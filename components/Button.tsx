@@ -42,16 +42,19 @@ const sizeStyles: Record<ButtonSize, string> = {
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = "primary", size = "md", className = "", disabled, ...props }, ref) => {
+  (
+    { variant = "primary", size = "md", className = "", disabled, ...props },
+    ref,
+  ) => {
     return (
       <button
         ref={ref}
         disabled={disabled}
-        className={`font-medium transition-all duration-150 disabled:opacity-50 disabled:pointer-events-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+        className={`cursor-pointer font-medium transition-all duration-150 disabled:opacity-50 disabled:pointer-events-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
         {...props}
       />
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

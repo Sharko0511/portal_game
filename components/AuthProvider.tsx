@@ -1,14 +1,19 @@
 "use client";
 
-import { createContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useEffect, useState, useCallback, ReactNode } from "react";
 import { getSupabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { Profile } from "@/lib/auth";
+
+const SESSION_DURATION_MS = 3 * 60 * 60 * 1000; // 3 hours
+const SESSION_CHECK_INTERVAL_MS = 60 * 1000; // check every minute
+const SESSION_LOGIN_TIME_KEY = "session_login_time";
 
 export interface AuthContextType {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
+  sessionExpired: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (
     email: string,
@@ -25,6 +30,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [sessionExpired, setSessionExpired] = useState(false);
 
   async function fetchProfile(userId: string): Promise<Profile | null> {
     const supabase = getSupabase();
@@ -43,6 +49,21 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     if (p) setProfile(p);
   }
 
+  function isSessionExpired(): boolean {
+    const loginTime = localStorage.getItem(SESSION_LOGIN_TIME_KEY);
+    if (!loginTime) return false;
+    return Date.now() - Number(loginTime) > SESSION_DURATION_MS;
+  }
+
+  const handleSessionExpired = useCallback(async () => {
+    const supabase = getSupabase();
+    if (supabase) await supabase.auth.signOut();
+    localStorage.removeItem(SESSION_LOGIN_TIME_KEY);
+    setUser(null);
+    setProfile(null);
+    setSessionExpired(true);
+  }, []);
+
   useEffect(() => {
     const supabase = getSupabase();
     if (!supabase) {
@@ -52,6 +73,10 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       const u = session?.user ?? null;
+      if (u && isSessionExpired()) {
+        handleSessionExpired().then(() => setLoading(false));
+        return;
+      }
       setUser(u);
       if (u) {
         fetchProfile(u.id).then((p) => {
@@ -79,6 +104,17 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Periodically check session expiration
+  useEffect(() => {
+    if (!user) return;
+    const interval = setInterval(() => {
+      if (isSessionExpired()) {
+        handleSessionExpired();
+      }
+    }, SESSION_CHECK_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, [user, handleSessionExpired]);
+
   async function signIn(email: string, password: string) {
     const supabase = getSupabase();
     if (!supabase) throw new Error("Supabase not configured");
@@ -87,6 +123,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       password,
     });
     if (error) throw error;
+    localStorage.setItem(SESSION_LOGIN_TIME_KEY, String(Date.now()));
+    setSessionExpired(false);
   }
 
   async function signUp(email: string, password: string, displayName: string) {
@@ -103,8 +141,10 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   async function signOut() {
     const supabase = getSupabase();
     if (supabase) await supabase.auth.signOut();
+    localStorage.removeItem(SESSION_LOGIN_TIME_KEY);
     setUser(null);
     setProfile(null);
+    setSessionExpired(false);
   }
 
   return (
@@ -113,6 +153,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         user,
         profile,
         loading,
+        sessionExpired,
         signIn,
         signUp,
         signOut,
