@@ -21,14 +21,14 @@ function BannedMessage() {
 }
 
 export default function ProtectedRoute({ children }: { children: ReactNode }) {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, sessionExpired } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/login");
+      router.push(sessionExpired ? "/login?expired=1" : "/login");
     }
-  }, [loading, user, router]);
+  }, [loading, user, sessionExpired, router]);
 
   if (loading) {
     return (

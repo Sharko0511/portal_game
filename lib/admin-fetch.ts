@@ -7,18 +7,29 @@ export async function getAdminToken(): Promise<string> {
   return data.session?.access_token || "";
 }
 
+function handleUnauthorized() {
+  const supabase = getSupabase();
+  if (supabase) supabase.auth.signOut();
+  localStorage.removeItem("session_login_time");
+  window.location.href = "/login?expired=1";
+}
+
 export async function adminFetch(
   url: string,
   init?: RequestInit
 ): Promise<Response> {
   const token = await getAdminToken();
-  return fetch(url, {
+  const res = await fetch(url, {
     ...init,
     headers: {
       ...init?.headers,
       Authorization: `Bearer ${token}`,
     },
   });
+  if (res.status === 401) {
+    handleUnauthorized();
+  }
+  return res;
 }
 
 export async function adminFetchJson<T>(
