@@ -51,7 +51,22 @@ async function setup() {
     console.log("User created:", userData.user.id);
   }
 
-  // 3. Verify
+  // 3. Create a second regular user (for blog permission tests)
+  const { data: user2Data, error: user2Error } =
+    await supabase.auth.admin.createUser({
+      email: "user2@user.com",
+      password: "user2user2",
+      email_confirm: true,
+      user_metadata: { display_name: "User2" },
+    });
+
+  if (user2Error) {
+    console.log("User2 creation error:", user2Error.message);
+  } else {
+    console.log("User2 created:", user2Data.user.id);
+  }
+
+  // 4. Verify
   const { data: profiles } = await supabase
     .from("profiles")
     .select("id, display_name, email, role, is_banned");
