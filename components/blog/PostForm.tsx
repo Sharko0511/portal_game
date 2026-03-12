@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import TipTapEditor from "./TipTapEditor";
+import BlockEditor, { BlocksDoc } from "./BlockEditor";
 import ImageUpload from "./ImageUpload";
 
 export interface PostFormValues {
@@ -19,10 +19,22 @@ interface PostFormProps {
   loading?: boolean;
 }
 
-const EMPTY_DOC: Record<string, unknown> = {
-  type: "doc",
-  content: [{ type: "paragraph" }],
-};
+function makeEmptyDoc(): BlocksDoc {
+  return {
+    type: "blocks",
+    blocks: [{ id: Math.random().toString(36).slice(2), type: "text", content: { type: "doc", content: [{ type: "paragraph" }] } }],
+  };
+}
+
+function toBlocksDoc(content: Record<string, unknown> | undefined): BlocksDoc {
+  if (!content) return makeEmptyDoc();
+  if (content.type === "blocks") return content as unknown as BlocksDoc;
+  // Legacy TipTap doc — wrap as single text block
+  return {
+    type: "blocks",
+    blocks: [{ id: Math.random().toString(36).slice(2), type: "text", content }],
+  };
+}
 
 export default function PostForm({
   initialValues,
@@ -32,12 +44,8 @@ export default function PostForm({
   loading = false,
 }: PostFormProps) {
   const [title, setTitle] = useState(initialValues?.title ?? "");
-  const [content, setContent] = useState<Record<string, unknown>>(
-    initialValues?.content ?? EMPTY_DOC
-  );
-  const [coverImageUrl, setCoverImageUrl] = useState<string | null>(
-    initialValues?.cover_image_url ?? null
-  );
+  const [doc, setDoc] = useState<BlocksDoc>(() => toBlocksDoc(initialValues?.content));
+  const [coverImageUrl, setCoverImageUrl] = useState<string | null>(initialValues?.cover_image_url ?? null);
   const [published, setPublished] = useState(initialValues?.published ?? true);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,26 +53,23 @@ export default function PostForm({
     e.preventDefault();
     setError(null);
 
-    if (!title.trim()) {
-      setError("Title is required.");
-      return;
-    }
+    if (!title.trim()) { setError("Title is required."); return; }
 
-    const hasContent =
-      Array.isArray((content as { content?: unknown[] }).content) &&
-      ((content as { content?: unknown[] }).content ?? []).some(
-        (node: unknown) =>
-          (node as { content?: unknown[] }).content &&
-          (node as { content?: unknown[] }).content!.length > 0
-      );
+    const hasContent = doc.blocks.some((b) => {
+      if (b.type === "image") return true;
+      const nodes = (b.content as { content?: unknown[] }).content ?? [];
+      return nodes.some((n: unknown) => (n as { content?: unknown[] }).content?.length);
+    });
 
-    if (!hasContent) {
-      setError("Post content cannot be empty.");
-      return;
-    }
+    if (!hasContent) { setError("Post content cannot be empty."); return; }
 
     try {
-      await onSubmit({ title: title.trim(), content, cover_image_url: coverImageUrl, published });
+      await onSubmit({
+        title: title.trim(),
+        content: doc as unknown as Record<string, unknown>,
+        cover_image_url: coverImageUrl,
+        published,
+      });
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
     }
@@ -85,19 +90,15 @@ export default function PostForm({
       </div>
 
       {/* Cover image */}
-      <ImageUpload
-        label="Cover Image (optional)"
-        onUpload={(url) => setCoverImageUrl(url)}
-      />
+      <ImageUpload label="Cover Image (optional)" onUpload={setCoverImageUrl} />
 
-      {/* Content */}
+      {/* Block editor */}
       <div>
         <label className="mb-1.5 block text-sm font-medium text-gray-900">Content</label>
-        <TipTapEditor
-          content={content}
-          onChange={setContent}
-          placeholder="Write your post..."
-        />
+        <p className="mb-3 text-xs text-gray-400">
+          Mix text and image blocks freely. Use the <strong>+ Text block</strong> / <strong>+ Image block</strong> buttons between blocks to add more.
+        </p>
+        <BlockEditor value={doc} onChange={setDoc} />
       </div>
 
       {/* Published toggle */}
@@ -105,15 +106,9 @@ export default function PostForm({
         <button
           type="button"
           onClick={() => setPublished((p) => !p)}
-          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-            published ? "bg-[#c8e63d]" : "bg-gray-200"
-          }`}
+          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${published ? "bg-accent" : "bg-gray-200"}`}
         >
-          <span
-            className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
-              published ? "translate-x-6" : "translate-x-1"
-            }`}
-          />
+          <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${published ? "translate-x-6" : "translate-x-1"}`} />
         </button>
         <span className="text-sm text-gray-700">
           {published ? "Published — visible to followers" : "Draft — only visible to you"}
@@ -121,27 +116,17 @@ export default function PostForm({
       </div>
 
       {error && (
-        <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
-          {error}
-        </p>
+        <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">{error}</p>
       )}
 
-      {/* Actions */}
       <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded-full bg-[#c8e63d] px-6 py-2 text-sm font-medium text-gray-900 transition-colors hover:bg-[#c8e63d]/85 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
+        <button type="submit" disabled={loading}
+          className="rounded-full bg-accent px-6 py-2 text-sm font-medium text-gray-900 transition-colors hover:bg-accent/85 disabled:opacity-50 disabled:cursor-not-allowed">
           {loading ? "Saving..." : submitLabel}
         </button>
         {onCancel && (
-          <button
-            type="button"
-            onClick={onCancel}
-            disabled={loading}
-            className="rounded-full border border-gray-200 px-6 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50"
-          >
+          <button type="button" onClick={onCancel} disabled={loading}
+            className="rounded-full border border-gray-200 px-6 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50">
             Cancel
           </button>
         )}

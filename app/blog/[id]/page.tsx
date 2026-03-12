@@ -4,8 +4,11 @@ import { use } from "react";
 import Link from "next/link";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import TipTapEditor from "@/components/blog/TipTapEditor";
+import { BlocksRenderer, BlocksDoc } from "@/components/blog/BlockEditor";
 import LikeButton from "@/components/blog/LikeButton";
 import FollowButton from "@/components/blog/FollowButton";
+import CommentSection from "@/components/blog/CommentSection";
+import ShareButton from "@/components/blog/ShareButton";
 import { usePost } from "@/hooks/blog/usePost";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -104,17 +107,21 @@ function PostContent({ id }: { id: string }) {
 
       {/* Content */}
       <div className="mb-12">
-        <TipTapEditor content={post.content} editable={false} />
+        {post.content?.type === "blocks"
+          ? <BlocksRenderer doc={post.content as unknown as BlocksDoc} />
+          : <TipTapEditor content={post.content} editable={false} />
+        }
       </div>
 
-      {/* Like + placeholder for Step 11 comments */}
-      <div className="mb-8 flex items-center gap-4">
+      {/* Like + Share */}
+      <div className="mb-8 flex items-center gap-3">
         <LikeButton postId={post.id} likeCount={post.like_count} />
+        <ShareButton title={post.title} />
       </div>
 
-      {/* Comments placeholder — Step 11 */}
-      <div className="rounded-2xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-400">
-        Comments coming in Step 11
+      {/* Comments */}
+      <div className="rounded-2xl border border-gray-200 bg-white p-6">
+        <CommentSection postId={post.id} />
       </div>
     </div>
   );

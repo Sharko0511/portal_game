@@ -26,6 +26,14 @@ export default function Navbar() {
           >
             Leaderboard
           </Link>
+          {user && (
+            <Link
+              href="/blog"
+              className="text-gray-500 transition-colors hover:text-gray-900"
+            >
+              Blog
+            </Link>
+          )}
 
           {!loading && (
             <>

@@ -87,9 +87,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { status: 400 }
     );
   }
-  if (!content || typeof content !== "object" || content.type !== "doc") {
+  if (!content || typeof content !== "object" ||
+      (content.type !== "doc" && content.type !== "blocks")) {
     return NextResponse.json(
-      { error: { code: "BAD_REQUEST", message: "content must be a TipTap JSON document" } },
+      { error: { code: "BAD_REQUEST", message: "content must be a TipTap document or block array" } },
       { status: 400 }
     );
   }

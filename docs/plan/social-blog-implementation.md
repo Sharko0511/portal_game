@@ -38,10 +38,10 @@ DB steps have no unit test (run SQL directly in Supabase dashboard).
 - [x] Step 8 — Post Feed
 - [x] Step 9 — Like Button
 - [x] Step 10 — Follow Button
-- [ ] Step 11 — Comments UI
-- [ ] Step 12 — Share Button
-- [ ] Step 13 — User Profile Page
-- [ ] Step 14 — Navbar
+- [x] Step 11 — Comments UI
+- [x] Step 12 — Share Button
+- [x] Step 13 — User Profile Page
+- [x] Step 14 — Navbar
 
 ---
 
