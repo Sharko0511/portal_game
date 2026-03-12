@@ -33,11 +33,11 @@ DB steps have no unit test (run SQL directly in Supabase dashboard).
 - [x] Step 3 — Posts API
 - [x] Step 4 — Comments API
 - [x] Step 5 — Likes API
-- [ ] Step 6 — TipTap Editor
-- [ ] Step 7 — Post Form + Pages
-- [ ] Step 8 — Post Feed
-- [ ] Step 9 — Like Button
-- [ ] Step 10 — Follow Button
+- [x] Step 6 — TipTap Editor
+- [x] Step 7 — Post Form + Pages
+- [x] Step 8 — Post Feed
+- [x] Step 9 — Like Button
+- [x] Step 10 — Follow Button
 - [ ] Step 11 — Comments UI
 - [ ] Step 12 — Share Button
 - [ ] Step 13 — User Profile Page
