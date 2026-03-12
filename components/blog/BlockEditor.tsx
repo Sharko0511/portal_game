@@ -39,7 +39,7 @@ function ToolbarBtn({
   return (
     <button type="button" onMouseDown={(e) => { e.preventDefault(); onClick(); }}
       title={title} disabled={disabled}
-      className={`rounded px-1.5 py-1 text-xs transition-colors disabled:opacity-40 ${
+      className={`cursor-pointer rounded px-1.5 py-1 text-xs transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
         active ? "bg-accent text-gray-900" : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
       }`}
     >{children}</button>

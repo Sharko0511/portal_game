@@ -42,7 +42,7 @@ function ToolbarBtn({
       }}
       title={title}
       disabled={disabled}
-      className={`rounded px-2 py-1 text-sm transition-colors disabled:opacity-40 ${
+      className={`cursor-pointer rounded px-2 py-1 text-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
         active
           ? "bg-accent text-gray-900"
           : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
