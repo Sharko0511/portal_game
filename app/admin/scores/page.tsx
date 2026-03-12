@@ -45,7 +45,7 @@ export default function AdminScores() {
               setGame(e.target.value);
               setPage(1);
             }}
-            className="rounded-lg border border-white/10 bg-background px-3 py-1.5 text-sm"
+            className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm"
           >
             <option value="">All Games</option>
             {GAMES.map((g) => (
@@ -61,13 +61,13 @@ export default function AdminScores() {
       </div>
 
       {scoresQuery.isLoading ? (
-        <p className="text-foreground/50">Loading...</p>
+        <p className="text-gray-500">Loading...</p>
       ) : (
         <>
-          <div className="rounded-xl border border-white/10 bg-card overflow-hidden">
+          <div className="rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/10 text-left text-foreground/50">
+                <tr className="border-b border-white/10 text-left text-gray-500">
                   <th className="px-4 py-3">Player</th>
                   <th className="px-4 py-3">Game</th>
                   <th className="px-4 py-3">Score</th>
@@ -78,17 +78,17 @@ export default function AdminScores() {
               <tbody>
                 {scores.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-4 py-8 text-center text-foreground/30">
+                    <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
                       No scores found
                     </td>
                   </tr>
                 ) : (
                   scores.map((s) => (
-                    <tr key={s.id} className="border-b border-white/5">
+                    <tr key={s.id} className="border-b border-gray-200/50">
                       <td className="px-4 py-3">{s.player_name}</td>
                       <td className="px-4 py-3 capitalize">{s.game}</td>
-                      <td className="px-4 py-3 font-mono text-accent">{s.score}</td>
-                      <td className="px-4 py-3 text-foreground/50">
+                      <td className="px-4 py-3 font-mono text-gray-900">{s.score}</td>
+                      <td className="px-4 py-3 text-gray-500">
                         {new Date(s.created_at).toLocaleDateString()}
                       </td>
                       <td className="px-4 py-3">
@@ -117,7 +117,7 @@ export default function AdminScores() {
               >
                 Prev
               </Button>
-              <span className="text-sm text-foreground/50">
+              <span className="text-sm text-gray-500">
                 {page} / {totalPages}
               </span>
               <Button

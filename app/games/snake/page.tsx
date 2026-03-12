@@ -220,7 +220,7 @@ export default function SnakeGame() {
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="text-foreground/50">Loading...</div>
+        <div className="text-gray-500">Loading...</div>
       </div>
     );
   }
@@ -229,8 +229,8 @@ export default function SnakeGame() {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-4">
         <div className="text-6xl">🚫</div>
-        <h1 className="text-2xl font-bold text-danger">Game Unavailable</h1>
-        <p className="text-foreground/60">This game is currently disabled.</p>
+        <h1 className="text-2xl font-bold text-red-600">Game Unavailable</h1>
+        <p className="text-gray-500">This game is currently disabled.</p>
         <Link href="/" className="text-accent hover:underline">
           ← Back to Games
         </Link>
@@ -243,11 +243,11 @@ export default function SnakeGame() {
       <div className="mb-2 flex items-center justify-between shrink-0">
         <Link
           href="/"
-          className="text-sm text-foreground/50 hover:text-accent"
+          className="text-sm text-gray-500 hover:text-gray-900"
         >
           ← Back
         </Link>
-        <h1 className="text-xl font-bold text-success">
+        <h1 className="text-xl font-bold text-green-700">
           {gameConfig.icon} {gameConfig.display_name}
         </h1>
         <div className="text-lg font-mono font-bold text-accent">

@@ -21,14 +21,14 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="bg-white">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex flex-col overflow-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-white text-gray-900`}
       >
         <AuthProvider>
           <QueryProvider>
             <Navbar />
-            <main className="mx-auto w-full max-w-6xl px-6 py-4 flex-1 min-h-0">{children}</main>
+            <main className="mx-auto w-full max-w-6xl px-6 py-8 flex-1 bg-white">{children}</main>
           </QueryProvider>
         </AuthProvider>
       </body>

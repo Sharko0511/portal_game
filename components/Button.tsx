@@ -20,25 +20,25 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-accent text-background hover:bg-accent/80 hover:shadow-[0_0_20px_rgba(0,229,255,0.3)] active:scale-[0.97]",
+    "bg-[#c8e63d] text-gray-900 hover:bg-[#c8e63d]/85 active:scale-[0.97]",
   secondary:
-    "border border-white/10 text-foreground/70 hover:border-accent/30 hover:bg-card hover:text-foreground active:scale-[0.97]",
+    "border border-gray-200 text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-900 active:scale-[0.97]",
   danger:
-    "bg-danger text-white hover:bg-danger/80 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)] active:scale-[0.97]",
+    "bg-danger text-white hover:bg-danger/85 active:scale-[0.97]",
   "danger-ghost":
-    "bg-danger/20 text-danger hover:bg-danger/30 active:scale-[0.97]",
+    "bg-danger/10 text-red-600 border border-danger/20 hover:bg-danger/20 active:scale-[0.97]",
   success:
-    "bg-success text-background hover:bg-success/80 hover:shadow-[0_0_20px_rgba(74,222,128,0.3)] active:scale-[0.97]",
+    "bg-success text-white hover:bg-success/85 active:scale-[0.97]",
   "success-ghost":
-    "bg-success/20 text-success hover:bg-success/30 active:scale-[0.97]",
+    "bg-success/10 text-green-700 border border-success/20 hover:bg-success/20 active:scale-[0.97]",
   ghost:
-    "bg-foreground/20 text-foreground/50 hover:bg-foreground/30 hover:text-foreground/70 active:scale-[0.97]",
+    "bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-900 active:scale-[0.97]",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "px-2 py-1 text-xs rounded",
-  md: "px-3 py-1.5 text-sm rounded-lg",
-  lg: "px-4 py-2 text-sm rounded-lg",
+  sm: "px-2.5 py-1 text-xs rounded-full",
+  md: "px-3.5 py-1.5 text-sm rounded-full",
+  lg: "px-5 py-2 text-sm rounded-full",
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(

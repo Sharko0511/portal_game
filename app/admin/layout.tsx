@@ -17,9 +17,9 @@ function AdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <div className="flex gap-6" style={{ height: "calc(100vh - 5.5rem)" }}>
+    <div className="flex gap-6 min-h-[calc(100vh-5.5rem)]">
       <aside className="w-48 shrink-0">
-        <div className="mb-4 text-lg font-bold text-accent">Admin</div>
+        <div className="mb-4 text-sm font-semibold uppercase tracking-widest text-gray-500">Admin</div>
         <nav className="space-y-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
@@ -29,8 +29,8 @@ function AdminLayout({ children }: { children: ReactNode }) {
                 href={item.href}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
                   isActive
-                    ? "bg-accent text-background"
-                    : "text-foreground/70 hover:bg-card hover:text-accent"
+                    ? "bg-[#c8e63d] text-gray-900 font-medium"
+                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
                 }`}
               >
                 <span>{item.icon}</span>

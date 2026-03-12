@@ -9,7 +9,7 @@ function BannedMessage() {
   const { signOut } = useAuth();
   return (
     <div className="flex h-full flex-col items-center justify-center gap-4">
-      <h1 className="text-2xl font-bold text-danger">Account Banned</h1>
+      <h1 className="text-2xl font-bold text-red-600">Account Banned</h1>
       <p className="text-foreground/60">
         Your account has been banned. Contact an administrator for more info.
       </p>

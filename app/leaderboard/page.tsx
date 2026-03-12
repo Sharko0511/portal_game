@@ -24,10 +24,10 @@ export default function Leaderboard() {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <Link href="/" className="text-sm text-foreground/50 hover:text-accent">
+        <Link href="/" className="text-sm text-gray-500 hover:text-gray-900">
           ← Back
         </Link>
-        <h1 className="text-2xl font-bold text-accent">Leaderboard</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Leaderboard</h1>
         <div />
       </div>
 
@@ -51,10 +51,10 @@ export default function Leaderboard() {
         ))}
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-card">
+      <div className="rounded-2xl border border-gray-200 bg-white">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-white/10 text-foreground/50">
+            <tr className="border-b border-gray-200 text-gray-500 text-xs uppercase tracking-wide">
               <th className="px-6 py-3">#</th>
               <th className="px-6 py-3">Player</th>
               <th className="px-6 py-3">Game</th>
@@ -65,13 +65,13 @@ export default function Leaderboard() {
           <tbody>
             {scoresQuery.isLoading ? (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-foreground/30">
+                <td colSpan={5} className="px-6 py-10 text-center text-gray-500">
                   Loading...
                 </td>
               </tr>
             ) : scores.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-foreground/30">
+                <td colSpan={5} className="px-6 py-10 text-center text-gray-500">
                   No scores yet. Play a game and save your score!
                 </td>
               </tr>
@@ -81,7 +81,7 @@ export default function Leaderboard() {
                 return (
                   <tr
                     key={s.id}
-                    className="border-b border-white/5 transition-colors hover:bg-white/5"
+                    className="border-b border-gray-200/50 transition-colors hover:bg-gray-50"
                   >
                     <td className="px-6 py-3 font-mono">
                       {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i + 1}
@@ -90,10 +90,10 @@ export default function Leaderboard() {
                     <td className="px-6 py-3">
                       {gameDisplay.icon} {gameDisplay.name}
                     </td>
-                    <td className="px-6 py-3 text-right font-mono text-accent">
+                    <td className="px-6 py-3 text-right font-mono font-semibold text-gray-900">
                       {s.score}
                     </td>
-                    <td className="px-6 py-3 text-right text-foreground/40">
+                    <td className="px-6 py-3 text-right text-gray-500">
                       {new Date(s.created_at).toLocaleDateString()}
                     </td>
                   </tr>
