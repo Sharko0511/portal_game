@@ -33,7 +33,7 @@ export default function AdminConfig() {
   }
 
   if (configQuery.isLoading) {
-    return <p className="text-foreground/50">Loading...</p>;
+    return <p className="text-gray-500">Loading...</p>;
   }
 
   return (
@@ -41,18 +41,18 @@ export default function AdminConfig() {
       <h1 className="text-2xl font-bold">Site Configuration</h1>
 
       {message && (
-        <p className={`text-sm ${message.includes("Failed") ? "text-danger" : "text-success"}`}>
+        <p className={`text-sm ${message.includes("Failed") ? "text-red-600" : "text-green-700"}`}>
           {message}
         </p>
       )}
 
-      <div className="rounded-xl border border-white/10 bg-card p-6 space-y-6">
+      <div className="rounded-2xl border border-gray-200 bg-white p-6 space-y-6">
         {configs.map((c) => (
           <div key={c.key}>
             <label className="mb-1 block text-sm font-medium">
               {c.key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
             </label>
-            <p className="mb-2 text-xs text-foreground/50">{c.description}</p>
+            <p className="mb-2 text-xs text-gray-500">{c.description}</p>
 
             {typeof c.value === "boolean" ? (
               <div className="flex items-center gap-4">
@@ -71,7 +71,7 @@ export default function AdminConfig() {
                   type="text"
                   value={c.value}
                   onChange={(e) => handleChange(c.key, e.target.value)}
-                  className="flex-1 rounded-lg border border-white/10 bg-background px-3 py-2 text-sm"
+                  className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm"
                 />
                 <Button
                   onClick={() => handleUpdate(c.key, c.value)}

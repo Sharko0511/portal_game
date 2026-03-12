@@ -54,7 +54,7 @@ export default function AdminUsers() {
             placeholder="Search..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="rounded-lg border border-white/10 bg-background px-3 py-1.5 text-sm outline-none focus:border-accent"
+            className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-foreground/40"
           />
           <Button type="submit">
             Search
@@ -63,13 +63,13 @@ export default function AdminUsers() {
       </div>
 
       {usersQuery.isLoading ? (
-        <p className="text-foreground/50">Loading...</p>
+        <p className="text-gray-500">Loading...</p>
       ) : (
         <>
-          <div className="rounded-xl border border-white/10 bg-card overflow-hidden">
+          <div className="rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/10 text-left text-foreground/50">
+                <tr className="border-b border-white/10 text-left text-gray-500">
                   <th className="px-4 py-3">Name</th>
                   <th className="px-4 py-3">Email</th>
                   <th className="px-4 py-3">Role</th>
@@ -82,34 +82,34 @@ export default function AdminUsers() {
                 {users.map((u) => {
                   const isSelf = u.id === profile?.id;
                   return (
-                    <tr key={u.id} className="border-b border-white/5">
+                    <tr key={u.id} className="border-b border-gray-200/50">
                       <td className="px-4 py-3">{u.display_name}</td>
-                      <td className="px-4 py-3 text-foreground/50">{u.email}</td>
+                      <td className="px-4 py-3 text-gray-500">{u.email}</td>
                       <td className="px-4 py-3">
                         {isSelf ? (
-                          <span className="text-accent">{u.role}</span>
+                          <span className="text-gray-900">{u.role}</span>
                         ) : (
                           <select
                             value={u.role}
                             onChange={(e) => handleChangeRole(u.id, e.target.value)}
-                            className="rounded border border-white/10 bg-background px-2 py-1 text-sm"
+                            className="rounded border border-gray-200 bg-white px-2 py-1 text-sm"
                           >
                             <option value="user">user</option>
                             <option value="admin">admin</option>
                           </select>
                         )}
                       </td>
-                      <td className="px-4 py-3 font-mono text-accent">{u.score_count}</td>
+                      <td className="px-4 py-3 font-mono text-gray-900">{u.score_count}</td>
                       <td className="px-4 py-3">
                         {u.is_banned ? (
-                          <span className="text-danger">Banned</span>
+                          <span className="text-red-600">Banned</span>
                         ) : (
-                          <span className="text-success">Active</span>
+                          <span className="text-green-700">Active</span>
                         )}
                       </td>
                       <td className="px-4 py-3">
                         {isSelf ? (
-                          <span className="text-foreground/30">—</span>
+                          <span className="text-gray-500">—</span>
                         ) : (
                           <div className="flex gap-2">
                             <Button
@@ -146,7 +146,7 @@ export default function AdminUsers() {
               >
                 Prev
               </Button>
-              <span className="text-sm text-foreground/50">
+              <span className="text-sm text-gray-500">
                 {page} / {totalPages}
               </span>
               <Button

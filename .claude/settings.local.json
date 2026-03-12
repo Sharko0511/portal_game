@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(gh auth status:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(find d:ProjectsLearninggame-portal -type f \\\\\\(-name colors* -o -name tokens* -o -name theme* -o -name constants* \\\\\\))"
     ]
   }
 }

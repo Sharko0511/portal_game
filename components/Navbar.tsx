@@ -8,21 +8,21 @@ export default function Navbar() {
   const { user, profile, loading } = useAuth();
 
   return (
-    <nav className="border-b border-white/10 bg-card shrink-0">
+    <nav className="bg-white border-b border-gray-200 shrink-0">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
-        <Link href="/" className="text-xl font-bold text-accent">
+        <Link href="/" className="text-lg font-semibold text-gray-900 tracking-tight">
           Game Portal
         </Link>
-        <div className="flex items-center gap-6 text-sm">
+        <div className="flex items-center gap-7 text-sm">
           <Link
             href="/"
-            className="text-foreground/70 transition-colors hover:text-accent"
+            className="text-gray-500 transition-colors hover:text-gray-900"
           >
             Home
           </Link>
           <Link
             href="/leaderboard"
-            className="text-foreground/70 transition-colors hover:text-accent"
+            className="text-gray-500 transition-colors hover:text-gray-900"
           >
             Leaderboard
           </Link>
@@ -34,7 +34,7 @@ export default function Navbar() {
                   {profile.role === "admin" && (
                     <Link
                       href="/admin"
-                      className="text-foreground/70 transition-colors hover:text-accent"
+                      className="text-gray-500 transition-colors hover:text-gray-900"
                     >
                       Admin
                     </Link>
@@ -45,13 +45,13 @@ export default function Navbar() {
                 <>
                   <Link
                     href="/login"
-                    className="text-foreground/70 transition-colors hover:text-accent"
+                    className="text-gray-500 transition-colors hover:text-gray-900"
                   >
                     Login
                   </Link>
                   <Link
                     href="/register"
-                    className="rounded-lg bg-accent px-3 py-1.5 font-medium text-background transition-colors hover:bg-accent/80"
+                    className="rounded-full bg-[#c8e63d] px-4 py-1.5 text-sm font-medium text-gray-900 transition-colors hover:bg-[#c8e63d]/85"
                   >
                     Register
                   </Link>
