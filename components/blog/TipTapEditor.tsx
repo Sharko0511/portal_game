@@ -106,9 +106,10 @@ export default function TipTapEditor({
       if (error) throw error;
       const { data } = supabase.storage.from("post-images").getPublicUrl(path);
       // Insert image node at current cursor position
-      editor.chain().focus().setImage({ src: data.publicUrl }).run();
-      // Add a paragraph after so the user can keep typing
-      editor.chain().focus().createParagraphNear().run();
+      if (editor) {
+        editor.chain().focus().setImage({ src: data.publicUrl }).run();
+        editor.chain().focus().createParagraphNear().run();
+      }
     } catch (err) {
       alert(err instanceof Error ? err.message : "Upload failed.");
     } finally {
