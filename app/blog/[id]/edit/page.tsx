@@ -71,7 +71,7 @@ function EditPostContent({ id }: { id: string }) {
             title: post.title,
             content: post.content,
             cover_image_url: post.cover_image_url,
-            published: post.published,
+            visibility: post.visibility,
           }}
           onSubmit={handleSubmit}
           onCancel={() => router.push(`/blog/${id}`)}
