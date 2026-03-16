@@ -102,21 +102,24 @@ function PopularSidebar({ currentId, category }: { currentId: string; category: 
 
   return (
     <aside className="hidden xl:block w-72 shrink-0">
-      <div className="sticky top-8 rounded-2xl border border-border bg-card p-5">
-        <h3 className="mb-4 text-sm font-semibold text-foreground">Bài viết phổ biến</h3>
-        <div className="space-y-4">
-          {popular.map((p) => (
-            <Link key={p.id} href={`/blog/${p.id}`} className="group flex gap-3">
-              {p.cover_image_url && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={p.cover_image_url}
-                  alt={p.title}
-                  className="h-16 w-16 shrink-0 rounded-xl object-cover"
-                />
-              )}
+      <div className="sticky top-8">
+        <h3 className="mb-3 text-base font-semibold text-foreground">Bài viết phổ biến</h3>
+        <div className="mb-1 border-t-2 border-gray-800" />
+        <div>
+          {popular.map((p, i) => (
+            <Link key={p.id} href={`/blog/${p.id}`} className={`group flex gap-3 py-3 ${i !== 0 ? "border-t-2 border-gray-300" : ""}`}>
+              <div className="h-16 w-16 shrink-0 rounded-xl overflow-hidden bg-gray-100">
+                {p.cover_image_url && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={p.cover_image_url}
+                    alt={p.title}
+                    className="h-full w-full object-cover"
+                  />
+                )}
+              </div>
               <div className="min-w-0">
-                <p className="text-xs font-semibold text-foreground line-clamp-2 group-hover:underline">
+                <p className="text-sm font-semibold text-foreground line-clamp-3 group-hover:underline">
                   {p.title}
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">{formatDate(p.created_at)}</p>
@@ -124,12 +127,14 @@ function PopularSidebar({ currentId, category }: { currentId: string; category: 
             </Link>
           ))}
         </div>
-        <Link
-          href={`/blog`}
-          className="mt-4 flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
-        >
-          Xem thêm <span>↗</span>
-        </Link>
+        <div className="mt-3 flex justify-end">
+          <Link
+            href={`/${category}`}
+            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          >
+            Xem thêm <span>↗</span>
+          </Link>
+        </div>
       </div>
     </aside>
   );
@@ -188,56 +193,59 @@ function PostContent({ id }: { id: string }) {
   const hasStats = post.word_count > 0 || post.event_encounters > 0 || post.cards_count > 0;
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-8">
+    <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 xl:px-21">
+
+      {/* ── Full-width header ── */}
+      {/* Breadcrumb */}
+      <nav className="mb-6 flex items-center gap-1.5 text-sm text-muted-foreground">
+        <Link href={`/${lng}`} className="hover:text-foreground">Trang chủ</Link>
+        <span>›</span>
+        <Link href={`/${lng}/${post.category}`} className="font-medium text-[#317F5F] hover:text-[#317F5F]/80">
+          {categoryLabel}
+        </Link>
+      </nav>
+
+      {/* Title */}
+      <h1 className="mb-3 text-3xl font-bold leading-tight text-foreground sm:text-4xl">
+        {post.title}
+      </h1>
+
+      {/* Date + edit */}
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <span className="text-sm text-muted-foreground">{formatDate(post.created_at)}</span>
+        {(isAuthor || isAdmin) && (
+          <Link
+            href={`/${lng}/blog/${post.id}/edit`}
+            className="rounded-full border border-border px-4 py-1 text-xs text-muted-foreground hover:bg-gray-50"
+          >
+            Edit Post
+          </Link>
+        )}
+      </div>
+
+      {/* Audio player */}
+      {post.audio_url && <AudioPlayer src={post.audio_url} />}
+
+      {/* Cover image */}
+      {post.cover_image_url && (
+        <figure className="mb-6">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={post.cover_image_url}
+            alt={post.title}
+            className="w-full rounded-2xl object-cover"
+          />
+          {post.cover_image_caption && (
+            <figcaption className="mt-2 text-center text-xs text-muted-foreground italic">
+              {post.cover_image_caption}
+            </figcaption>
+          )}
+        </figure>
+      )}
+
       <div className="flex gap-10">
         {/* ── Article column ── */}
         <article className="min-w-0 flex-1">
-          {/* Breadcrumb */}
-          <nav className="mb-6 flex items-center gap-1.5 text-sm text-muted-foreground">
-            <Link href={`/${lng}`} className="hover:text-foreground">Trang chủ</Link>
-            <span>›</span>
-            <Link href={`/${lng}/${post.category}`} className="hover:text-foreground">
-              {categoryLabel}
-            </Link>
-          </nav>
-
-          {/* Title */}
-          <h1 className="mb-3 text-3xl font-bold leading-tight text-foreground sm:text-4xl">
-            {post.title}
-          </h1>
-
-          {/* Date + edit */}
-          <div className="mb-6 flex items-center justify-between gap-3">
-            <span className="text-sm text-muted-foreground">{formatDate(post.created_at)}</span>
-            {(isAuthor || isAdmin) && (
-              <Link
-                href={`/${lng}/blog/${post.id}/edit`}
-                className="rounded-full border border-border px-4 py-1 text-xs text-muted-foreground hover:bg-gray-50"
-              >
-                Edit Post
-              </Link>
-            )}
-          </div>
-
-          {/* Audio player */}
-          {post.audio_url && <AudioPlayer src={post.audio_url} />}
-
-          {/* Cover image */}
-          {post.cover_image_url && (
-            <figure className="mb-6">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={post.cover_image_url}
-                alt={post.title}
-                className="w-full rounded-2xl object-cover"
-              />
-              {post.cover_image_caption && (
-                <figcaption className="mt-2 text-center text-xs text-muted-foreground italic">
-                  {post.cover_image_caption}
-                </figcaption>
-              )}
-            </figure>
-          )}
 
           {/* Level badge */}
           {post.level && (
@@ -258,21 +266,21 @@ function PostContent({ id }: { id: string }) {
 
           {/* Stats row */}
           {hasStats && (
-            <div className="mb-10 flex flex-wrap items-end gap-8 border-t border-b border-border py-8">
+            <div className="mb-10 grid grid-cols-3 gap-x-4 py-8">
               {post.word_count > 0 && (
-                <div>
+                <div className="border-b-2 border-gray-300 pb-3">
                   <p className="text-4xl font-bold text-foreground">{post.word_count.toLocaleString()}</p>
                   <p className="text-sm text-muted-foreground">words</p>
                 </div>
               )}
               {post.event_encounters > 0 && (
-                <div>
+                <div className="border-b-2 border-gray-300 pb-3">
                   <p className="text-4xl font-bold text-foreground">{post.event_encounters}</p>
                   <p className="text-sm text-muted-foreground">event encounters</p>
                 </div>
               )}
               {post.cards_count > 0 && (
-                <div>
+                <div className="border-b-2 border-gray-300 pb-3">
                   <p className="text-4xl font-bold text-foreground">{post.cards_count}</p>
                   <p className="text-sm text-muted-foreground">cards</p>
                 </div>
