@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfileScores } from "@/hooks/useProfileScores";
 import { useUpdateProfile } from "@/hooks/useUpdateProfile";
@@ -14,6 +14,7 @@ function ProfileContent() {
   const [message, setMessage] = useState("");
   const [telegramStatus, setTelegramStatus] = useState<"idle" | "pending" | "loading">("idle");
   const [deepLink, setDeepLink] = useState<string | null>(null);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const scoresQuery = useProfileScores(profile?.id);
   const updateProfile = useUpdateProfile();
@@ -24,7 +25,20 @@ function ProfileContent() {
     if (profile) {
       setDisplayName(profile.display_name || "");
     }
+    // Stop polling once telegram is linked
+    if (profile?.telegram_chat_id && pollRef.current) {
+      clearInterval(pollRef.current);
+      pollRef.current = null;
+      setTelegramStatus("idle");
+    }
   }, [profile]);
+
+  // Clean up poll on unmount
+  useEffect(() => {
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
+  }, []);
 
   async function handleConnectTelegram() {
     setTelegramStatus("loading");
@@ -39,9 +53,8 @@ function ProfileContent() {
       setDeepLink(json.data.deep_link);
       setTelegramStatus("pending");
       // Poll every 3s to see if the user has linked
-      const interval = setInterval(async () => {
-        await refreshProfile();
-        if (profile?.telegram_chat_id) clearInterval(interval);
+      pollRef.current = setInterval(() => {
+        refreshProfile();
       }, 3000);
     } else {
       setTelegramStatus("idle");
