@@ -153,7 +153,7 @@ async function notifyFollowers(
 
   const sends = followers
     .map((f) => {
-      const profile = f.profiles as { telegram_chat_id: number | null } | null;
+      const profile = f.profiles as unknown as { telegram_chat_id: number | null } | null;
       return profile?.telegram_chat_id ?? null;
     })
     .filter((id): id is number => id !== null)
