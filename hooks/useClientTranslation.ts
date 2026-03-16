@@ -1,20 +1,47 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // Module-level cache: key = "lng:ns" → flat key-value map
 const cache = new Map<string, Record<string, string>>();
 
+/** Seed the cache from server-fetched data. Called synchronously before render. */
+export function seedTranslationCache(seed: Record<string, Record<string, string>>) {
+  for (const [key, value] of Object.entries(seed)) {
+    if (!cache.has(key)) cache.set(key, value);
+  }
+}
+
 export function useClientTranslation(lng: string, ns: string) {
   const cacheKey = `${lng}:${ns}`;
+  const [trackedKey, setTrackedKey] = useState(cacheKey);
   const [translations, setTranslations] = useState<Record<string, string>>(
     () => cache.get(cacheKey) ?? {}
   );
   const [isLoading, setIsLoading] = useState(!cache.has(cacheKey));
+  // Keep last successfully loaded translations to avoid key flash during language switch
+  const stableTranslations = useRef<Record<string, string>>(cache.get(cacheKey) ?? {});
+
+  // Synchronous state update during render — if the key changed and cache already
+  // has the data (e.g. 2nd/3rd language switch), apply it immediately without waiting
+  // for useEffect. This makes cached switches instant.
+  if (trackedKey !== cacheKey) {
+    setTrackedKey(cacheKey);
+    const cached = cache.get(cacheKey);
+    if (cached) {
+      stableTranslations.current = cached;
+      setTranslations(cached);
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+    }
+  }
 
   useEffect(() => {
     if (cache.has(cacheKey)) {
-      setTranslations(cache.get(cacheKey)!);
+      const data = cache.get(cacheKey)!;
+      stableTranslations.current = data;
+      setTranslations(data);
       setIsLoading(false);
       return;
     }
@@ -28,10 +55,11 @@ export function useClientTranslation(lng: string, ns: string) {
         if (cancelled) return;
         const data: Record<string, string> = json.data ?? {};
         cache.set(cacheKey, data);
+        stableTranslations.current = data;
         setTranslations(data);
       })
       .catch(() => {
-        // On failure keep empty translations — keys used as fallback
+        // On failure keep previous translations visible
       })
       .finally(() => {
         if (!cancelled) setIsLoading(false);
@@ -44,10 +72,11 @@ export function useClientTranslation(lng: string, ns: string) {
 
   /**
    * Resolves a dot-notation key, e.g. t("navigation.home") → "Home"
-   * Falls back to the key itself if not found.
+   * While loading a new language, falls back to the previous language's text
+   * so raw keys are never shown during a language switch.
    */
   function t(key: string): string {
-    return translations[key] ?? key;
+    return translations[key] ?? stableTranslations.current[key] ?? key;
   }
 
   /** Invalidate cache for this (lng, ns) — used after admin saves a change */
