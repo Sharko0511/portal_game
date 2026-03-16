@@ -54,8 +54,9 @@ export default function Footer() {
             <p className="text-white/70">© {year} The Good Learning. All rights reserved.</p>
           </div>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link href={`/${lng}/blog`} className="text-white hover:text-white/80">Blog</Link>
-            <Link href={`/${lng}/audio`} className="text-white hover:text-white/80">Audio</Link>
+            <Link href={`/${lng}`} className="text-white hover:text-white/80">Trang chủ</Link>
+            <Link href={`/${lng}/blog`} className="text-white hover:text-white/80">Báo hay</Link>
+            <Link href={`/${lng}/audio`} className="text-white hover:text-white/80">Audio chất</Link>
             <Link href={`/${lng}/games`} className="text-white hover:text-white/80">Games</Link>
           </div>
         </div>
