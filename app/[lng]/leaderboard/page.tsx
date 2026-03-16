@@ -22,7 +22,7 @@ export default function Leaderboard() {
   }
 
   return (
-    <div>
+    <div className="mx-auto max-w-6xl px-6 py-8">
       <div className="mb-6 flex items-center justify-between">
         <Link href={`/${lng}`} className="text-sm text-gray-500 hover:text-gray-900">← Back</Link>
         <h1 className="text-2xl font-bold text-gray-900">Leaderboard</h1>

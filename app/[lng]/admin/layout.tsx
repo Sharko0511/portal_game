@@ -19,7 +19,7 @@ function AdminLayout({ children }: { children: ReactNode }) {
   ];
 
   return (
-    <div className="flex gap-6 min-h-[calc(100vh-5.5rem)]">
+    <div className="flex gap-6 min-h-[calc(100vh-5.5rem)] px-6 py-8 max-w-6xl mx-auto w-full">
       <aside className="w-48 shrink-0">
         <div className="mb-4 text-sm font-semibold uppercase tracking-widest text-gray-500">Admin</div>
         <nav className="space-y-1">

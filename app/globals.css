@@ -14,24 +14,66 @@
 }
 
 @theme inline {
-  --color-background: #ffffff;
-  --color-foreground: #111827;
-  --color-foreground-muted: #6b7280;
-  --color-card: #f9fafb;
-  --color-card-hover: #f3f4f6;
-  --color-border: #e5e7eb;
-  --color-accent: #c8e63d;
-  --color-accent-foreground: #111827;
-  --color-success: #16a34a;
-  --color-danger: #dc2626;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  /* The Good Learning design tokens */
+  --color-green: #317f5f;
+  --color-darkgray: #262626;
+  --color-mediumgray: #8c9199;
+  --color-navy: #040415;
+  --color-lightgray: #a8afb9;
+  /* Aliases for existing app */
+  --color-success: #16a34a;
+  --color-danger: #dc2626;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: #ffffff;
+  --foreground: #111827;
+  --card: #f9fafb;
+  --card-foreground: #111827;
+  --popover: #ffffff;
+  --popover-foreground: #111827;
+  --primary: #111827;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f4f6;
+  --secondary-foreground: #111827;
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+  --accent: #f3f4f6;
+  --accent-foreground: #111827;
+  --destructive: #dc2626;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #c8e63d;
 }
 
 html, body {
-  background-color: #ffffff !important;
+  background-color: #ffffff;
   color: #111827;
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-montserrat), var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
 * {

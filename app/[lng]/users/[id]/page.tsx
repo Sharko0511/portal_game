@@ -42,7 +42,7 @@ function UserProfileContent({ userId }: { userId: string }) {
   }, [userId]);
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="mx-auto max-w-3xl px-6 py-8">
       {/* Back */}
       <div className="mb-6">
         <Link href={`/${lng}/blog`} className="text-sm text-gray-500 hover:text-gray-900">

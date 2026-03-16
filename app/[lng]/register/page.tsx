@@ -51,7 +51,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-[70vh] items-center justify-center">
+    <div className="flex min-h-[70vh] items-center justify-center px-6 py-8">
       <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
         <h1 className="mb-6 text-center text-2xl font-bold text-gray-900">Register</h1>
         <form onSubmit={handleSubmit} className="space-y-4">

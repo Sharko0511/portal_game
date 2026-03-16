@@ -253,7 +253,7 @@ export default function BreakoutGame() {
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col px-6 py-4 mx-auto max-w-6xl w-full">
       <div className="mb-2 flex items-center justify-between shrink-0">
         <Link href={`/${lng}/games`} className="text-sm text-gray-500 hover:text-gray-900">
           ← Back

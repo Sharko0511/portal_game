@@ -1,13 +1,15 @@
 import { ReactNode } from "react";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function LngLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-white overflow-x-hidden">
       <Navbar />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-8">
+      <main className="flex-1 w-full">
         {children}
       </main>
+      <Footer />
     </div>
   );
 }

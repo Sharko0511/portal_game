@@ -59,7 +59,7 @@ function EditPostContent({ id }: { id: string }) {
   }
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="mx-auto max-w-3xl px-6 py-8">
       <div className="mb-8 flex items-center gap-4">
         <Link href={`/${lng}/blog/${id}`} className="text-sm text-gray-500 hover:text-gray-900">
           ← Back to Post

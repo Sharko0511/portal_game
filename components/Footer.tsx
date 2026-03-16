@@ -1,0 +1,65 @@
+"use client"
+
+import Link from "next/link"
+import { useLng } from "@/hooks/useLng"
+import { Facebook, Twitter, Instagram, Youtube } from "lucide-react"
+
+export default function Footer() {
+  const lng = useLng()
+  const year = new Date().getFullYear()
+
+  return (
+    <footer className="bg-[#1b5e20] text-white py-[56px] pb-[32px] mt-0">
+      <div className="w-full px-4 md:px-[84px]">
+        <div className="flex flex-col md:flex-row mb-[80px] md:gap-10">
+          {/* Left block - exactly 50% width */}
+          <div className="mb-8 md:mb-0 md:w-1/2">
+            <h2 className="text-3xl font-bold mb-6">
+              The Good Learning<span className="text-white">.</span>
+            </h2>
+            <div className="">
+              <h3 className="text-sm font-medium mb-4">Follow us</h3>
+              <div className="flex space-x-4">
+                <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer"
+                  className="text-white hover:text-white/80 transition-colors" aria-label="Facebook">
+                  <Facebook size={20} />
+                </Link>
+                <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer"
+                  className="text-white hover:text-white/80 transition-colors" aria-label="Twitter">
+                  <Twitter size={20} />
+                </Link>
+                <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+                  className="text-white hover:text-white/80 transition-colors" aria-label="Instagram">
+                  <Instagram size={20} />
+                </Link>
+                <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer"
+                  className="text-white hover:text-white/80 transition-colors" aria-label="YouTube">
+                  <Youtube size={20} />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Right block - exactly 50% width */}
+          <div className="md:w-1/2">
+            <h3 className="text-xl font-bold mb-4">About</h3>
+            <p className="text-white/90 leading-relaxed">
+              A place to read, write, and grow. Follow writers you love and never miss a post.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row justify-between items-center">
+          <div>
+            <p className="text-white/70">© {year} The Good Learning. All rights reserved.</p>
+          </div>
+          <div className="flex space-x-6 mt-4 md:mt-0">
+            <Link href={`/${lng}/blog`} className="text-white hover:text-white/80">Blog</Link>
+            <Link href={`/${lng}/audio`} className="text-white hover:text-white/80">Audio</Link>
+            <Link href={`/${lng}/games`} className="text-white hover:text-white/80">Games</Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  )
+}

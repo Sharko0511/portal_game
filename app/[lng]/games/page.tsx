@@ -16,7 +16,7 @@ export default function GamesPage() {
   const games = gamesQuery.data ?? [];
 
   return (
-    <div>
+    <div className="mx-auto max-w-6xl px-6 py-8">
       <div className="mb-6">
         <p className="text-sm text-gray-500">Bonus</p>
       </div>
