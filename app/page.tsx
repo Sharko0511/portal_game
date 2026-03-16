@@ -36,7 +36,7 @@ export default function Home() {
   }
 
   const games = gamesQuery.data ?? [];
-  const siteName = statusQuery.data?.site_name || "Game Portal";
+  const siteName = statusQuery.data?.site_name || "The Good Learning";
 
   return (
     <div>

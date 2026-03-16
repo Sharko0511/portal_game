@@ -81,9 +81,9 @@ const data: Record<"en" | "vi", Translations> = {
       about: {
         title: "About Us",
         description:
-          "Game Portal is a community platform where you can play games,<br />write blog posts, and connect with other players and writers.",
+          "The Good Learning is a community platform where you can play games,<br />write blog posts, and connect with other players and writers.",
       },
-      copyright: "2026© Game Portal",
+      copyright: "2026© The Good Learning",
       navigation: {
         blog: "Blog",
         games: "Games",
@@ -272,9 +272,9 @@ const data: Record<"en" | "vi", Translations> = {
       about: {
         title: "Về chúng tôi",
         description:
-          "Game Portal là nền tảng cộng đồng nơi bạn có thể chơi game,<br />viết blog và kết nối với những người chơi và tác giả khác.",
+          "The Good Learning là nền tảng cộng đồng nơi bạn có thể chơi game,<br />viết blog và kết nối với những người chơi và tác giả khác.",
       },
-      copyright: "2026© Game Portal",
+      copyright: "2026© The Good Learning",
       navigation: {
         blog: "Blog",
         games: "Trò chơi",

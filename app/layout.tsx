@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Game Portal",
-  description: "A collection of vanilla JS canvas games",
+  title: "The Good Learning",
+  description: "Improve your English through blog posts, articles, and games.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

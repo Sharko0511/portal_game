@@ -23,7 +23,7 @@ export async function GET(): Promise<NextResponse> {
 
   const status: SiteStatus = {
     maintenance_mode: false,
-    site_name: "Game Portal",
+    site_name: "The Good Learning",
   };
 
   data?.forEach((item) => {

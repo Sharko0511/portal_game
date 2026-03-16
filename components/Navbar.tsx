@@ -11,7 +11,7 @@ export default function Navbar() {
     <nav className="bg-white border-b border-gray-200 shrink-0">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
         <Link href="/" className="text-lg font-semibold text-gray-900 tracking-tight">
-          Game Portal
+          The Good Learning<span className="text-[#317F5F]">.</span>
         </Link>
         <div className="flex items-center gap-7 text-sm">
           <Link
