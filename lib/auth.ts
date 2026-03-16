@@ -10,6 +10,7 @@ export interface Profile {
   is_banned: boolean;
   created_at: string;
   updated_at: string;
+  telegram_chat_id: number | null;
 }
 
 export interface AuthResult {

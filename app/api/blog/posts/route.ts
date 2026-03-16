@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, AuthResult, AuthError } from "@/lib/auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { sendTelegramMessage } from "@/lib/telegram";
 
 function slugify(title: string): string {
   return (
@@ -117,5 +118,46 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
+  // Notify followers who have linked Telegram (fire-and-forget)
+  if (published) {
+    notifyFollowers(supabase, auth.user.id, auth.profile.display_name, data.title, data.id).catch(
+      (err) => console.error("Telegram notify error:", err)
+    );
+  }
+
   return NextResponse.json({ data }, { status: 201 });
+}
+
+async function notifyFollowers(
+  supabase: ReturnType<typeof getSupabaseAdmin>,
+  authorId: string,
+  authorName: string,
+  postTitle: string,
+  postId: string
+): Promise<void> {
+  const { data: followers } = await supabase
+    .from("follows")
+    .select("profiles!follows_follower_id_fkey(telegram_chat_id)")
+    .eq("following_id", authorId);
+
+  if (!followers?.length) return;
+
+  const appUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    ? process.env.NEXT_PUBLIC_APP_URL ?? ""
+    : "";
+
+  const message =
+    `📝 <b>${authorName}</b> published a new post!\n\n` +
+    `<b>${postTitle}</b>\n` +
+    (appUrl ? `\n${appUrl}/blog/${postId}` : "");
+
+  const sends = followers
+    .map((f) => {
+      const profile = f.profiles as { telegram_chat_id: number | null } | null;
+      return profile?.telegram_chat_id ?? null;
+    })
+    .filter((id): id is number => id !== null)
+    .map((chatId) => sendTelegramMessage(chatId, message));
+
+  await Promise.allSettled(sends);
 }

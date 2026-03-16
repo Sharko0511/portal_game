@@ -9,9 +9,11 @@ import Link from "next/link";
 import Button from "@/components/Button";
 
 function ProfileContent() {
-  const { profile } = useAuth();
+  const { profile, refreshProfile } = useAuth();
   const [displayName, setDisplayName] = useState("");
   const [message, setMessage] = useState("");
+  const [telegramStatus, setTelegramStatus] = useState<"idle" | "pending" | "loading">("idle");
+  const [deepLink, setDeepLink] = useState<string | null>(null);
 
   const scoresQuery = useProfileScores(profile?.id);
   const updateProfile = useUpdateProfile();
@@ -23,6 +25,41 @@ function ProfileContent() {
       setDisplayName(profile.display_name || "");
     }
   }, [profile]);
+
+  async function handleConnectTelegram() {
+    setTelegramStatus("loading");
+    const supabase = (await import("@/lib/supabase")).getSupabase();
+    const session = (await supabase?.auth.getSession())?.data.session;
+    const res = await fetch("/api/telegram/link", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${session?.access_token}` },
+    });
+    const json = await res.json();
+    if (json.data?.deep_link) {
+      setDeepLink(json.data.deep_link);
+      setTelegramStatus("pending");
+      // Poll every 3s to see if the user has linked
+      const interval = setInterval(async () => {
+        await refreshProfile();
+        if (profile?.telegram_chat_id) clearInterval(interval);
+      }, 3000);
+    } else {
+      setTelegramStatus("idle");
+    }
+  }
+
+  async function handleDisconnectTelegram() {
+    setTelegramStatus("loading");
+    const supabase = (await import("@/lib/supabase")).getSupabase();
+    const session = (await supabase?.auth.getSession())?.data.session;
+    await fetch("/api/telegram/link", {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${session?.access_token}` },
+    });
+    await refreshProfile();
+    setDeepLink(null);
+    setTelegramStatus("idle");
+  }
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
@@ -90,6 +127,49 @@ function ProfileContent() {
             {updateProfile.isPending ? "Saving..." : "Save Changes"}
           </Button>
         </form>
+      </div>
+
+      <div className="rounded-2xl border border-gray-200 bg-white p-6">
+        <h2 className="mb-1 text-lg font-semibold">Telegram Notifications</h2>
+        <p className="mb-4 text-sm text-gray-500">
+          Link your Telegram account to receive a notification when authors you follow post new content.
+        </p>
+        {profile.telegram_chat_id ? (
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-green-700 font-medium">Connected</span>
+            <Button
+              type="button"
+              size="lg"
+              disabled={telegramStatus === "loading"}
+              onClick={handleDisconnectTelegram}
+            >
+              {telegramStatus === "loading" ? "Disconnecting..." : "Disconnect"}
+            </Button>
+          </div>
+        ) : telegramStatus === "pending" && deepLink ? (
+          <div className="space-y-3">
+            <p className="text-sm text-gray-700">
+              Click the button below to open Telegram and send the link command to the bot. Once you do, this page will update automatically.
+            </p>
+            <a
+              href={deepLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block rounded-lg bg-[#229ED9] px-4 py-2 text-sm font-medium text-white hover:bg-[#1a8bc4]"
+            >
+              Open Telegram & Link Account
+            </a>
+          </div>
+        ) : (
+          <Button
+            type="button"
+            size="lg"
+            disabled={telegramStatus === "loading"}
+            onClick={handleConnectTelegram}
+          >
+            {telegramStatus === "loading" ? "Generating link..." : "Connect Telegram"}
+          </Button>
+        )}
       </div>
 
       <div className="rounded-2xl border border-gray-200 bg-white p-6">
