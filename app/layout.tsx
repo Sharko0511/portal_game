@@ -1,7 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import AuthProvider from "@/components/AuthProvider";
 import QueryProvider from "@/components/QueryProvider";
-import Navbar from "@/components/Navbar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,8 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         <AuthProvider>
           <QueryProvider>
-            <Navbar />
-            <main className="mx-auto w-full max-w-6xl px-6 py-8 flex-1 bg-white">{children}</main>
+            {children}
           </QueryProvider>
         </AuthProvider>
       </body>

@@ -4,12 +4,14 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { useLng } from "@/hooks/useLng";
 
 export default function UserMenu() {
   const { profile, signOut } = useAuth();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const lng = useLng();
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -24,7 +26,7 @@ export default function UserMenu() {
   async function handleLogout() {
     await signOut();
     setOpen(false);
-    router.push("/");
+    router.push(`/${lng}`);
   }
 
   return (
@@ -51,7 +53,7 @@ export default function UserMenu() {
             <p className="text-xs text-gray-500">{profile?.role}</p>
           </div>
           <Link
-            href="/profile"
+            href={`/${lng}/profile`}
             onClick={() => setOpen(false)}
             className="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-900"
           >
