@@ -24,7 +24,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   const botUsername = process.env.TELEGRAM_BOT_USERNAME;
-  const deepLink = `https://t.me/${botUsername}?start=${token}`;
+  const deepLink = `tg://resolve?domain=${botUsername}&start=${token}`;
 
   return NextResponse.json({ data: { deep_link: deepLink, token } });
 }

@@ -149,7 +149,7 @@ function ProfileContent() {
         ) : telegramStatus === "pending" && deepLink ? (
           <div className="space-y-3">
             <p className="text-sm text-gray-700">
-              Click the button below to open Telegram and send the link command to the bot. Once you do, this page will update automatically.
+              Click the button to open Telegram. When the bot opens, click <b>START</b> to link your account.
             </p>
             <a
               href={deepLink}
@@ -159,6 +159,12 @@ function ProfileContent() {
             >
               Open Telegram & Link Account
             </a>
+            <p className="text-xs text-gray-500">
+              Button not working? Open <b>@gameportal_notify_bot</b> in Telegram and send this command manually:
+            </p>
+            <code className="block rounded bg-gray-100 px-3 py-2 text-xs text-gray-800 select-all">
+              /start {deepLink.split("start=")[1]}
+            </code>
           </div>
         ) : (
           <Button
