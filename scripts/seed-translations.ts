@@ -5,10 +5,12 @@
 
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SECRET_KEY!
-);
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const key = process.env.SUPABASE_SECRET_KEY;
+console.log("URL:", url ? `${url.slice(0, 30)}...` : "MISSING");
+console.log("KEY:", key ? `${key.slice(0, 10)}...` : "MISSING");
+
+const supabase = createClient(url!, key!);
 
 // ─── Translation data ────────────────────────────────────────────────────────
 
@@ -34,6 +36,7 @@ const data: Record<"en" | "vi", Translations> = {
       navigation: {
         home: "Home",
         blog: "Blog",
+        audio: "Audio",
         games: "Games",
         leaderboard: "Leaderboard",
         profile: "Profile",
@@ -85,9 +88,10 @@ const data: Record<"en" | "vi", Translations> = {
       },
       copyright: "2026© The Good Learning",
       navigation: {
+        home: "Home",
         blog: "Blog",
+        audio: "Audio",
         games: "Games",
-        leaderboard: "Leaderboard",
       },
       social: {
         follow: "Follow us",
@@ -224,8 +228,9 @@ const data: Record<"en" | "vi", Translations> = {
     common: flatten({
       navigation: {
         home: "Trang chủ",
-        blog: "Blog",
-        games: "Trò chơi",
+        blog: "Báo hay",
+        audio: "Audio chất",
+        games: "Games",
         leaderboard: "Bảng xếp hạng",
         profile: "Hồ sơ",
         admin: "Quản trị",
@@ -276,9 +281,10 @@ const data: Record<"en" | "vi", Translations> = {
       },
       copyright: "2026© The Good Learning",
       navigation: {
-        blog: "Blog",
-        games: "Trò chơi",
-        leaderboard: "Bảng xếp hạng",
+        home: "Trang chủ",
+        blog: "Báo hay",
+        audio: "Audio chất",
+        games: "Games",
       },
       social: {
         follow: "Theo dõi chúng tôi",
@@ -436,7 +442,7 @@ async function seed() {
       .upsert(batch, { onConflict: "language,namespace,key" });
 
     if (error) {
-      console.error(`Batch ${i / batchSize + 1} failed:`, error.message);
+      console.error(`Batch ${i / batchSize + 1} failed:`, JSON.stringify(error, null, 2));
       process.exit(1);
     }
     console.log(`Batch ${i / batchSize + 1}/${Math.ceil(rows.length / batchSize)} done`);
