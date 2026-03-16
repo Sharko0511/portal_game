@@ -22,70 +22,72 @@ const LEVEL_LABELS: Record<PostLevel, string> = {
 
 const LEVEL_ORDER: PostLevel[] = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
-// ── Single article row ────────────────────────────────────────
-
-function ArticleRow({ post }: { post: Post }) {
-  return (
-    <Link
-      href={`/blog/${post.id}`}
-      className="group flex items-center gap-4 border-t border-border py-4 hover:bg-gray-50 transition-colors -mx-2 px-2 rounded-xl"
-    >
-      {/* Thumbnail */}
-      <div className="h-20 w-28 shrink-0 overflow-hidden rounded-xl bg-gray-100">
-        {post.cover_image_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={post.cover_image_url}
-            alt={post.title}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center bg-linear-to-br from-gray-100 to-gray-200">
-            <span className="text-xl font-bold text-gray-300">{post.title.charAt(0)}</span>
-          </div>
-        )}
-      </div>
-
-      {/* Reading time + date — fixed width column */}
-      <div className="flex w-28 shrink-0 flex-col gap-0.5 text-xs text-muted-foreground">
-        {post.reading_time > 0 && <span>{post.reading_time} phút đọc</span>}
-        <span>{formatDate(post.created_at)}</span>
-      </div>
-
-      {/* Title — takes remaining space */}
-      <h3 className="flex-1 font-semibold text-foreground line-clamp-2 group-hover:underline">
-        {post.title}
-      </h3>
-    </Link>
-  );
-}
-
-// ── Level group ───────────────────────────────────────────────
+// ── Level group — 3-column grid (4 | 3 | 5) ──────────────────
 
 interface LevelGroupProps {
   level: PostLevel;
   posts: Post[];
   category: string;
+  first?: boolean;
+  last?: boolean;
 }
 
-function LevelGroup({ level, posts, category }: LevelGroupProps) {
+function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
   return (
-    <section className="py-8">
-      {/* Heading + "more on this topic" on separate lines */}
-      <div className="mb-4">
-        <h2 className="text-2xl font-bold text-foreground">{LEVEL_LABELS[level]}</h2>
-        <Link
-          href={`/${category}?level=${level}`}
-          className="mt-1 inline-block text-xs text-muted-foreground hover:text-foreground"
-        >
-          more on this topic ↗
-        </Link>
-      </div>
-      <div>
-        {posts.map((post) => (
-          <ArticleRow key={post.id} post={post} />
-        ))}
-      </div>
+    <section className={`${first ? "" : "border-t border-border pt-8"}`}>
+      {posts.map((post, i) => (
+        <div key={post.id} className={`grid grid-cols-12 gap-x-12 gap-y-4 items-start mb-8 ${last ? "last:mb-0" : ""}`}>
+
+          {/* Col 1 (4/12) — level heading only on first row */}
+          <div className="col-span-4">
+            {i === 0 ? (
+              <>
+                <h2 className="text-2xl font-bold text-foreground">{LEVEL_LABELS[level]}</h2>
+                <Link
+                  href={`/${category}?level=${level}`}
+                  className="mt-1 inline-block text-sm text-muted-foreground hover:text-foreground"
+                >
+                  more on this topic ↗
+                </Link>
+              </>
+            ) : null}
+          </div>
+
+          {/* Cols 2+3 (8/12) — separator starts here */}
+          <div className={`col-span-8 grid grid-cols-8 gap-x-14 items-start ${i !== 0 ? "border-t-2 border-gray-200 pt-8" : ""}`}>
+
+            {/* Col 2 (3/8) — cover image */}
+            <Link href={`/blog/${post.id}`} className="col-span-3 block overflow-hidden rounded-xl">
+              <div className="w-[320px] h-50 overflow-hidden rounded-xl bg-gray-100">
+                {post.cover_image_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={post.cover_image_url}
+                    alt={post.title}
+                    className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center bg-gray-100">
+                    <span className="text-2xl font-bold text-gray-300">{post.title.charAt(0)}</span>
+                  </div>
+                )}
+              </div>
+            </Link>
+
+            {/* Col 3 (5/8) — read time + date at top, title at bottom */}
+            <Link href={`/blog/${post.id}`} className="col-span-5 group flex flex-col justify-between gap-3 self-stretch pt-1">
+              <div className="flex items-center justify-between text-sm text-muted-foreground">
+                {post.reading_time > 0 && <span>{post.reading_time} phút đọc</span>}
+                <span>{formatDate(post.created_at)}</span>
+              </div>
+              <h3 className="text-lg font-semibold text-foreground leading-snug group-hover:underline">
+                {post.title}
+              </h3>
+            </Link>
+
+          </div>
+        </div>
+      ))}
     </section>
   );
 }
@@ -113,9 +115,9 @@ export default function ArticleListByLevel({ posts, category }: ArticleListByLev
   }
 
   return (
-    <div className="divide-y divide-border">
-      {levels.map((level) => (
-        <LevelGroup key={level} level={level} posts={grouped.get(level)!} category={category} />
+    <div>
+      {levels.map((level, i) => (
+        <LevelGroup key={level} level={level} posts={grouped.get(level)!} category={category} first={i === 0} last={i === levels.length - 1} />
       ))}
     </div>
   );

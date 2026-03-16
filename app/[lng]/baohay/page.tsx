@@ -134,7 +134,7 @@ export default function BaohayPage() {
       )}
 
       {/* Article list — constrained width */}
-      <div className="mx-auto max-w-5xl px-6 py-10">
+      <div className="px-10 pt-12 pb-12">
         {isLoading ? (
           <div className="space-y-4">
             <div className="h-8 w-48 animate-pulse rounded-lg bg-gray-100" />
