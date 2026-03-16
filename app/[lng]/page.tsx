@@ -13,7 +13,7 @@ export default function HomePage() {
         <div className="text-center">
           <div className="mb-4 text-6xl">🔧</div>
           <h1 className="mb-2 text-2xl font-bold">Under Maintenance</h1>
-          <p className="text-gray-500">We are making some improvements. Please check back soon!</p>
+          <p className="text-muted-foreground">We are making some improvements. Please check back soon!</p>
         </div>
       </div>
     );

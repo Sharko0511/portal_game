@@ -77,7 +77,7 @@ export default function Home() {
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {games.map((game) => (
-            <Link key={game.id} href={`/games/${game.id}`} className="group overflow-hidden rounded-2xl border border-gray-200 bg-white transition-shadow hover:shadow-md">
+            <Link key={game.id} href={`/games/${game.id}`} className="group overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-md">
               <div className={`flex h-40 items-center justify-center bg-gradient-to-br ${gameGradients[game.id] || "from-gray-400 to-gray-600"}`}>
                 <span className="text-6xl drop-shadow">{game.icon}</span>
               </div>

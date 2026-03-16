@@ -20,8 +20,8 @@ export default function LikeButton({ postId, likeCount }: LikeButtonProps) {
       disabled={pending || statusQuery.isLoading}
       className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 ${
         liked
-          ? "border-[#c8e63d] bg-[#c8e63d] text-gray-900"
-          : "border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-gray-900"
+          ? "border-[#c8e63d] bg-[#c8e63d] text-foreground"
+          : "border-border bg-white text-muted-foreground hover:border-gray-400 hover:text-foreground"
       }`}
     >
       <svg

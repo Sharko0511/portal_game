@@ -54,7 +54,7 @@ export default function AdminUsers() {
             placeholder="Search..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-foreground/40"
+            className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm outline-none focus:border-foreground/40"
           />
           <Button type="submit">
             Search
@@ -92,7 +92,7 @@ export default function AdminUsers() {
                           <select
                             value={u.role}
                             onChange={(e) => handleChangeRole(u.id, e.target.value)}
-                            className="rounded border border-gray-200 bg-white px-2 py-1 text-sm"
+                            className="rounded border border-border bg-card px-2 py-1 text-sm"
                           >
                             <option value="user">user</option>
                             <option value="admin">admin</option>

@@ -18,11 +18,11 @@ export default function GamesPage() {
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">
       <div className="mb-6">
-        <p className="text-sm text-gray-500">Bonus</p>
+        <p className="text-sm text-muted-foreground">Bonus</p>
       </div>
       <div className="mb-8 flex items-start justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">Mini Games</h1>
-        <Link href={`/${lng}/leaderboard`} className="text-sm text-gray-500 hover:text-gray-900">
+        <h1 className="text-3xl font-bold text-foreground">Mini Games</h1>
+        <Link href={`/${lng}/leaderboard`} className="text-sm text-muted-foreground hover:text-foreground">
           Leaderboard →
         </Link>
       </div>
@@ -34,14 +34,14 @@ export default function GamesPage() {
           ))}
         </div>
       ) : games.length === 0 ? (
-        <p className="text-sm text-gray-500">No games available at the moment.</p>
+        <p className="text-sm text-muted-foreground">No games available at the moment.</p>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {games.map((game) => (
             <Link
               key={game.id}
               href={`/${lng}/games/${game.id}`}
-              className="group overflow-hidden rounded-2xl border border-gray-200 bg-white transition-shadow hover:shadow-md"
+              className="group overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-md"
             >
               <div
                 className={`flex h-40 items-center justify-center bg-gradient-to-br ${
@@ -51,9 +51,9 @@ export default function GamesPage() {
                 <span className="text-6xl drop-shadow">{game.icon}</span>
               </div>
               <div className="p-5">
-                <h3 className="mb-1 text-lg font-semibold text-gray-900">{game.display_name}</h3>
-                <p className="mb-4 text-sm text-gray-500">{game.description}</p>
-                <span className="inline-block rounded-full border border-gray-200 px-3 py-0.5 text-xs text-gray-500 transition-colors group-hover:border-[#c8e63d] group-hover:bg-[#c8e63d] group-hover:text-gray-900">
+                <h3 className="mb-1 text-lg font-semibold text-foreground">{game.display_name}</h3>
+                <p className="mb-4 text-sm text-muted-foreground">{game.description}</p>
+                <span className="inline-block rounded-full border border-border px-3 py-0.5 text-xs text-muted-foreground transition-colors group-hover:border-[#c8e63d] group-hover:bg-[#c8e63d] group-hover:text-foreground">
                   Play Now
                 </span>
               </div>

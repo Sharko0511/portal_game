@@ -9,7 +9,7 @@ export default function FeaturesSection() {
   const router = useRouter()
 
   return (
-    <section className="w-full bg-white py-8">
+    <section className="w-full bg-background py-8">
       <div className="mx-auto px-4 md:px-[84px]">
         <div className="text-center mb-6 md:mb-[32px]">
           <h2 className="text-3xl md:text-5xl lg:text-[64px] font-bold md:leading-[108px] text-[#a4c639] mb-2">

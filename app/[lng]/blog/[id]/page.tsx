@@ -44,7 +44,7 @@ function PostContent({ id }: { id: string }) {
     return (
       <div className="flex h-64 flex-col items-center justify-center gap-3">
         <p className="text-red-600">Post not found or you don&apos;t have access.</p>
-        <Link href={`/${lng}/blog`} className="text-sm text-gray-500 hover:text-gray-900">
+        <Link href={`/${lng}/blog`} className="text-sm text-muted-foreground hover:text-foreground">
           ← Back to Feed
         </Link>
       </div>
@@ -59,7 +59,7 @@ function PostContent({ id }: { id: string }) {
     <div className="mx-auto max-w-3xl px-6 py-8">
       {/* Back */}
       <div className="mb-6">
-        <Link href={`/${lng}/blog`} className="text-sm text-gray-500 hover:text-gray-900">
+        <Link href={`/${lng}/blog`} className="text-sm text-muted-foreground hover:text-foreground">
           ← Back to Feed
         </Link>
       </div>
@@ -76,8 +76,8 @@ function PostContent({ id }: { id: string }) {
 
       {/* Meta + Follow */}
       <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2 text-sm text-gray-500">
-          <span className="font-medium text-gray-900">{post.author_name}</span>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">{post.author_name}</span>
           <span>·</span>
           <span>{formatDate(post.created_at)}</span>
           {post.updated_at !== post.created_at && (
@@ -91,16 +91,16 @@ function PostContent({ id }: { id: string }) {
       </div>
 
       {/* Title */}
-      <h1 className="mb-6 text-3xl font-bold text-gray-900 sm:text-4xl">{post.title}</h1>
+      <h1 className="mb-6 text-3xl font-bold text-foreground sm:text-4xl">{post.title}</h1>
 
       {/* Stats row */}
-      <div className="mb-8 flex items-center gap-6 border-b border-gray-100 pb-6 text-sm text-gray-500">
+      <div className="mb-8 flex items-center gap-6 border-b border-border pb-6 text-sm text-muted-foreground">
         <span>{post.like_count} likes</span>
         <span>{post.comment_count} comments</span>
         {(isAuthor || isAdmin) && (
           <Link
             href={`/${lng}/blog/${post.id}/edit`}
-            className="ml-auto rounded-full border border-gray-200 px-4 py-1 text-xs text-gray-600 hover:bg-gray-50"
+            className="ml-auto rounded-full border border-border px-4 py-1 text-xs text-muted-foreground hover:bg-gray-50"
           >
             Edit Post
           </Link>
@@ -122,7 +122,7 @@ function PostContent({ id }: { id: string }) {
       </div>
 
       {/* Comments */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-6">
+      <div className="rounded-2xl border border-border bg-card p-6">
         <CommentSection postId={post.id} />
       </div>
     </div>

@@ -32,25 +32,25 @@ export default function CommentItem({ comment, onDelete, deleting }: CommentItem
   return (
     <div className="flex gap-3">
       {/* Avatar */}
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-600">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-muted-foreground">
         {comment.profiles?.display_name?.charAt(0).toUpperCase() ?? "?"}
       </div>
 
       {/* Content */}
       <div className="flex-1">
         <div className="mb-0.5 flex items-baseline gap-2">
-          <span className="text-sm font-medium text-gray-900">
+          <span className="text-sm font-medium text-foreground">
             {comment.profiles?.display_name ?? "Unknown"}
           </span>
-          <span className="text-xs text-gray-400">{formatRelative(comment.created_at)}</span>
+          <span className="text-xs text-muted-foreground">{formatRelative(comment.created_at)}</span>
         </div>
-        <p className="text-sm text-gray-700 leading-relaxed">{comment.content}</p>
+        <p className="text-sm text-foreground leading-relaxed">{comment.content}</p>
 
         {/* Delete */}
         {canDelete && (
           <div className="mt-1">
             {confirming ? (
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-muted-foreground">
                 Delete?{" "}
                 <button
                   onClick={() => { onDelete(comment.id); setConfirming(false); }}
@@ -62,7 +62,7 @@ export default function CommentItem({ comment, onDelete, deleting }: CommentItem
                 ·{" "}
                 <button
                   onClick={() => setConfirming(false)}
-                  className="text-gray-500 hover:underline"
+                  className="text-muted-foreground hover:underline"
                 >
                   No
                 </button>
@@ -70,7 +70,7 @@ export default function CommentItem({ comment, onDelete, deleting }: CommentItem
             ) : (
               <button
                 onClick={() => setConfirming(true)}
-                className="text-xs text-gray-400 hover:text-red-500"
+                className="text-xs text-muted-foreground hover:text-red-500"
               >
                 Delete
               </button>

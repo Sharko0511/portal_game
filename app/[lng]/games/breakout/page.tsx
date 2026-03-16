@@ -234,7 +234,7 @@ export default function BreakoutGame() {
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-muted-foreground">Loading...</div>
       </div>
     );
   }
@@ -244,7 +244,7 @@ export default function BreakoutGame() {
       <div className="flex h-full flex-col items-center justify-center gap-4">
         <div className="text-6xl">🚫</div>
         <h1 className="text-2xl font-bold text-red-600">Game Unavailable</h1>
-        <p className="text-gray-500">This game is currently disabled.</p>
+        <p className="text-muted-foreground">This game is currently disabled.</p>
         <Link href={`/${lng}/games`} className="text-accent hover:underline">
           ← Back to Games
         </Link>
@@ -255,7 +255,7 @@ export default function BreakoutGame() {
   return (
     <div className="flex h-full flex-col px-6 py-4 mx-auto max-w-6xl w-full">
       <div className="mb-2 flex items-center justify-between shrink-0">
-        <Link href={`/${lng}/games`} className="text-sm text-gray-500 hover:text-gray-900">
+        <Link href={`/${lng}/games`} className="text-sm text-muted-foreground hover:text-foreground">
           ← Back
         </Link>
         <h1 className="text-xl font-bold text-accent-secondary">

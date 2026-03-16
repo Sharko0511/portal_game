@@ -54,7 +54,7 @@ export default function AdminUsers() {
             placeholder="Search..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-foreground/40"
+            className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm outline-none focus:border-foreground/40"
           />
           <Button type="submit">
             Search
@@ -63,13 +63,13 @@ export default function AdminUsers() {
       </div>
 
       {usersQuery.isLoading ? (
-        <p className="text-gray-500">Loading...</p>
+        <p className="text-muted-foreground">Loading...</p>
       ) : (
         <>
-          <div className="rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden">
+          <div className="rounded-2xl border border-border bg-gray-50 overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/10 text-left text-gray-500">
+                <tr className="border-b border-white/10 text-left text-muted-foreground">
                   <th className="px-4 py-3">Name</th>
                   <th className="px-4 py-3">Email</th>
                   <th className="px-4 py-3">Role</th>
@@ -82,24 +82,24 @@ export default function AdminUsers() {
                 {users.map((u) => {
                   const isSelf = u.id === profile?.id;
                   return (
-                    <tr key={u.id} className="border-b border-gray-200/50">
+                    <tr key={u.id} className="border-b border-border/50">
                       <td className="px-4 py-3">{u.display_name}</td>
-                      <td className="px-4 py-3 text-gray-500">{u.email}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{u.email}</td>
                       <td className="px-4 py-3">
                         {isSelf ? (
-                          <span className="text-gray-900">{u.role}</span>
+                          <span className="text-foreground">{u.role}</span>
                         ) : (
                           <select
                             value={u.role}
                             onChange={(e) => handleChangeRole(u.id, e.target.value)}
-                            className="rounded border border-gray-200 bg-white px-2 py-1 text-sm"
+                            className="rounded border border-border bg-card px-2 py-1 text-sm"
                           >
                             <option value="user">user</option>
                             <option value="admin">admin</option>
                           </select>
                         )}
                       </td>
-                      <td className="px-4 py-3 font-mono text-gray-900">{u.score_count}</td>
+                      <td className="px-4 py-3 font-mono text-foreground">{u.score_count}</td>
                       <td className="px-4 py-3">
                         {u.is_banned ? (
                           <span className="text-red-600">Banned</span>
@@ -109,7 +109,7 @@ export default function AdminUsers() {
                       </td>
                       <td className="px-4 py-3">
                         {isSelf ? (
-                          <span className="text-gray-500">—</span>
+                          <span className="text-muted-foreground">—</span>
                         ) : (
                           <div className="flex gap-2">
                             <Button
@@ -146,7 +146,7 @@ export default function AdminUsers() {
               >
                 Prev
               </Button>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-muted-foreground">
                 {page} / {totalPages}
               </span>
               <Button

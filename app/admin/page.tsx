@@ -32,7 +32,7 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-gray-200 bg-white p-5">
+        <div className="rounded-2xl border border-border bg-card p-5">
           <h2 className="mb-4 font-semibold">Top Players</h2>
           {stats.top_players.length === 0 ? (
             <p className="text-sm text-gray-500">No players yet</p>
@@ -51,7 +51,7 @@ export default function AdminDashboard() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-5">
+        <div className="rounded-2xl border border-border bg-card p-5">
           <h2 className="mb-4 font-semibold">Recent Scores</h2>
           {stats.recent_scores.length === 0 ? (
             <p className="text-sm text-gray-500">No scores yet</p>
@@ -89,7 +89,7 @@ function StatCard({
   icon: string;
 }) {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5">
+    <div className="rounded-2xl border border-border bg-card p-5">
       <div className="mb-2 text-2xl">{icon}</div>
       <div className="text-2xl font-bold text-gray-900">{value}</div>
       <div className="text-sm text-gray-500">{title}</div>

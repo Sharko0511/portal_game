@@ -79,13 +79,13 @@ export default function PostForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Title */}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-gray-900">Title</label>
+        <label className="mb-1.5 block text-sm font-medium text-foreground">Title</label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Enter post title..."
-          className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-lg font-semibold text-gray-900 outline-none placeholder:text-gray-400 focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+          className="w-full rounded-xl border border-border bg-white px-4 py-3 text-lg font-semibold text-foreground outline-none placeholder:text-muted-foreground focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
         />
       </div>
 
@@ -94,8 +94,8 @@ export default function PostForm({
 
       {/* Block editor */}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-gray-900">Content</label>
-        <p className="mb-3 text-xs text-gray-400">
+        <label className="mb-1.5 block text-sm font-medium text-foreground">Content</label>
+        <p className="mb-3 text-xs text-muted-foreground">
           Mix text and image blocks freely. Use the <strong>+ Text block</strong> / <strong>+ Image block</strong> buttons between blocks to add more.
         </p>
         <BlockEditor value={doc} onChange={setDoc} />
@@ -110,7 +110,7 @@ export default function PostForm({
         >
           <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${published ? "translate-x-6" : "translate-x-1"}`} />
         </button>
-        <span className="text-sm text-gray-700">
+        <span className="text-sm text-foreground">
           {published ? "Published — visible to followers" : "Draft — only visible to you"}
         </span>
       </div>
@@ -119,14 +119,14 @@ export default function PostForm({
         <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">{error}</p>
       )}
 
-      <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
+      <div className="flex items-center gap-3 border-t border-border pt-4">
         <button type="submit" disabled={loading}
-          className="rounded-full bg-accent px-6 py-2 text-sm font-medium text-gray-900 transition-colors hover:bg-accent/85 disabled:opacity-50 disabled:cursor-not-allowed">
+          className="rounded-full bg-accent px-6 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent/85 disabled:opacity-50 disabled:cursor-not-allowed">
           {loading ? "Saving..." : submitLabel}
         </button>
         {onCancel && (
           <button type="button" onClick={onCancel} disabled={loading}
-            className="rounded-full border border-gray-200 px-6 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50">
+            className="rounded-full border border-border px-6 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-gray-50 disabled:opacity-50">
             Cancel
           </button>
         )}

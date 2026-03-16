@@ -40,7 +40,7 @@ function ToolbarBtn({
     <button type="button" onMouseDown={(e) => { e.preventDefault(); onClick(); }}
       title={title} disabled={disabled}
       className={`cursor-pointer rounded px-1.5 py-1 text-xs transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
-        active ? "bg-accent text-gray-900" : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+        active ? "bg-accent text-foreground" : "text-muted-foreground hover:bg-gray-100 hover:text-foreground"
       }`}
     >{children}</button>
   );
@@ -72,9 +72,9 @@ function TextBlockEditor({
   if (!editor) return null;
 
   return (
-    <div className="group relative rounded-xl border border-gray-200 bg-white">
+    <div className="group relative rounded-xl border border-border bg-white">
       {/* Mini toolbar */}
-      <div className="flex flex-wrap items-center gap-0.5 border-b border-gray-100 px-2 py-1.5">
+      <div className="flex flex-wrap items-center gap-0.5 border-b border-border px-2 py-1.5">
         <ToolbarBtn title="Bold" active={editor.isActive("bold")}
           onClick={() => editor.chain().focus().toggleBold().run()}><strong>B</strong></ToolbarBtn>
         <ToolbarBtn title="Italic" active={editor.isActive("italic")}
@@ -106,14 +106,14 @@ function TextBlockEditor({
         {/* Delete block button */}
         {showDelete && (
           <button type="button" onClick={onDelete}
-            className="ml-auto rounded px-2 py-1 text-xs text-gray-400 hover:bg-red-50 hover:text-red-500"
+            className="ml-auto rounded px-2 py-1 text-xs text-muted-foreground hover:bg-red-50 hover:text-red-500"
             title="Remove this text block"
           >✕</button>
         )}
       </div>
 
       <EditorContent editor={editor}
-        className="prose prose-gray max-w-none px-4 py-3 text-gray-900 text-sm
+        className="prose prose-gray max-w-none px-4 py-3 text-foreground text-sm
           [&_.ProseMirror]:min-h-16 [&_.ProseMirror]:outline-none" />
     </div>
   );
@@ -129,11 +129,11 @@ function ImageBlockEditor({
   onDelete: () => void;
 }) {
   return (
-    <div className="group relative rounded-xl border border-gray-200 bg-white p-3">
+    <div className="group relative rounded-xl border border-border bg-white p-3">
       <div className="mb-2 flex items-center justify-between">
-        <span className="text-xs font-medium text-gray-500">Image Block</span>
+        <span className="text-xs font-medium text-muted-foreground">Image Block</span>
         <button type="button" onClick={onDelete}
-          className="rounded px-2 py-1 text-xs text-gray-400 hover:bg-red-50 hover:text-red-500"
+          className="rounded px-2 py-1 text-xs text-muted-foreground hover:bg-red-50 hover:text-red-500"
           title="Remove image block">✕</button>
       </div>
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -144,7 +144,7 @@ function ImageBlockEditor({
         value={block.caption ?? ""}
         onChange={(e) => onChange({ caption: e.target.value })}
         placeholder="Add caption (optional)..."
-        className="mt-2 w-full rounded-lg border border-gray-100 bg-gray-50 px-3 py-1.5 text-xs text-gray-600 outline-none focus:border-gray-300 placeholder:text-gray-400"
+        className="mt-2 w-full rounded-lg border border-border bg-gray-50 px-3 py-1.5 text-xs text-muted-foreground outline-none focus:border-gray-300 placeholder:text-muted-foreground"
       />
     </div>
   );
@@ -163,11 +163,11 @@ function AddBlockRow({
     <div className="flex items-center gap-2">
       <div className="flex-1 h-px bg-gray-100" />
       <button type="button" onClick={onAddText}
-        className="flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+        className="flex items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-gray-50 hover:text-foreground transition-colors">
         + Text block
       </button>
       <button type="button" onClick={onAddImage} disabled={uploading}
-        className="flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors disabled:opacity-50">
+        className="flex items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-gray-50 hover:text-foreground transition-colors disabled:opacity-50">
         {uploading ? "Uploading..." : "+ Image block"}
       </button>
       <div className="flex-1 h-px bg-gray-100" />
@@ -186,7 +186,7 @@ function ReadOnlyTextBlock({ content }: { content: Record<string, unknown> }) {
   });
   if (!editor) return null;
   return (
-    <div className="prose prose-gray max-w-none text-gray-900">
+    <div className="prose prose-gray max-w-none text-foreground">
       <EditorContent editor={editor} />
     </div>
   );
@@ -203,7 +203,7 @@ export function BlocksRenderer({ doc }: { doc: BlocksDoc }) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={block.url} alt={block.caption ?? ""} className="w-full rounded-xl" />
               {block.caption && (
-                <figcaption className="mt-2 text-center text-sm text-gray-500">{block.caption}</figcaption>
+                <figcaption className="mt-2 text-center text-sm text-muted-foreground">{block.caption}</figcaption>
               )}
             </figure>
           )}

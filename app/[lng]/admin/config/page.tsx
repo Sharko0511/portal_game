@@ -33,7 +33,7 @@ export default function AdminConfig() {
   }
 
   if (configQuery.isLoading) {
-    return <p className="text-gray-500">Loading...</p>;
+    return <p className="text-muted-foreground">Loading...</p>;
   }
 
   return (
@@ -46,13 +46,13 @@ export default function AdminConfig() {
         </p>
       )}
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 space-y-6">
+      <div className="rounded-2xl border border-border bg-card p-6 space-y-6">
         {configs.map((c) => (
           <div key={c.key}>
             <label className="mb-1 block text-sm font-medium">
               {c.key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
             </label>
-            <p className="mb-2 text-xs text-gray-500">{c.description}</p>
+            <p className="mb-2 text-xs text-muted-foreground">{c.description}</p>
 
             {typeof c.value === "boolean" ? (
               <div className="flex items-center gap-4">
@@ -71,7 +71,7 @@ export default function AdminConfig() {
                   type="text"
                   value={c.value}
                   onChange={(e) => handleChange(c.key, e.target.value)}
-                  className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm"
+                  className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm"
                 />
                 <Button
                   onClick={() => handleUpdate(c.key, c.value)}

@@ -100,7 +100,7 @@ function ProfileContent() {
         <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-6">
+      <div className="rounded-2xl border border-border bg-card p-6">
         <form onSubmit={handleSave} className="space-y-4">
           <div>
             <label className="mb-1.5 block text-sm font-medium text-gray-900">Display Name</label>
@@ -108,7 +108,7 @@ function ProfileContent() {
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-foreground/40 focus:ring-2 focus:ring-[#c8e63d]/20"
+              className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus:border-foreground/40 focus:ring-2 focus:ring-[#c8e63d]/20"
             />
           </div>
           <div>
@@ -142,7 +142,7 @@ function ProfileContent() {
         </form>
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-6">
+      <div className="rounded-2xl border border-border bg-card p-6">
         <h2 className="mb-1 text-lg font-semibold">Telegram Notifications</h2>
         <p className="mb-4 text-sm text-gray-500">
           Link your Telegram account to receive a notification when authors you follow post new content.
@@ -191,7 +191,7 @@ function ProfileContent() {
         )}
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-6">
+      <div className="rounded-2xl border border-border bg-card p-6">
         <h2 className="mb-4 text-lg font-semibold">My Scores</h2>
         {scoresQuery.isLoading ? (
           <p className="text-sm text-gray-500">Loading scores...</p>

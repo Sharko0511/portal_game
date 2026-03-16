@@ -24,8 +24,8 @@ export default function Leaderboard() {
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">
       <div className="mb-6 flex items-center justify-between">
-        <Link href={`/${lng}`} className="text-sm text-gray-500 hover:text-gray-900">← Back</Link>
-        <h1 className="text-2xl font-bold text-gray-900">Leaderboard</h1>
+        <Link href={`/${lng}`} className="text-sm text-muted-foreground hover:text-foreground">← Back</Link>
+        <h1 className="text-2xl font-bold text-foreground">Leaderboard</h1>
         <div />
       </div>
 
@@ -40,10 +40,10 @@ export default function Leaderboard() {
         ))}
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white">
+      <div className="rounded-2xl border border-border bg-card">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-gray-200 text-gray-500 text-xs uppercase tracking-wide">
+            <tr className="border-b border-border text-muted-foreground text-xs uppercase tracking-wide">
               <th className="px-6 py-3">#</th>
               <th className="px-6 py-3">Player</th>
               <th className="px-6 py-3">Game</th>
@@ -53,19 +53,19 @@ export default function Leaderboard() {
           </thead>
           <tbody>
             {scoresQuery.isLoading ? (
-              <tr><td colSpan={5} className="px-6 py-10 text-center text-gray-500">Loading...</td></tr>
+              <tr><td colSpan={5} className="px-6 py-10 text-center text-muted-foreground">Loading...</td></tr>
             ) : scores.length === 0 ? (
-              <tr><td colSpan={5} className="px-6 py-10 text-center text-gray-500">No scores yet. Play a game!</td></tr>
+              <tr><td colSpan={5} className="px-6 py-10 text-center text-muted-foreground">No scores yet. Play a game!</td></tr>
             ) : (
               scores.map((s, i) => {
                 const gameDisplay = getGameDisplay(s.game);
                 return (
-                  <tr key={s.id} className="border-b border-gray-200/50 transition-colors hover:bg-gray-50">
+                  <tr key={s.id} className="border-b border-border/50 transition-colors hover:bg-gray-50">
                     <td className="px-6 py-3 font-mono">{i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i + 1}</td>
                     <td className="px-6 py-3 font-medium">{s.player_name}</td>
                     <td className="px-6 py-3">{gameDisplay.icon} {gameDisplay.name}</td>
-                    <td className="px-6 py-3 text-right font-mono font-semibold text-gray-900">{s.score}</td>
-                    <td className="px-6 py-3 text-right text-gray-500">{new Date(s.created_at).toLocaleDateString()}</td>
+                    <td className="px-6 py-3 text-right font-mono font-semibold text-foreground">{s.score}</td>
+                    <td className="px-6 py-3 text-right text-muted-foreground">{new Date(s.created_at).toLocaleDateString()}</td>
                   </tr>
                 );
               })

@@ -27,15 +27,15 @@ export default function FollowButton({ targetUserId, followerCount }: FollowButt
         disabled={pending || statusQuery.isLoading}
         className={`rounded-full border px-5 py-2 text-sm font-medium transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 ${
           following
-            ? "border-gray-300 bg-white text-gray-700 hover:border-red-300 hover:text-red-600"
-            : "border-transparent bg-[#c8e63d] text-gray-900 hover:bg-[#c8e63d]/85"
+            ? "border-gray-300 bg-white text-foreground hover:border-red-300 hover:text-red-600"
+            : "border-transparent bg-[#c8e63d] text-foreground hover:bg-[#c8e63d]/85"
         }`}
       >
         {pending ? "..." : following ? "Following" : "Follow"}
       </button>
 
       {followerCount !== undefined && (
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-muted-foreground">
           {followerCount} {followerCount === 1 ? "follower" : "followers"}
         </span>
       )}

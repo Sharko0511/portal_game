@@ -23,7 +23,7 @@ function EditPostContent({ id }: { id: string }) {
   if (postQuery.isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <p className="text-sm text-gray-500">Loading post...</p>
+        <p className="text-sm text-muted-foreground">Loading post...</p>
       </div>
     );
   }
@@ -32,7 +32,7 @@ function EditPostContent({ id }: { id: string }) {
     return (
       <div className="flex h-64 flex-col items-center justify-center gap-3">
         <p className="text-sm text-red-600">Post not found.</p>
-        <Link href={`/${lng}/blog`} className="text-sm text-gray-500 hover:text-gray-900">
+        <Link href={`/${lng}/blog`} className="text-sm text-muted-foreground hover:text-foreground">
           ← Back to Blog
         </Link>
       </div>
@@ -46,7 +46,7 @@ function EditPostContent({ id }: { id: string }) {
     return (
       <div className="flex h-64 flex-col items-center justify-center gap-3">
         <p className="text-sm text-red-600">You are not allowed to edit this post.</p>
-        <Link href={`/${lng}/blog`} className="text-sm text-gray-500 hover:text-gray-900">
+        <Link href={`/${lng}/blog`} className="text-sm text-muted-foreground hover:text-foreground">
           ← Back to Blog
         </Link>
       </div>
@@ -61,13 +61,13 @@ function EditPostContent({ id }: { id: string }) {
   return (
     <div className="mx-auto max-w-3xl px-6 py-8">
       <div className="mb-8 flex items-center gap-4">
-        <Link href={`/${lng}/blog/${id}`} className="text-sm text-gray-500 hover:text-gray-900">
+        <Link href={`/${lng}/blog/${id}`} className="text-sm text-muted-foreground hover:text-foreground">
           ← Back to Post
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900">Edit Post</h1>
+        <h1 className="text-2xl font-bold text-foreground">Edit Post</h1>
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-8">
+      <div className="rounded-2xl border border-border bg-card p-8">
         <PostForm
           initialValues={{
             title: post.title,

@@ -51,7 +51,7 @@ export default function Leaderboard() {
         ))}
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white">
+      <div className="rounded-2xl border border-border bg-card">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-gray-200 text-gray-500 text-xs uppercase tracking-wide">

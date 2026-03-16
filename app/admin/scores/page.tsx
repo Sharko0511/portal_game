@@ -45,7 +45,7 @@ export default function AdminScores() {
               setGame(e.target.value);
               setPage(1);
             }}
-            className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm"
+            className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm"
           >
             <option value="">All Games</option>
             {GAMES.map((g) => (

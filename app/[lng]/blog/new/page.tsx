@@ -21,13 +21,13 @@ function NewPostContent() {
     <div className="mx-auto max-w-3xl px-6 py-8">
       {/* Header */}
       <div className="mb-8 flex items-center gap-4">
-        <Link href={`/${lng}/blog`} className="text-sm text-gray-500 hover:text-gray-900">
+        <Link href={`/${lng}/blog`} className="text-sm text-muted-foreground hover:text-foreground">
           ← Back to Blog
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900">New Post</h1>
+        <h1 className="text-2xl font-bold text-foreground">New Post</h1>
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-8">
+      <div className="rounded-2xl border border-border bg-card p-8">
         <PostForm
           onSubmit={handleSubmit}
           onCancel={() => router.push(`/${lng}/blog`)}

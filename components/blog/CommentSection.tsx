@@ -28,9 +28,9 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-2">
-        <h2 className="text-lg font-semibold text-gray-900">Comments</h2>
+        <h2 className="text-lg font-semibold text-foreground">Comments</h2>
         {!commentsQuery.isLoading && (
-          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
+          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-muted-foreground">
             {comments.length}
           </span>
         )}
@@ -49,12 +49,12 @@ export default function CommentSection({ postId }: CommentSectionProps) {
           }}
           placeholder="Write a comment... (Enter to submit)"
           rows={2}
-          className="flex-1 resize-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+          className="flex-1 resize-none rounded-xl border border-border bg-white px-4 py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
         />
         <button
           type="submit"
           disabled={!text.trim() || addComment.isPending}
-          className="self-end rounded-full bg-[#c8e63d] px-4 py-2 text-sm font-medium text-gray-900 transition-colors hover:bg-[#c8e63d]/85 disabled:cursor-not-allowed disabled:opacity-50"
+          className="self-end rounded-full bg-[#c8e63d] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[#c8e63d]/85 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {addComment.isPending ? "..." : "Post"}
         </button>
@@ -81,7 +81,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
           ))}
         </div>
       ) : comments.length === 0 ? (
-        <p className="text-sm text-gray-400">No comments yet. Be the first!</p>
+        <p className="text-sm text-muted-foreground">No comments yet. Be the first!</p>
       ) : (
         <div className="divide-y divide-gray-100">
           {comments.map((c) => (

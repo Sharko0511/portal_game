@@ -120,7 +120,7 @@ function PostContent({ id }: { id: string }) {
       </div>
 
       {/* Comments */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-6">
+      <div className="rounded-2xl border border-border bg-card p-6">
         <CommentSection postId={post.id} />
       </div>
     </div>

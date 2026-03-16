@@ -45,7 +45,7 @@ function UserProfileContent({ userId }: { userId: string }) {
     <div className="mx-auto max-w-3xl px-6 py-8">
       {/* Back */}
       <div className="mb-6">
-        <Link href={`/${lng}/blog`} className="text-sm text-gray-500 hover:text-gray-900">
+        <Link href={`/${lng}/blog`} className="text-sm text-muted-foreground hover:text-foreground">
           ← Back to Feed
         </Link>
       </div>
@@ -53,7 +53,7 @@ function UserProfileContent({ userId }: { userId: string }) {
       {/* User card */}
       <div className="mb-8">
         {profileLoading ? (
-          <div className="h-36 animate-pulse rounded-2xl border border-gray-200 bg-gray-100" />
+          <div className="h-36 animate-pulse rounded-2xl border border-border bg-gray-100" />
         ) : userProfile ? (
           <UserCard
             userId={userProfile.id}
@@ -68,9 +68,9 @@ function UserProfileContent({ userId }: { userId: string }) {
       {/* Posts section */}
       <div>
         <div className="mb-3">
-          <p className="text-sm text-gray-500">Posts</p>
+          <p className="text-sm text-muted-foreground">Posts</p>
         </div>
-        <h2 className="mb-6 text-2xl font-bold text-gray-900">
+        <h2 className="mb-6 text-2xl font-bold text-foreground">
           {userProfile?.display_name ?? "..."}&apos;s Posts
         </h2>
 

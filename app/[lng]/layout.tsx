@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 
 export default function LngLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col bg-white overflow-x-hidden">
+    <div className="flex min-h-screen flex-col bg-background overflow-x-hidden">
       <Navbar />
       <main className="flex-1 w-full">
         {children}

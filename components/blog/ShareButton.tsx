@@ -38,7 +38,7 @@ export default function ShareButton({ title, url }: ShareButtonProps) {
   return (
     <button
       onClick={handleShare}
-      className="flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition-all hover:border-gray-400 hover:text-gray-900 active:scale-95"
+      className="flex items-center gap-2 rounded-full border border-border bg-white px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:border-gray-400 hover:text-foreground active:scale-95"
     >
       {copied ? (
         <>

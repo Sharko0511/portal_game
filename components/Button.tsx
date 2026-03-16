@@ -20,9 +20,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-[#c8e63d] text-gray-900 hover:bg-[#c8e63d]/85 active:scale-[0.97]",
+    "bg-[#c8e63d] text-foreground hover:bg-[#c8e63d]/85 active:scale-[0.97]",
   secondary:
-    "border border-gray-200 text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-900 active:scale-[0.97]",
+    "border border-border text-muted-foreground bg-white hover:bg-gray-50 hover:text-foreground active:scale-[0.97]",
   danger:
     "bg-danger text-white hover:bg-danger/85 active:scale-[0.97]",
   "danger-ghost":
@@ -32,7 +32,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   "success-ghost":
     "bg-success/10 text-green-700 border border-success/20 hover:bg-success/20 active:scale-[0.97]",
   ghost:
-    "bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-900 active:scale-[0.97]",
+    "bg-gray-50 text-muted-foreground hover:bg-gray-100 hover:text-foreground active:scale-[0.97]",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {

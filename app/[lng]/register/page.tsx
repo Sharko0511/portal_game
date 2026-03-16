@@ -52,8 +52,8 @@ export default function RegisterPage() {
 
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-6 py-8">
-      <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
-        <h1 className="mb-6 text-center text-2xl font-bold text-gray-900">Register</h1>
+      <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-8 shadow-sm">
+        <h1 className="mb-6 text-center text-2xl font-bold text-foreground">Register</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           {[
             { label: "Display Name", value: displayName, onChange: setDisplayName, type: "text" },
@@ -62,9 +62,9 @@ export default function RegisterPage() {
             { label: "Confirm Password", value: confirmPassword, onChange: setConfirmPassword, type: "password" },
           ].map(({ label, value, onChange, type }) => (
             <div key={label}>
-              <label className="mb-1.5 block text-sm font-medium text-gray-900">{label}</label>
+              <label className="mb-1.5 block text-sm font-medium text-foreground">{label}</label>
               <input type={type} value={value} onChange={(e) => onChange(e.target.value)} required
-                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-foreground/40 focus:ring-2 focus:ring-[#c8e63d]/20" />
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-foreground/40 focus:ring-2 focus:ring-[#c8e63d]/20" />
             </div>
           ))}
           {error && <p className="text-sm text-red-600">{error}</p>}
@@ -72,9 +72,9 @@ export default function RegisterPage() {
             {loading ? "Registering..." : "Register"}
           </Button>
         </form>
-        <p className="mt-4 text-center text-sm text-gray-500">
+        <p className="mt-4 text-center text-sm text-muted-foreground">
           Already have an account?{" "}
-          <Link href={`/${lng}/login`} className="font-medium text-gray-900 hover:underline">
+          <Link href={`/${lng}/login`} className="font-medium text-foreground hover:underline">
             Login here
           </Link>
         </p>

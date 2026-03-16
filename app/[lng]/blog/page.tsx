@@ -14,17 +14,17 @@ function BlogFeedContent() {
     <div className="mx-auto max-w-6xl px-6 py-8">
       {/* Header */}
       <div className="mb-3">
-        <p className="text-sm text-gray-500">Blog</p>
+        <p className="text-sm text-muted-foreground">Blog</p>
       </div>
       <div className="mb-8 flex items-start justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">Your Feed</h1>
+        <h1 className="text-3xl font-bold text-foreground">Your Feed</h1>
         <div className="flex items-center gap-3">
-          <p className="hidden max-w-xs text-right text-sm text-gray-500 sm:block">
+          <p className="hidden max-w-xs text-right text-sm text-muted-foreground sm:block">
             Posts from people you follow
           </p>
           <Link
             href={`/${lng}/blog/new`}
-            className="rounded-full bg-[#c8e63d] px-5 py-2 text-sm font-medium text-gray-900 transition-colors hover:bg-[#c8e63d]/85"
+            className="rounded-full bg-[#c8e63d] px-5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[#c8e63d]/85"
           >
             + New Post
           </Link>

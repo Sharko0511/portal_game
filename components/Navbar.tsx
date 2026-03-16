@@ -119,7 +119,7 @@ export default function Navbar() {
                 <>
                   {profile.role === "admin" && (
                     <Link href={`/${lng}/admin`}
-                      className="text-sm font-semibold text-gray-500 transition-colors hover:text-[#317F5F] whitespace-nowrap">
+                      className="text-sm font-semibold text-muted-foreground transition-colors hover:text-[#317F5F] whitespace-nowrap">
                       {t("navigation.admin")}
                     </Link>
                   )}
@@ -128,12 +128,12 @@ export default function Navbar() {
               ) : (
                 <>
                   <Link href={`/${lng}/login`}
-                    className="text-sm font-semibold text-gray-500 transition-colors hover:text-[#317F5F] whitespace-nowrap">
+                    className="text-sm font-semibold text-muted-foreground transition-colors hover:text-[#317F5F] whitespace-nowrap">
                     {t("navigation.login")}
                   </Link>
                   <Link
                     href={`/${lng}/register`}
-                    className="rounded-full bg-[#a4c639] px-3 py-1.5 text-sm font-semibold text-gray-900 transition-colors hover:bg-[#a4c639]/85 whitespace-nowrap"
+                    className="rounded-full bg-[#a4c639] px-3 py-1.5 text-sm font-semibold text-foreground transition-colors hover:bg-[#a4c639]/85 whitespace-nowrap"
                   >
                     {t("navigation.register")}
                   </Link>
@@ -148,7 +148,7 @@ export default function Navbar() {
 
       {/* Mobile menu — shown below lg */}
       {mobileOpen && (
-        <div className="xl:hidden px-4 py-4 border-t border-gray-200 bg-white">
+        <div className="xl:hidden px-4 py-4 border-t border-border bg-background">
           <nav className="flex flex-col space-y-4">
             <Link href={`/${lng}`} onClick={() => setMobileOpen(false)}
               className="text-base font-semibold hover:text-[#317F5F] py-1">{t("navigation.home")}</Link>
@@ -179,9 +179,9 @@ export default function Navbar() {
               ) : (
                 <>
                   <Link href={`/${lng}/login`} onClick={() => setMobileOpen(false)}
-                    className="text-base font-semibold text-gray-500 hover:text-[#317F5F] py-1">{t("navigation.login")}</Link>
+                    className="text-base font-semibold text-muted-foreground hover:text-[#317F5F] py-1">{t("navigation.login")}</Link>
                   <Link href={`/${lng}/register`} onClick={() => setMobileOpen(false)}
-                    className="inline-block w-fit rounded-full bg-[#a4c639] px-5 py-2 font-semibold text-gray-900 hover:bg-[#a4c639]/85">
+                    className="inline-block w-fit rounded-full bg-[#a4c639] px-5 py-2 font-semibold text-foreground hover:bg-[#a4c639]/85">
                     {t("navigation.register")}
                   </Link>
                 </>

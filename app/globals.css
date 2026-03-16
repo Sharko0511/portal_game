@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #111827;
@@ -70,9 +72,32 @@
   --ring: #c8e63d;
 }
 
+html.dark {
+  --background: #0f1117;
+  --foreground: #f3f4f6;
+  --foreground-muted: #9ca3af;
+  --card: #1a1d27;
+  --card-hover: #252836;
+  --card-foreground: #f3f4f6;
+  --popover: #1a1d27;
+  --popover-foreground: #f3f4f6;
+  --primary: #f3f4f6;
+  --primary-foreground: #0f1117;
+  --secondary: #252836;
+  --secondary-foreground: #f3f4f6;
+  --muted: #252836;
+  --muted-foreground: #9ca3af;
+  --accent: #252836;
+  --accent-foreground: #f3f4f6;
+  --border: #2d3148;
+  --input: #2d3148;
+  --ring: #c8e63d;
+  --destructive: #ef4444;
+}
+
 html, body {
-  background-color: #ffffff;
-  color: #111827;
+  background-color: var(--background);
+  color: var(--foreground);
   font-family: var(--font-montserrat), var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
@@ -87,24 +112,24 @@ html, body {
 *::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
 
 /* TipTap / Prose styles */
-.prose h1 { font-size: 1.875rem; font-weight: 700; margin: 1.5rem 0 0.75rem; color: #111827; }
-.prose h2 { font-size: 1.5rem; font-weight: 600; margin: 1.25rem 0 0.625rem; color: #111827; }
-.prose h3 { font-size: 1.25rem; font-weight: 600; margin: 1rem 0 0.5rem; color: #111827; }
-.prose p { margin: 0.75rem 0; line-height: 1.75; color: #374151; }
-.prose strong { font-weight: 700; color: #111827; }
+.prose h1 { font-size: 1.875rem; font-weight: 700; margin: 1.5rem 0 0.75rem; color: var(--foreground); }
+.prose h2 { font-size: 1.5rem; font-weight: 600; margin: 1.25rem 0 0.625rem; color: var(--foreground); }
+.prose h3 { font-size: 1.25rem; font-weight: 600; margin: 1rem 0 0.5rem; color: var(--foreground); }
+.prose p { margin: 0.75rem 0; line-height: 1.75; color: var(--foreground); }
+.prose strong { font-weight: 700; color: var(--foreground); }
 .prose em { font-style: italic; }
 .prose u { text-decoration: underline; }
 .prose s { text-decoration: line-through; }
-.prose a { color: #111827; text-decoration: underline; font-weight: 500; }
-.prose a:hover { color: #374151; }
-.prose ul { list-style-type: disc; padding-left: 1.5rem; margin: 0.75rem 0; color: #374151; }
-.prose ol { list-style-type: decimal; padding-left: 1.5rem; margin: 0.75rem 0; color: #374151; }
+.prose a { color: var(--foreground); text-decoration: underline; font-weight: 500; }
+.prose a:hover { color: var(--foreground-muted); }
+.prose ul { list-style-type: disc; padding-left: 1.5rem; margin: 0.75rem 0; color: var(--foreground); }
+.prose ol { list-style-type: decimal; padding-left: 1.5rem; margin: 0.75rem 0; color: var(--foreground); }
 .prose li { margin: 0.25rem 0; line-height: 1.75; }
-.prose blockquote { border-left: 3px solid #e5e7eb; padding-left: 1rem; color: #6b7280; margin: 1rem 0; font-style: italic; }
-.prose code { background: #f3f4f6; border-radius: 4px; padding: 0.1em 0.4em; font-size: 0.875em; color: #111827; font-family: monospace; }
+.prose blockquote { border-left: 3px solid var(--border); padding-left: 1rem; color: var(--foreground-muted); margin: 1rem 0; font-style: italic; }
+.prose code { background: var(--card); border-radius: 4px; padding: 0.1em 0.4em; font-size: 0.875em; color: var(--foreground); font-family: monospace; }
 .prose pre { background: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
 .prose pre code { background: none; padding: 0; color: inherit; }
-.prose hr { border: none; border-top: 1px solid #e5e7eb; margin: 1.5rem 0; }
+.prose hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
 .prose img { max-width: 100%; border-radius: 8px; margin: 1rem 0; }
 
 /* Ensure all interactive elements show pointer cursor */

@@ -50,7 +50,7 @@ export default function AdminGames() {
   }
 
   if (gamesQuery.isLoading) {
-    return <p className="text-gray-500">Loading...</p>;
+    return <p className="text-muted-foreground">Loading...</p>;
   }
 
   return (
@@ -65,13 +65,13 @@ export default function AdminGames() {
 
       <div className="space-y-4">
         {games.map((g) => (
-          <div key={g.id} className="rounded-2xl border border-gray-200 bg-white p-5">
+          <div key={g.id} className="rounded-2xl border border-border bg-card p-5">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{g.icon}</span>
                 <div>
                   <h3 className="font-semibold">{g.display_name}</h3>
-                  <p className="text-sm text-gray-500">{g.description}</p>
+                  <p className="text-sm text-muted-foreground">{g.description}</p>
                 </div>
               </div>
               <Button
@@ -85,14 +85,14 @@ export default function AdminGames() {
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {(CONFIG_FIELDS[g.id] || []).map((field) => (
                 <div key={field}>
-                  <label className="mb-1 block text-xs text-gray-500">
+                  <label className="mb-1 block text-xs text-muted-foreground">
                     {field.replace(/_/g, " ")}
                   </label>
                   <input
                     type="number"
                     value={g.config[field] || 0}
                     onChange={(e) => handleConfigChange(g.id, field, e.target.value)}
-                    className="w-full rounded border border-gray-200 bg-white px-2 py-1 text-sm"
+                    className="w-full rounded border border-border bg-card px-2 py-1 text-sm"
                   />
                 </div>
               ))}

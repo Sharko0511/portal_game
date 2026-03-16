@@ -6,7 +6,7 @@ export default function AdminDashboard() {
   const statsQuery = useAdminStats();
 
   if (statsQuery.isLoading) {
-    return <div className="text-gray-500">Loading stats...</div>;
+    return <div className="text-muted-foreground">Loading stats...</div>;
   }
 
   if (statsQuery.isError || !statsQuery.data) {
@@ -17,7 +17,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+      <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard title="Total Users" value={stats.total_users} icon="👥" />
@@ -32,18 +32,18 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-gray-200 bg-white p-5">
+        <div className="rounded-2xl border border-border bg-card p-5">
           <h2 className="mb-4 font-semibold">Top Players</h2>
           {stats.top_players.length === 0 ? (
-            <p className="text-sm text-gray-500">No players yet</p>
+            <p className="text-sm text-muted-foreground">No players yet</p>
           ) : (
             <table className="w-full text-sm">
               <tbody>
                 {stats.top_players.map((p, i) => (
-                  <tr key={i} className="border-b border-gray-200/50">
-                    <td className="py-2 text-gray-500">{i + 1}</td>
+                  <tr key={i} className="border-b border-border/50">
+                    <td className="py-2 text-muted-foreground">{i + 1}</td>
                     <td className="py-2">{p.display_name}</td>
-                    <td className="py-2 text-right font-mono font-semibold text-gray-900">{p.total_score}</td>
+                    <td className="py-2 text-right font-mono font-semibold text-foreground">{p.total_score}</td>
                   </tr>
                 ))}
               </tbody>
@@ -51,19 +51,19 @@ export default function AdminDashboard() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-5">
+        <div className="rounded-2xl border border-border bg-card p-5">
           <h2 className="mb-4 font-semibold">Recent Scores</h2>
           {stats.recent_scores.length === 0 ? (
-            <p className="text-sm text-gray-500">No scores yet</p>
+            <p className="text-sm text-muted-foreground">No scores yet</p>
           ) : (
             <table className="w-full text-sm">
               <tbody>
                 {stats.recent_scores.map((s, i) => (
-                  <tr key={i} className="border-b border-gray-200/50">
+                  <tr key={i} className="border-b border-border/50">
                     <td className="py-2">{s.player_name}</td>
-                    <td className="py-2 capitalize text-gray-500">{s.game}</td>
-                    <td className="py-2 text-right font-mono font-semibold text-gray-900">{s.score}</td>
-                    <td className="py-2 text-right text-xs text-gray-500">
+                    <td className="py-2 capitalize text-muted-foreground">{s.game}</td>
+                    <td className="py-2 text-right font-mono font-semibold text-foreground">{s.score}</td>
+                    <td className="py-2 text-right text-xs text-muted-foreground">
                       {formatTime(s.created_at)}
                     </td>
                   </tr>
@@ -89,11 +89,11 @@ function StatCard({
   icon: string;
 }) {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5">
+    <div className="rounded-2xl border border-border bg-card p-5">
       <div className="mb-2 text-2xl">{icon}</div>
-      <div className="text-2xl font-bold text-gray-900">{value}</div>
-      <div className="text-sm text-gray-500">{title}</div>
-      {subtitle && <div className="text-xs text-gray-500">{subtitle}</div>}
+      <div className="text-2xl font-bold text-foreground">{value}</div>
+      <div className="text-sm text-muted-foreground">{title}</div>
+      {subtitle && <div className="text-xs text-muted-foreground">{subtitle}</div>}
     </div>
   );
 }

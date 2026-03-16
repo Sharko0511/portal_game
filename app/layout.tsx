@@ -26,12 +26,12 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="bg-white" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} antialiased font-montserrat min-h-screen flex flex-col bg-white text-gray-900`}
+        className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} antialiased font-montserrat min-h-screen flex flex-col bg-background text-foreground`}
         style={{ fontFamily: "var(--font-montserrat), var(--font-geist-sans), sans-serif" }}
       >
-        <ThemeProvider defaultTheme="light">
+        <ThemeProvider defaultTheme="system">
           <AuthProvider>
             <QueryProvider>
               {children}

@@ -25,7 +25,7 @@ function NewPostContent() {
         <h1 className="text-2xl font-bold text-gray-900">New Post</h1>
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-8">
+      <div className="rounded-2xl border border-border bg-card p-8">
         <PostForm
           onSubmit={handleSubmit}
           onCancel={() => router.push("/blog")}

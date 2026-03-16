@@ -20,8 +20,19 @@ const ThemeProviderContext = createContext<ThemeProviderState>({
   setTheme: () => null,
 })
 
-export function ThemeProvider({ children, defaultTheme = "light" }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(defaultTheme)
+export function ThemeProvider({ children, defaultTheme = "system" }: ThemeProviderProps) {
+  const [theme, setThemeState] = useState<Theme>(defaultTheme)
+
+  // Load persisted theme on mount
+  useEffect(() => {
+    const stored = localStorage.getItem("theme") as Theme | null
+    if (stored) setThemeState(stored)
+  }, [])
+
+  const setTheme = (t: Theme) => {
+    localStorage.setItem("theme", t)
+    setThemeState(t)
+  }
 
   useEffect(() => {
     const root = window.document.documentElement
@@ -29,7 +40,14 @@ export function ThemeProvider({ children, defaultTheme = "light" }: ThemeProvide
     if (theme === "system") {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
       root.classList.add(systemTheme)
-      return
+      // Also listen for OS changes while on "system"
+      const mq = window.matchMedia("(prefers-color-scheme: dark)")
+      const handler = (e: MediaQueryListEvent) => {
+        root.classList.remove("light", "dark")
+        root.classList.add(e.matches ? "dark" : "light")
+      }
+      mq.addEventListener("change", handler)
+      return () => mq.removeEventListener("change", handler)
     }
     root.classList.add(theme)
   }, [theme])
@@ -39,6 +57,7 @@ export function ThemeProvider({ children, defaultTheme = "light" }: ThemeProvide
       {children}
     </ThemeProviderContext.Provider>
   )
+
 }
 
 export const useTheme = () => {

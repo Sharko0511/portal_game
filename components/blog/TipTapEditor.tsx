@@ -44,8 +44,8 @@ function ToolbarBtn({
       disabled={disabled}
       className={`cursor-pointer rounded px-2 py-1 text-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
         active
-          ? "bg-accent text-gray-900"
-          : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+          ? "bg-accent text-foreground"
+          : "text-muted-foreground hover:bg-gray-100 hover:text-foreground"
       }`}
     >
       {children}
@@ -121,7 +121,7 @@ export default function TipTapEditor({
   // ── Read-only ────────────────────────────────────────────
   if (!editable) {
     return (
-      <div className="prose prose-gray max-w-none text-gray-900">
+      <div className="prose prose-gray max-w-none text-foreground">
         <EditorContent editor={editor} />
       </div>
     );
@@ -129,7 +129,7 @@ export default function TipTapEditor({
 
   // ── Editor ───────────────────────────────────────────────
   return (
-    <div className="rounded-xl border border-gray-200 bg-white">
+    <div className="rounded-xl border border-border bg-white">
       {/* Hidden file input for image uploads */}
       <input
         ref={imageInputRef}
@@ -143,7 +143,7 @@ export default function TipTapEditor({
       />
 
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-0.5 border-b border-gray-200 px-3 py-2">
+      <div className="flex flex-wrap items-center gap-0.5 border-b border-border px-3 py-2">
         <ToolbarBtn title="Undo" onClick={() => editor.chain().focus().undo().run()}>↩</ToolbarBtn>
         <ToolbarBtn title="Redo" onClick={() => editor.chain().focus().redo().run()}>↪</ToolbarBtn>
 
@@ -223,7 +223,7 @@ export default function TipTapEditor({
       {/* Editor area */}
       <EditorContent
         editor={editor}
-        className="prose prose-gray max-w-none px-5 py-4 text-gray-900
+        className="prose prose-gray max-w-none px-5 py-4 text-foreground
           [&_.ProseMirror]:min-h-75
           [&_.ProseMirror]:outline-none
           [&_.ProseMirror_img]:rounded-xl
@@ -232,7 +232,7 @@ export default function TipTapEditor({
           [&_.ProseMirror_img]:cursor-default
           [&_.ProseMirror_img.ProseMirror-selectednode]:ring-2
           [&_.ProseMirror_img.ProseMirror-selectednode]:ring-accent
-          [&_.ProseMirror_p.is-editor-empty:first-child::before]:text-gray-400
+          [&_.ProseMirror_p.is-editor-empty:first-child::before]:text-muted-foreground
           [&_.ProseMirror_p.is-editor-empty:first-child::before]:content-[attr(data-placeholder)]
           [&_.ProseMirror_p.is-editor-empty:first-child::before]:pointer-events-none
           [&_.ProseMirror_p.is-editor-empty:first-child::before]:float-left
@@ -240,7 +240,7 @@ export default function TipTapEditor({
       />
 
       {uploading && (
-        <div className="border-t border-gray-100 px-5 py-2 text-xs text-gray-400">
+        <div className="border-t border-border px-5 py-2 text-xs text-muted-foreground">
           Uploading image...
         </div>
       )}
