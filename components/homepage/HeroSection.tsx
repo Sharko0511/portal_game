@@ -12,8 +12,8 @@ export default function HeroSection() {
   const { t } = useClientTranslation(lng, "homepage")
 
   return (
-    <section className="w-full bg-[#94B506] py-8 md:py-[64px]">
-      <div className="mx-auto px-4 md:px-[84px] flex flex-col md:flex-row md:items-start md:gap-10">
+    <section className="w-full bg-[#94B506] py-8 md:py-16">
+      <div className="mx-auto px-4 md:px-21 flex flex-col md:flex-row md:items-start md:gap-10">
 
         {/* Mobile layout */}
         <div className="flex flex-col md:hidden w-full">

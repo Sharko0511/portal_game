@@ -12,9 +12,9 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="bg-[#1b5e20] text-white py-[56px] pb-[32px] mt-0">
-      <div className="w-full px-4 md:px-[84px]">
-        <div className="flex flex-col md:flex-row mb-[80px] md:gap-10">
+    <footer className="bg-[#1b5e20] text-white py-14 pb-8 mt-0">
+      <div className="w-full px-4 md:px-21">
+        <div className="flex flex-col md:flex-row mb-20 md:gap-10">
           {/* Left block - exactly 50% width */}
           <div className="mb-8 md:mb-0 md:w-1/2">
             <h2 className="text-3xl font-bold mb-6">
