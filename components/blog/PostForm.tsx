@@ -3,14 +3,14 @@
 import { useState } from "react";
 import BlockEditor, { BlocksDoc } from "./BlockEditor";
 import ImageUpload from "./ImageUpload";
-import { PostCategory, PostLevel, PlayerFeedback } from "@/hooks/blog/usePost";
+import { PostCategory, PostLevel, PostVisibility, PlayerFeedback } from "@/hooks/blog/usePost";
 
 export interface PostFormValues {
   title: string;
   content: Record<string, unknown>;
   cover_image_url: string | null;
   cover_image_caption: string | null;
-  published: boolean;
+  visibility: PostVisibility;
   category: PostCategory;
   level: PostLevel | null;
   audio_url: string | null;
@@ -69,7 +69,7 @@ export default function PostForm({
   const [doc, setDoc] = useState<BlocksDoc>(() => toBlocksDoc(initialValues?.content));
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(initialValues?.cover_image_url ?? null);
   const [coverImageCaption, setCoverImageCaption] = useState(initialValues?.cover_image_caption ?? "");
-  const [published, setPublished] = useState(initialValues?.published ?? true);
+  const [visibility, setVisibility] = useState<PostVisibility>(initialValues?.visibility ?? "private");
   const [error, setError] = useState<string | null>(null);
 
   // Admin-only fields
@@ -123,7 +123,7 @@ export default function PostForm({
         content: doc as unknown as Record<string, unknown>,
         cover_image_url: coverImageUrl,
         cover_image_caption: coverImageCaption.trim() || null,
-        published,
+        visibility,
         category,
         level: (level as PostLevel) || null,
         audio_url: audioUrl.trim() || null,
@@ -330,18 +330,32 @@ export default function PostForm({
         </div>
       )}
 
-      {/* Published toggle */}
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={() => setPublished((p) => !p)}
-          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${published ? "bg-accent" : "bg-gray-200"}`}
-        >
-          <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${published ? "translate-x-6" : "translate-x-1"}`} />
-        </button>
-        <span className="text-sm text-foreground">
-          {published ? "Published — visible to followers" : "Draft — only visible to you"}
-        </span>
+      {/* Visibility selector */}
+      <div>
+        <label className="mb-2 block text-sm font-medium text-foreground">Visibility</label>
+        <div className="flex gap-2">
+          {(["private", "share", ...(isAdmin ? ["public"] : [])] as PostVisibility[]).map((v) => (
+            <button
+              key={v}
+              type="button"
+              onClick={() => setVisibility(v)}
+              className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors capitalize
+                ${visibility === v
+                  ? v === "public" ? "border-green-600 bg-green-600 text-white"
+                    : v === "share" ? "border-blue-500 bg-blue-500 text-white"
+                    : "border-gray-700 bg-gray-700 text-white"
+                  : "border-border bg-white text-muted-foreground hover:bg-gray-50"
+                }`}
+            >
+              {v === "private" ? "🔒 Private" : v === "share" ? "👥 Share" : "🌐 Public"}
+            </button>
+          ))}
+        </div>
+        <p className="mt-1.5 text-xs text-muted-foreground">
+          {visibility === "private" && "Only you can see this post."}
+          {visibility === "share" && "Visible to your followers (login required)."}
+          {visibility === "public" && "Visible to everyone — appears in Báo hay / Audio chat."}
+        </p>
       </div>
 
       {error && (

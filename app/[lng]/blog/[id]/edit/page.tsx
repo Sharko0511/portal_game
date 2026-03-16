@@ -74,7 +74,7 @@ function EditPostContent({ id }: { id: string }) {
             content: post.content,
             cover_image_url: post.cover_image_url,
             cover_image_caption: post.cover_image_caption,
-            published: post.published,
+            visibility: post.visibility,
             category: post.category,
             level: post.level,
             audio_url: post.audio_url,

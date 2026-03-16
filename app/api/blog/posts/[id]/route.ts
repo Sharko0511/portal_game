@@ -3,6 +3,7 @@ import { requireAuth, AuthResult, AuthError } from "@/lib/auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
 type Params = { params: Promise<{ id: string }> };
+type Visibility = "private" | "share" | "public";
 
 export async function GET(
   request: NextRequest,
@@ -24,16 +25,29 @@ export async function GET(
     );
   }
 
-  // Admin-authored published posts are publicly readable (no login required)
-  if (post.author_role === "admin" && post.published) {
+  // Public posts: no login required
+  if (post.visibility === "public") {
     return NextResponse.json({ data: post });
   }
 
-  // All other posts require authentication + author-or-follower check
+  // Share + private: require authentication
   const auth: AuthResult | AuthError = await requireAuth(request);
   if (auth.error) return auth.error;
 
   const isAuthor = post.author_id === auth.user.id;
+
+  // Private: owner only
+  if (post.visibility === "private") {
+    if (!isAuthor) {
+      return NextResponse.json(
+        { error: { code: "FORBIDDEN", message: "This post is private" } },
+        { status: 403 }
+      );
+    }
+    return NextResponse.json({ data: post });
+  }
+
+  // Share: author or follower
   if (!isAuthor) {
     const { data: follow } = await supabase
       .from("follows")
@@ -65,7 +79,7 @@ export async function PATCH(
 
   const { data: post } = await supabase
     .from("posts")
-    .select("author_id")
+    .select("author_id, visibility")
     .eq("id", id)
     .single();
 
@@ -76,7 +90,11 @@ export async function PATCH(
     );
   }
 
-  if (post.author_id !== auth.user.id) {
+  const isAuthor = post.author_id === auth.user.id;
+  const isAdmin = auth.profile.role === "admin";
+
+  // Only author or admin can edit
+  if (!isAuthor && !isAdmin) {
     return NextResponse.json(
       { error: { code: "FORBIDDEN", message: "Only the author can edit this post" } },
       { status: 403 }
@@ -88,7 +106,7 @@ export async function PATCH(
     content?: Record<string, unknown>;
     cover_image_url?: string;
     cover_image_caption?: string;
-    published?: boolean;
+    visibility?: Visibility;
     category?: string;
     level?: string | null;
     audio_url?: string | null;
@@ -109,12 +127,38 @@ export async function PATCH(
     );
   }
 
+  // Validate visibility transition
+  if (body.visibility !== undefined) {
+    const from = post.visibility as Visibility;
+    const to = body.visibility;
+
+    if (isAdmin && isAuthor) {
+      // Admin on own post: any transition allowed
+    } else if (isAdmin && !isAuthor) {
+      // Admin on others' post: only share ↔ public
+      if (!((from === "share" && to === "public") || (from === "public" && to === "share"))) {
+        return NextResponse.json(
+          { error: { code: "FORBIDDEN", message: "Admin can only promote share→public or demote public→share on others' posts" } },
+          { status: 403 }
+        );
+      }
+    } else {
+      // Owner (non-admin): only private ↔ share
+      if (!((from === "private" && to === "share") || (from === "share" && to === "private"))) {
+        return NextResponse.json(
+          { error: { code: "FORBIDDEN", message: "You can only toggle between private and share" } },
+          { status: 403 }
+        );
+      }
+    }
+  }
+
   const updates: Record<string, unknown> = { updated_at: new Date().toISOString() };
   if (body.title !== undefined) updates.title = body.title;
   if (body.content !== undefined) updates.content = body.content;
   if (body.cover_image_url !== undefined) updates.cover_image_url = body.cover_image_url;
   if (body.cover_image_caption !== undefined) updates.cover_image_caption = body.cover_image_caption;
-  if (body.published !== undefined) updates.published = body.published;
+  if (body.visibility !== undefined) updates.visibility = body.visibility;
   if (body.category !== undefined) updates.category = body.category;
   if (body.level !== undefined) updates.level = body.level;
   if (body.audio_url !== undefined) updates.audio_url = body.audio_url;

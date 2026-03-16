@@ -5,6 +5,7 @@ import { adminFetch } from "@/lib/admin-fetch";
 
 export type PostCategory = "blog" | "baohay" | "audiochat";
 export type PostLevel = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
+export type PostVisibility = "private" | "share" | "public";
 
 export interface PlayerFeedback {
   content: string;
@@ -20,7 +21,7 @@ export interface Post {
   cover_image_url: string | null;
   cover_image_caption: string | null;
   slug: string;
-  published: boolean;
+  visibility: PostVisibility;
   created_at: string;
   updated_at: string;
   like_count: number;
@@ -88,7 +89,7 @@ interface CreatePostInput {
   content: Record<string, unknown>;
   cover_image_url?: string | null;
   cover_image_caption?: string | null;
-  published?: boolean;
+  visibility?: PostVisibility;
   category?: PostCategory;
   level?: PostLevel | null;
   audio_url?: string | null;
@@ -126,7 +127,7 @@ interface UpdatePostInput {
   content?: Record<string, unknown>;
   cover_image_url?: string | null;
   cover_image_caption?: string | null;
-  published?: boolean;
+  visibility?: PostVisibility;
   category?: PostCategory;
   level?: PostLevel | null;
   audio_url?: string | null;

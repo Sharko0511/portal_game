@@ -11,8 +11,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     .from("posts_with_counts")
     .select("*")
     .eq("category", "baohay")
-    .eq("published", true)
-    .eq("author_role", "admin")
+    .eq("visibility", "public")
     .order("created_at", { ascending: false });
 
   if (error) {
