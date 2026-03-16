@@ -66,11 +66,32 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   return NextResponse.json({ data });
 }
 
+const VALID_CATEGORIES = ["blog", "baohay", "audiochat"] as const;
+const VALID_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
+
+type PostBody = {
+  title?: string;
+  content?: Record<string, unknown>;
+  cover_image_url?: string;
+  cover_image_caption?: string;
+  published?: boolean;
+  category?: string;
+  level?: string | null;
+  audio_url?: string | null;
+  reading_time?: number;
+  tags?: string[];
+  word_count?: number;
+  event_encounters?: number;
+  cards_count?: number;
+  feedback_intro?: string | null;
+  player_feedback?: { content: string }[];
+};
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth: AuthResult | AuthError = await requireAuth(request);
   if (auth.error) return auth.error;
 
-  let body: { title?: string; content?: Record<string, unknown>; cover_image_url?: string; published?: boolean };
+  let body: PostBody;
   try {
     body = await request.json();
   } catch {
@@ -80,7 +101,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const { title, content, cover_image_url, published = true } = body;
+  const {
+    title, content, cover_image_url, cover_image_caption,
+    published = true, category = "blog", level = null,
+    audio_url = null, reading_time = 0, tags = [],
+    word_count = 0, event_encounters = 0, cards_count = 0,
+    feedback_intro = null, player_feedback = [],
+  } = body;
 
   if (!title?.trim()) {
     return NextResponse.json(
@@ -95,6 +122,24 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { status: 400 }
     );
   }
+  if (!VALID_CATEGORIES.includes(category as typeof VALID_CATEGORIES[number])) {
+    return NextResponse.json(
+      { error: { code: "BAD_REQUEST", message: `category must be one of: ${VALID_CATEGORIES.join(", ")}` } },
+      { status: 400 }
+    );
+  }
+  if (level !== null && level !== undefined && !VALID_LEVELS.includes(level as typeof VALID_LEVELS[number])) {
+    return NextResponse.json(
+      { error: { code: "BAD_REQUEST", message: `level must be one of: ${VALID_LEVELS.join(", ")}` } },
+      { status: 400 }
+    );
+  }
+  if (!Array.isArray(player_feedback) || player_feedback.some((f) => typeof f?.content !== "string")) {
+    return NextResponse.json(
+      { error: { code: "BAD_REQUEST", message: "player_feedback must be an array of {content: string}" } },
+      { status: 400 }
+    );
+  }
 
   const supabase = getSupabaseAdmin();
 
@@ -105,8 +150,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       title: title.trim(),
       content,
       cover_image_url: cover_image_url ?? null,
+      cover_image_caption: cover_image_caption ?? null,
       slug: slugify(title),
       published,
+      category,
+      level: level ?? null,
+      audio_url,
+      reading_time,
+      tags,
+      word_count,
+      event_encounters,
+      cards_count,
+      feedback_intro,
+      player_feedback,
     })
     .select()
     .single();

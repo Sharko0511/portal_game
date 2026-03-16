@@ -73,12 +73,24 @@ function EditPostContent({ id }: { id: string }) {
             title: post.title,
             content: post.content,
             cover_image_url: post.cover_image_url,
+            cover_image_caption: post.cover_image_caption,
             published: post.published,
+            category: post.category,
+            level: post.level,
+            audio_url: post.audio_url,
+            reading_time: post.reading_time,
+            tags: post.tags,
+            word_count: post.word_count,
+            event_encounters: post.event_encounters,
+            cards_count: post.cards_count,
+            feedback_intro: post.feedback_intro,
+            player_feedback: post.player_feedback,
           }}
           onSubmit={handleSubmit}
           onCancel={() => router.push(`/${lng}/blog/${id}`)}
           submitLabel="Save Changes"
           loading={updatePost.isPending}
+          isAdmin={profile?.role === "admin"}
         />
       </div>
     </div>

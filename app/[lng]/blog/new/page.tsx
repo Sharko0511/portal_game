@@ -5,12 +5,15 @@ import Link from "next/link";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import PostForm, { PostFormValues } from "@/components/blog/PostForm";
 import { useCreatePost } from "@/hooks/blog/usePost";
+import { useAuth } from "@/hooks/useAuth";
 import { useLng } from "@/hooks/useLng";
 
 function NewPostContent() {
   const router = useRouter();
   const createPost = useCreatePost();
   const lng = useLng();
+  const { profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
 
   async function handleSubmit(values: PostFormValues) {
     const post = await createPost.mutateAsync(values);
@@ -33,6 +36,7 @@ function NewPostContent() {
           onCancel={() => router.push(`/${lng}/blog`)}
           submitLabel="Publish Post"
           loading={createPost.isPending}
+          isAdmin={isAdmin}
         />
       </div>
     </div>

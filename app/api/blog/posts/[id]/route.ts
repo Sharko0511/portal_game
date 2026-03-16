@@ -8,9 +8,6 @@ export async function GET(
   request: NextRequest,
   { params }: Params
 ): Promise<NextResponse> {
-  const auth: AuthResult | AuthError = await requireAuth(request);
-  if (auth.error) return auth.error;
-
   const { id } = await params;
   const supabase = getSupabaseAdmin();
 
@@ -27,7 +24,15 @@ export async function GET(
     );
   }
 
-  // Check visibility: viewer must be the author or follow the author
+  // Admin-authored published posts are publicly readable (no login required)
+  if (post.author_role === "admin" && post.published) {
+    return NextResponse.json({ data: post });
+  }
+
+  // All other posts require authentication + author-or-follower check
+  const auth: AuthResult | AuthError = await requireAuth(request);
+  if (auth.error) return auth.error;
+
   const isAuthor = post.author_id === auth.user.id;
   if (!isAuthor) {
     const { data: follow } = await supabase
@@ -78,7 +83,23 @@ export async function PATCH(
     );
   }
 
-  let body: { title?: string; content?: Record<string, unknown>; cover_image_url?: string; published?: boolean };
+  let body: {
+    title?: string;
+    content?: Record<string, unknown>;
+    cover_image_url?: string;
+    cover_image_caption?: string;
+    published?: boolean;
+    category?: string;
+    level?: string | null;
+    audio_url?: string | null;
+    reading_time?: number;
+    tags?: string[];
+    word_count?: number;
+    event_encounters?: number;
+    cards_count?: number;
+    feedback_intro?: string | null;
+    player_feedback?: { content: string }[];
+  };
   try {
     body = await request.json();
   } catch {
@@ -92,7 +113,18 @@ export async function PATCH(
   if (body.title !== undefined) updates.title = body.title;
   if (body.content !== undefined) updates.content = body.content;
   if (body.cover_image_url !== undefined) updates.cover_image_url = body.cover_image_url;
+  if (body.cover_image_caption !== undefined) updates.cover_image_caption = body.cover_image_caption;
   if (body.published !== undefined) updates.published = body.published;
+  if (body.category !== undefined) updates.category = body.category;
+  if (body.level !== undefined) updates.level = body.level;
+  if (body.audio_url !== undefined) updates.audio_url = body.audio_url;
+  if (body.reading_time !== undefined) updates.reading_time = body.reading_time;
+  if (body.tags !== undefined) updates.tags = body.tags;
+  if (body.word_count !== undefined) updates.word_count = body.word_count;
+  if (body.event_encounters !== undefined) updates.event_encounters = body.event_encounters;
+  if (body.cards_count !== undefined) updates.cards_count = body.cards_count;
+  if (body.feedback_intro !== undefined) updates.feedback_intro = body.feedback_intro;
+  if (body.player_feedback !== undefined) updates.player_feedback = body.player_feedback;
 
   const { data, error } = await supabase
     .from("posts")

@@ -65,11 +65,11 @@ export default function Navbar() {
             className="text-sm 2xl:text-base font-semibold transition-colors hover:text-[#317F5F] whitespace-nowrap">
             {t("navigation.home")}
           </Link>
-          <Link href={`/${lng}/blog`}
+          <Link href={`/${lng}/baohay`}
             className="text-sm 2xl:text-base font-semibold transition-colors hover:text-[#317F5F] whitespace-nowrap">
             {t("navigation.blog")}
           </Link>
-          <Link href={`/${lng}/audio`}
+          <Link href={`/${lng}/audiochat`}
             className="text-sm 2xl:text-base font-semibold transition-colors hover:text-[#317F5F] whitespace-nowrap">
             {t("navigation.audio")}
           </Link>
@@ -152,9 +152,9 @@ export default function Navbar() {
           <nav className="flex flex-col space-y-4">
             <Link href={`/${lng}`} onClick={() => setMobileOpen(false)}
               className="text-base font-semibold hover:text-[#317F5F] py-1">{t("navigation.home")}</Link>
-            <Link href={`/${lng}/blog`} onClick={() => setMobileOpen(false)}
+            <Link href={`/${lng}/baohay`} onClick={() => setMobileOpen(false)}
               className="text-base font-semibold hover:text-[#317F5F] py-1">{t("navigation.blog")}</Link>
-            <Link href={`/${lng}/audio`} onClick={() => setMobileOpen(false)}
+            <Link href={`/${lng}/audiochat`} onClick={() => setMobileOpen(false)}
               className="text-base font-semibold hover:text-[#317F5F] py-1">{t("navigation.audio")}</Link>
             <Link href={`/${lng}/games`} onClick={() => setMobileOpen(false)}
               className="text-base font-semibold hover:text-[#317F5F] py-1">{t("navigation.games")}</Link>

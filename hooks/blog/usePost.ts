@@ -3,19 +3,39 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminFetch } from "@/lib/admin-fetch";
 
+export type PostCategory = "blog" | "baohay" | "audiochat";
+export type PostLevel = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
+
+export interface PlayerFeedback {
+  content: string;
+}
+
 export interface Post {
   id: string;
   author_id: string;
   author_name: string;
+  author_role: string;
   title: string;
   content: Record<string, unknown>;
   cover_image_url: string | null;
+  cover_image_caption: string | null;
   slug: string;
   published: boolean;
   created_at: string;
   updated_at: string;
   like_count: number;
   comment_count: number;
+  // article fields
+  category: PostCategory;
+  level: PostLevel | null;
+  audio_url: string | null;
+  reading_time: number;
+  tags: string[];
+  word_count: number;
+  event_encounters: number;
+  cards_count: number;
+  feedback_intro: string | null;
+  player_feedback: PlayerFeedback[];
 }
 
 // ── Fetch single post ────────────────────────────────────
@@ -24,12 +44,40 @@ export function usePost(id: string) {
   return useQuery<Post>({
     queryKey: ["post", id],
     queryFn: async () => {
-      const res = await adminFetch(`/api/blog/posts/${id}`);
+      const res = await fetch(`/api/blog/posts/${id}`);
       if (!res.ok) throw new Error(`Failed to fetch post: ${res.status}`);
       const json = await res.json();
       return json.data as Post;
     },
     enabled: !!id,
+  });
+}
+
+// ── Fetch baohay posts (public) ──────────────────────────
+
+export function useBaohay() {
+  return useQuery<Post[]>({
+    queryKey: ["baohay"],
+    queryFn: async () => {
+      const res = await fetch("/api/blog/baohay");
+      if (!res.ok) throw new Error(`Failed to fetch baohay: ${res.status}`);
+      const json = await res.json();
+      return json.data as Post[];
+    },
+  });
+}
+
+// ── Fetch audiochat posts (public) ───────────────────────
+
+export function useAudiochat() {
+  return useQuery<Post[]>({
+    queryKey: ["audiochat"],
+    queryFn: async () => {
+      const res = await fetch("/api/blog/audiochat");
+      if (!res.ok) throw new Error(`Failed to fetch audiochat: ${res.status}`);
+      const json = await res.json();
+      return json.data as Post[];
+    },
   });
 }
 
@@ -39,7 +87,18 @@ interface CreatePostInput {
   title: string;
   content: Record<string, unknown>;
   cover_image_url?: string | null;
+  cover_image_caption?: string | null;
   published?: boolean;
+  category?: PostCategory;
+  level?: PostLevel | null;
+  audio_url?: string | null;
+  reading_time?: number;
+  tags?: string[];
+  word_count?: number;
+  event_encounters?: number;
+  cards_count?: number;
+  feedback_intro?: string | null;
+  player_feedback?: PlayerFeedback[];
 }
 
 export function useCreatePost() {
@@ -66,7 +125,18 @@ interface UpdatePostInput {
   title?: string;
   content?: Record<string, unknown>;
   cover_image_url?: string | null;
+  cover_image_caption?: string | null;
   published?: boolean;
+  category?: PostCategory;
+  level?: PostLevel | null;
+  audio_url?: string | null;
+  reading_time?: number;
+  tags?: string[];
+  word_count?: number;
+  event_encounters?: number;
+  cards_count?: number;
+  feedback_intro?: string | null;
+  player_feedback?: PlayerFeedback[];
 }
 
 export function useUpdatePost() {
