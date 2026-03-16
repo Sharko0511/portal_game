@@ -77,6 +77,12 @@ export default function Navbar() {
             className="text-sm 2xl:text-base font-semibold transition-colors hover:text-[#317F5F] whitespace-nowrap">
             {t("navigation.games")}
           </Link>
+          {user && profile && (
+            <Link href={`/${lng}/blog`}
+              className="text-sm 2xl:text-base font-semibold transition-colors hover:text-[#317F5F] whitespace-nowrap">
+              {t("navigation.feed")}
+            </Link>
+          )}
 
           {/* Search — expandable */}
           <div ref={searchWrapperRef} className="relative flex items-center">
@@ -158,6 +164,10 @@ export default function Navbar() {
               className="text-base font-semibold hover:text-[#317F5F] py-1">{t("navigation.audio")}</Link>
             <Link href={`/${lng}/games`} onClick={() => setMobileOpen(false)}
               className="text-base font-semibold hover:text-[#317F5F] py-1">{t("navigation.games")}</Link>
+            {user && profile && (
+              <Link href={`/${lng}/blog`} onClick={() => setMobileOpen(false)}
+                className="text-base font-semibold hover:text-[#317F5F] py-1">{t("navigation.feed")}</Link>
+            )}
 
             {/* Mobile search */}
             <div className="relative w-full py-1">

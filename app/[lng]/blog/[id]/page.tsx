@@ -129,7 +129,7 @@ function PopularSidebar({ currentId, category }: { currentId: string; category: 
         </div>
         <div className="mt-3 flex justify-end">
           <Link
-            href={`/${category}`}
+            href={`/coming-soon`}
             className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
           >
             Xem thêm <span>↗</span>

@@ -114,15 +114,17 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
       </div>
 
       {/* Content */}
-      <div className="min-w-0 flex-1">
-        <div className="mb-1 flex items-center gap-1.5 text-xs text-muted-foreground">
-          <span className="font-medium text-foreground">{post.author_name}</span>
-          <span>·</span>
-          <span>{formatDate(post.created_at)}</span>
+      <div className="min-w-0 flex-1 flex flex-col justify-between">
+        <div>
+          <div className="mb-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+            <span className="font-medium text-foreground">{post.author_name}</span>
+            <span>·</span>
+            <span>{formatDate(post.created_at)}</span>
+          </div>
+          <h3 className="mb-2 text-sm font-semibold text-foreground group-hover:underline line-clamp-2">
+            {post.title}
+          </h3>
         </div>
-        <h3 className="mb-1 text-sm font-semibold text-foreground group-hover:underline line-clamp-2">
-          {post.title}
-        </h3>
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <span>{post.like_count} likes</span>
           <span>{post.comment_count} comments</span>

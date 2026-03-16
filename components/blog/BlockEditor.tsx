@@ -1,13 +1,12 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, DragEvent } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import TextAlign from "@tiptap/extension-text-align";
-import { createClient } from "@supabase/supabase-js";
 import { useAuth } from "@/hooks/useAuth";
 
 // ── Block types ──────────────────────────────────────────
@@ -122,12 +121,50 @@ function TextBlockEditor({
 // ── Single image block ───────────────────────────────────
 
 function ImageBlockEditor({
-  block, onChange, onDelete,
+  block, onChange, onDelete, userId,
 }: {
   block: ImageBlock;
   onChange: (updates: Partial<ImageBlock>) => void;
   onDelete: () => void;
+  userId: string | undefined;
 }) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+
+  async function uploadFile(file: File) {
+    if (!userId) return;
+    const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!ALLOWED.includes(file.type)) { alert("Only JPEG, PNG, WebP, GIF allowed."); return; }
+    if (file.size > 5 * 1024 * 1024) { alert("Image must be under 5MB."); return; }
+
+    setUploading(true);
+    try {
+      const { createClient } = await import("@supabase/supabase-js");
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      const ext = file.name.split(".").pop();
+      const path = `${userId}/${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from("post-images").upload(path, file);
+      if (error) throw error;
+      const { data } = supabase.storage.from("post-images").getPublicUrl(path);
+      onChange({ url: data.publicUrl });
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Upload failed.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function handleDrop(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) uploadFile(file);
+  }
+
   return (
     <div className="group relative rounded-xl border border-border bg-white p-3">
       <div className="mb-2 flex items-center justify-between">
@@ -136,16 +173,46 @@ function ImageBlockEditor({
           className="rounded px-2 py-1 text-xs text-muted-foreground hover:bg-red-50 hover:text-red-500"
           title="Remove image block">✕</button>
       </div>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={block.url} alt={block.caption ?? ""}
-        className="w-full rounded-lg object-cover max-h-96" />
-      <input
-        type="text"
-        value={block.caption ?? ""}
-        onChange={(e) => onChange({ caption: e.target.value })}
-        placeholder="Add caption (optional)..."
-        className="mt-2 w-full rounded-lg border border-border bg-gray-50 px-3 py-1.5 text-xs text-muted-foreground outline-none focus:border-gray-300 placeholder:text-muted-foreground"
-      />
+
+      {block.url ? (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={block.url} alt={block.caption ?? ""}
+            className="w-full rounded-lg object-cover max-h-96" />
+          <input
+            type="text"
+            value={block.caption ?? ""}
+            onChange={(e) => onChange({ caption: e.target.value })}
+            placeholder="Add caption (optional)..."
+            className="mt-2 w-full rounded-lg border border-border bg-gray-50 px-3 py-1.5 text-xs text-muted-foreground outline-none focus:border-gray-300 placeholder:text-muted-foreground"
+          />
+        </>
+      ) : (
+        <>
+          <input ref={fileInputRef} type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif" className="hidden"
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadFile(f); }}
+          />
+          <div
+            onClick={() => !uploading && fileInputRef.current?.click()}
+            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={handleDrop}
+            className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed py-10 transition-colors
+              ${dragOver ? "border-blue-400 bg-blue-50" : "border-border bg-gray-50 hover:border-gray-400 hover:bg-gray-100"}`}
+          >
+            {uploading ? (
+              <p className="text-sm text-muted-foreground">Uploading...</p>
+            ) : (
+              <>
+                <span className="text-3xl">🖼️</span>
+                <p className="text-sm font-medium text-muted-foreground">Click or drag to upload</p>
+                <p className="text-xs text-muted-foreground">JPEG, PNG, WebP, GIF — max 5MB</p>
+              </>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -222,11 +289,6 @@ interface BlockEditorProps {
 
 export default function BlockEditor({ value, onChange }: BlockEditorProps) {
   const { user } = useAuth();
-  const imageInputRef = useRef<HTMLInputElement>(null);
-  const [uploading, setUploading] = useState(false);
-  // Track which index to insert image after
-  const insertAfterRef = useRef<number>(-1);
-
   const blocks = value.blocks;
 
   const update = useCallback((newBlocks: Block[]) => {
@@ -248,50 +310,15 @@ export default function BlockEditor({ value, onChange }: BlockEditorProps) {
     update(newBlocks);
   }
 
-  function openImagePicker(afterIndex: number) {
-    insertAfterRef.current = afterIndex;
-    imageInputRef.current?.click();
-  }
-
-  async function handleImageFile(file: File) {
-    if (!user) return;
-    const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (!ALLOWED.includes(file.type)) { alert("Only JPEG, PNG, WebP, GIF allowed."); return; }
-    if (file.size > 5 * 1024 * 1024) { alert("Image must be under 5MB."); return; }
-
-    setUploading(true);
-    try {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      );
-      const ext = file.name.split(".").pop();
-      const path = `${user.id}/${Date.now()}.${ext}`;
-      const { error } = await supabase.storage.from("post-images").upload(path, file);
-      if (error) throw error;
-      const { data } = supabase.storage.from("post-images").getPublicUrl(path);
-
-      const imageBlock: ImageBlock = { id: uid(), type: "image", url: data.publicUrl };
-      const newBlocks = [...blocks];
-      newBlocks.splice(insertAfterRef.current + 1, 0, imageBlock);
-      // Add an empty text block after the image so user can keep writing
-      newBlocks.splice(insertAfterRef.current + 2, 0, emptyTextBlock());
-      update(newBlocks);
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "Upload failed.");
-    } finally {
-      setUploading(false);
-      if (imageInputRef.current) imageInputRef.current.value = "";
-    }
+  function addImageAfter(afterIndex: number) {
+    const imageBlock: ImageBlock = { id: uid(), type: "image", url: "" };
+    const newBlocks = [...blocks];
+    newBlocks.splice(afterIndex + 1, 0, imageBlock);
+    update(newBlocks);
   }
 
   return (
     <div className="space-y-3">
-      <input ref={imageInputRef} type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif" className="hidden"
-        onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImageFile(f); }}
-      />
-
       {blocks.map((block, i) => (
         <div key={block.id} className="space-y-3">
           {block.type === "text" && (
@@ -307,13 +334,14 @@ export default function BlockEditor({ value, onChange }: BlockEditorProps) {
               block={block}
               onChange={(patch) => updateBlock(block.id, patch)}
               onDelete={() => deleteBlock(block.id)}
+              userId={user?.id}
             />
           )}
           {/* Add-block row after each block */}
           <AddBlockRow
             onAddText={() => addTextAfter(i)}
-            onAddImage={() => openImagePicker(i)}
-            uploading={uploading}
+            onAddImage={() => addImageAfter(i)}
+            uploading={false}
           />
         </div>
       ))}
