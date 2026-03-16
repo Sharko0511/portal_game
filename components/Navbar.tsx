@@ -58,7 +58,7 @@ export default function Navbar() {
         </Button>
 
         {/* Desktop nav — only at lg+ */}
-        <div className="hidden xl:flex items-center space-x-4 2xl:space-x-6">
+        <div className="hidden xl:flex items-center gap-4 2xl:gap-6">
           <Link href={`/${lng}`}
             className="text-sm 2xl:text-base font-semibold transition-colors hover:text-[#317F5F] whitespace-nowrap">
             Trang chủ
@@ -110,8 +110,6 @@ export default function Navbar() {
             </button>
           </div>
 
-          <SettingsDropdown />
-
           {/* Auth */}
           {!loading && (
             <>
@@ -141,6 +139,8 @@ export default function Navbar() {
               )}
             </>
           )}
+
+          <SettingsDropdown />
         </div>
       </div>
 

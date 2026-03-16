@@ -3,10 +3,9 @@
 import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuGroup,
-  DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Globe, Moon, Sun, Settings } from "lucide-react"
+import { Globe, Moon, Sun, Monitor, Settings } from "lucide-react"
 import { useTheme } from "@/components/ThemeProvider"
 import { useEffect, useState } from "react"
 
@@ -14,6 +13,12 @@ const LANGUAGES = [
   { code: "en", label: "English" },
   { code: "vi", label: "Tiếng Việt" },
 ]
+
+const THEMES = [
+  { value: "light", label: "Light", icon: Sun },
+  { value: "dark",  label: "Dark",  icon: Moon },
+  { value: "system",label: "System",icon: Monitor },
+] as const
 
 export function SettingsDropdown() {
   const router = useRouter()
@@ -34,7 +39,6 @@ export function SettingsDropdown() {
     return (
       <Button variant="ghost" size="icon" className="rounded-full w-9 h-9">
         <Settings className="h-[1.2rem] w-[1.2rem]" />
-        <span className="sr-only">Settings</span>
       </Button>
     )
   }
@@ -44,49 +48,53 @@ export function SettingsDropdown() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full w-9 h-9 cursor-pointer">
           <Settings className="h-[1.2rem] w-[1.2rem]" />
-          <span className="sr-only">Settings</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuLabel>Settings</DropdownMenuLabel>
 
-        <DropdownMenuSeparator />
+      <DropdownMenuContent align="end" className="w-44 p-3 font-(family-name:--font-montserrat)">
 
-        <DropdownMenuGroup>
-          <DropdownMenuLabel className="flex items-center text-xs font-normal text-muted-foreground">
-            <Globe className="mr-2 h-4 w-4" />
-            Language
-          </DropdownMenuLabel>
+        {/* Language */}
+        <div className="flex items-center gap-1.5 mb-2 text-xs text-muted-foreground">
+          <Globe className="h-3.5 w-3.5" />
+          <span>Language</span>
+        </div>
+        <div className="flex flex-col gap-0.5 mb-3">
           {LANGUAGES.map((lang) => (
-            <DropdownMenuItem
+            <button
               key={lang.code}
               onClick={() => switchLanguage(lang.code)}
-              className={currentLang === lang.code ? "bg-accent cursor-pointer" : "cursor-pointer"}
+              className={`w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors hover:bg-accent
+                ${currentLang === lang.code
+                  ? "font-semibold text-[#317F5F]"
+                  : "text-foreground"}`}
             >
-              <span className="ml-6">{lang.label}</span>
-              {currentLang === lang.code && <span className="ml-auto text-xs text-[#317F5F]">Active</span>}
-            </DropdownMenuItem>
+              {lang.label}
+            </button>
           ))}
-        </DropdownMenuGroup>
+        </div>
 
-        <DropdownMenuSeparator />
+        <div className="h-px bg-border mb-3" />
 
-        <DropdownMenuGroup>
-          <DropdownMenuLabel className="flex items-center text-xs font-normal text-muted-foreground">
-            {theme === "dark" ? <Moon className="mr-2 h-4 w-4" /> : <Sun className="mr-2 h-4 w-4" />}
-            Theme
-          </DropdownMenuLabel>
-          {(["light", "dark", "system"] as const).map((t) => (
-            <DropdownMenuItem
-              key={t}
-              onClick={() => setTheme(t)}
-              className={theme === t ? "bg-accent cursor-pointer" : "cursor-pointer"}
+        {/* Theme */}
+        <div className="flex items-center gap-1.5 mb-2 text-xs text-muted-foreground">
+          {theme === "dark" ? <Moon className="h-3.5 w-3.5" /> : <Sun className="h-3.5 w-3.5" />}
+          <span>Theme</span>
+        </div>
+        <div className="flex flex-col gap-0.5">
+          {THEMES.map(({ value, label }) => (
+            <button
+              key={value}
+              onClick={() => setTheme(value)}
+              className={`w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors hover:bg-accent
+                ${theme === value
+                  ? "font-semibold text-[#317F5F]"
+                  : "text-foreground"}`}
             >
-              <span className="ml-6 capitalize">{t}</span>
-              {theme === t && <span className="ml-auto text-xs text-[#317F5F]">Active</span>}
-            </DropdownMenuItem>
+              {label}
+            </button>
           ))}
-        </DropdownMenuGroup>
+        </div>
+
       </DropdownMenuContent>
     </DropdownMenu>
   )
