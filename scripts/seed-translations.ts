@@ -249,27 +249,27 @@ const data: Record<"en" | "vi", Translations> = {
 
     homepage: flatten({
       hero: {
-        title: "Chơi, Học & Chia Sẻ",
+        title: "Cải thiện tiếng Anh trực tuyến",
         description:
-          "Nơi để chơi game, chia sẻ ý tưởng qua blog,<br />và kết nối với những người yêu thích học hỏi.",
-        button: "Khám phá Blog",
+          "Trang web của chúng tôi giúp bạn nâng cao tiếng Anh mỗi ngày qua tin tức thực tế và audio chuẩn bản xứ.<br />Nội dung đa dạng, dễ tiếp cận, phù hợp cho cả học tập lẫn luyện thi – vừa hiệu quả, vừa thú vị.",
+        button: "Thử ngay!",
       },
     }),
 
     homepage_features: flatten({
-      title: "Bạn có thể làm gì ở đây?",
-      subtitle: "Tất cả trong một nơi.",
+      title: "Học tiếng Anh không khó",
+      subtitle: "Vậy học ở đâu?",
       blog: {
-        title: "Blog",
+        title: "Báo hay",
         description:
-          "Viết và chia sẻ bài viết với cộng đồng. Theo dõi các tác giả yêu thích và nhận thông báo khi họ đăng bài mới.",
-        button: "Đến Blog",
+          "Học tiếng Anh qua việc đọc báo là một phương pháp hiệu quả và thực tế giúp bạn cải thiện cả vốn từ vựng lẫn kỹ năng đọc hiểu. Bằng cách tiếp cận với các bài viết mang tính thời sự, bạn không chỉ học được cách dùng từ trong ngữ cảnh thực tế mà còn nâng cao kiến thức xã hội. Đây là cách học tự nhiên, linh hoạt, và phù hợp với mọi trình độ.",
+        button: "Xem thêm",
       },
       games: {
-        title: "Trò chơi",
+        title: "Audio chất",
         description:
-          "Chơi Snake, Pong, Breakout và nhiều hơn nữa. Cạnh tranh trên bảng xếp hạng và khoe điểm cao nhất của bạn.",
-        button: "Chơi ngay",
+          "Học tiếng Anh qua audio giúp bạn rèn luyện kỹ năng nghe và phát âm một cách hiệu quả. Khi thường xuyên nghe tiếng Anh từ các bản tin, hội thoại hoặc podcast, bạn sẽ dần làm quen với ngữ điệu, tốc độ nói tự nhiên và cách sử dụng từ vựng trong thực tế.",
+        button: "Xem thêm",
       },
     }),
 

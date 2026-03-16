@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useLng } from "@/hooks/useLng";
 import { useGamesConfig } from "@/hooks/useGamesConfig";
+import { useClientTranslation } from "@/hooks/useClientTranslation";
 
 const gameGradients: Record<string, string> = {
   snake: "from-emerald-400 to-green-600",
@@ -14,6 +15,7 @@ export default function GamesPage() {
   const lng = useLng();
   const gamesQuery = useGamesConfig();
   const games = gamesQuery.data ?? [];
+  const { t } = useClientTranslation(lng, "games");
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">
@@ -21,9 +23,9 @@ export default function GamesPage() {
         <p className="text-sm text-muted-foreground">Bonus</p>
       </div>
       <div className="mb-8 flex items-start justify-between">
-        <h1 className="text-3xl font-bold text-foreground">Mini Games</h1>
+        <h1 className="text-3xl font-bold text-foreground">{t("title")}</h1>
         <Link href={`/${lng}/leaderboard`} className="text-sm text-muted-foreground hover:text-foreground">
-          Leaderboard →
+          {t("leaderboard")} →
         </Link>
       </div>
 
@@ -54,7 +56,7 @@ export default function GamesPage() {
                 <h3 className="mb-1 text-lg font-semibold text-foreground">{game.display_name}</h3>
                 <p className="mb-4 text-sm text-muted-foreground">{game.description}</p>
                 <span className="inline-block rounded-full border border-border px-3 py-0.5 text-xs text-muted-foreground transition-colors group-hover:border-[#c8e63d] group-hover:bg-[#c8e63d] group-hover:text-foreground">
-                  Play Now
+                  {t("play")}
                 </span>
               </div>
             </Link>

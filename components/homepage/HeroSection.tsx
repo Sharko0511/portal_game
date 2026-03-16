@@ -4,22 +4,21 @@ import Image from "next/image"
 import { useLng } from "@/hooks/useLng"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
+import { useClientTranslation } from "@/hooks/useClientTranslation"
 
 export default function HeroSection() {
   const lng = useLng()
   const router = useRouter()
+  const { t } = useClientTranslation(lng, "homepage")
 
   return (
-    <section className="w-full bg-[#a4c639] py-4 md:py-[64px]">
-      <div className="mx-auto px-4 md:px-[84px] flex flex-col md:flex-row md:items-start md:gap-11">
+    <section className="w-full bg-[#94B506] py-8 md:py-[64px]">
+      <div className="mx-auto px-4 md:px-[84px] flex flex-col md:flex-row md:items-start md:gap-10">
 
         {/* Mobile layout */}
         <div className="flex flex-col md:hidden w-full">
           <h1 className="text-4xl font-bold text-white leading-tight mb-4">
-            Learn. Share.{" "}
-            <span className="whitespace-nowrap">
-              Grow Together<span className="text-[#317F5F] inline-block">.</span>
-            </span>
+            {t("hero.title")}<span className="text-[#225D2D]">.</span>
           </h1>
           <div className="w-full mb-4">
             <Image
@@ -32,15 +31,15 @@ export default function HeroSection() {
               unoptimized
             />
           </div>
-          <p className="text-sm text-white/90 mb-4">
-            A place to read, write, and discuss ideas. Follow writers you love and get notified when they post.
-          </p>
+          <p className="text-sm text-white/90 mb-4"
+            dangerouslySetInnerHTML={{ __html: t("hero.description") }}
+          />
           <div className="mt-auto">
             <Button
-              className="w-full bg-[#317F5F] hover:bg-[#317F5F]/90 text-white rounded-full px-6 py-1.5 h-11 text-base cursor-pointer"
+              className="w-full bg-[#225D2D] hover:bg-[#225D2D]/90 text-white rounded-full px-8 py-4 h-16 text-2xl font-semibold cursor-pointer"
               onClick={() => router.push(`/${lng}/blog`)}
             >
-              Read the Blog
+              {t("hero.button")}
             </Button>
           </div>
         </div>
@@ -48,20 +47,17 @@ export default function HeroSection() {
         {/* Desktop — Text left 70% */}
         <div className="hidden md:flex md:w-[70%] flex-col gap-6">
           <h1 className="md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white md:leading-[1.2]">
-            Learn. Share.{" "}
-            <span className="whitespace-nowrap">
-              Grow Together<span className="text-[#317F5F] inline-block">.</span>
-            </span>
+            {t("hero.title")}<span className="text-[#225D2D]">.</span>
           </h1>
           <Button
-            className="w-auto self-start text-xl bg-[#317F5F] hover:bg-[#317F5F]/90 text-white rounded-full px-8 py-4 h-14 cursor-pointer"
+            className="w-auto self-start text-2xl font-semibold bg-[#225D2D] hover:bg-[#225D2D]/90 text-white rounded-full px-8 py-4 h-16 cursor-pointer"
             onClick={() => router.push(`/${lng}/blog`)}
           >
-            Read the Blog
+            {t("hero.button")}
           </Button>
-          <p className="md:text-lg lg:text-xl text-white/90">
-            A place to read, write, and discuss ideas. Follow writers you love and get notified when they post.
-          </p>
+          <p className="md:text-lg lg:text-xl text-white/90"
+            dangerouslySetInnerHTML={{ __html: t("hero.description") }}
+          />
         </div>
 
         {/* Desktop — Image right 30% */}

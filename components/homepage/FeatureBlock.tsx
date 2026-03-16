@@ -18,7 +18,7 @@ export default function FeatureBlock({ title, description, buttonText, onClick }
       </div>
       <div className="w-full mt-auto">
         <Button
-          className="w-full md:w-auto text-base md:text-[24px] bg-[#317F5F] hover:bg-[#317F5F]/90 text-white rounded-full px-6 py-1.5 h-11 md:py-4 md:h-16 cursor-pointer"
+          className="w-full md:w-auto text-2xl font-semibold bg-[#225D2D] hover:bg-[#225D2D]/90 text-white rounded-full px-8 py-4 h-16 cursor-pointer"
           onClick={onClick}
         >
           {buttonText}
