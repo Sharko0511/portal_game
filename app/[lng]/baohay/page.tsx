@@ -99,20 +99,20 @@ function BaohayHero({ lng, first, second }: { lng: string; first: Post; second?:
         <span className="font-medium text-white">Báo hay</span>
       </nav>
 
-      {/* Row 1: [image | detail] */}
-      <div className="mb-3 grid grid-cols-2 gap-6">
-        <HeroCoverCell post={first} className="h-72" />
-        <HeroDetailCard post={first} className="h-72" />
+      {/* Row 1: mobile stacks (detail→image), desktop: [image | detail] */}
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-6">
+        <HeroDetailCard post={first} className="order-1 h-auto md:order-2 md:h-72" />
+        <HeroCoverCell post={first} className="order-2 h-56 md:order-1 md:h-72" />
       </div>
 
       {/* Separator between rows */}
-      {second && <div className="my-8 h-px bg-white/20" />}
+      {second && <div className="mt-8 mb-2 md:my-8 h-px bg-white/20" />}
 
-      {/* Row 2: [detail | image] */}
+      {/* Row 2: mobile stacks (detail→image), desktop: [detail | image] */}
       {second && (
-        <div className="grid grid-cols-2 gap-6">
-          <HeroDetailCard post={second} className="h-72" />
-          <HeroCoverCell post={second} className="h-72" />
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-6">
+          <HeroDetailCard post={second} className="h-auto md:h-72" />
+          <HeroCoverCell post={second} className="h-56 md:h-72" />
         </div>
       )}
     </section>
