@@ -289,7 +289,7 @@ function PostContent({ id }: { id: string }) {
           {/* Level badge */}
           {post.level && (
             <div className="mb-6">
-              <span className="inline-block rounded-full bg-orange-400 px-3 py-1 text-xs font-semibold text-white">
+              <span className="inline-flex h-7.5 items-center justify-center rounded-full bg-[#F47121] px-3 text-sm font-semibold text-white">
                 {LEVEL_LABELS[post.level] ?? post.level}
               </span>
             </div>

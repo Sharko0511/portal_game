@@ -42,12 +42,12 @@ function HeroDetailCard({ post, className = "" }: { post: Post; className?: stri
   return (
     <Link
       href={`/blog/${post.id}`}
-      className={`group flex flex-col gap-4 rounded-2xl bg-[#1b5e20] p-6 hover:bg-[#236b27] transition-colors ${className}`}
+      className={`group flex flex-col gap-4 rounded-2xl bg-[#1b5e20] py-6 px-2 hover:bg-[#236b27] transition-colors ${className}`}
     >
       {/* Badge + reading time */}
       <div className="flex items-center justify-between gap-2">
         {post.level && (
-          <span className="inline-block rounded-full bg-orange-400 px-3 py-1 text-xs font-semibold text-white">
+          <span className="inline-flex h-7.5 items-center justify-center rounded-full bg-[#F47121] px-3 text-sm font-semibold text-white">
             {LEVEL_LABELS[post.level] ?? post.level}
           </span>
         )}
@@ -100,7 +100,7 @@ function BaohayHero({ lng, first, second }: { lng: string; first: Post; second?:
       </nav>
 
       {/* Row 1: [image | detail] */}
-      <div className="mb-3 grid grid-cols-2 gap-3">
+      <div className="mb-3 grid grid-cols-2 gap-6">
         <HeroCoverCell post={first} className="h-72" />
         <HeroDetailCard post={first} className="h-72" />
       </div>
@@ -110,7 +110,7 @@ function BaohayHero({ lng, first, second }: { lng: string; first: Post; second?:
 
       {/* Row 2: [detail | image] */}
       {second && (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-6">
           <HeroDetailCard post={second} className="h-72" />
           <HeroCoverCell post={second} className="h-72" />
         </div>
