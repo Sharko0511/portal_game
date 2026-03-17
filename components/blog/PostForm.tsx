@@ -156,7 +156,7 @@ export default function PostForm({
 
       {/* Cover image */}
       <div>
-        <ImageUpload label="Cover Image (optional)" onUpload={setCoverImageUrl} />
+        <ImageUpload label="Cover Image (optional)" onUpload={setCoverImageUrl} initialUrl={coverImageUrl} />
         {coverImageUrl && (
           <input
             type="text"

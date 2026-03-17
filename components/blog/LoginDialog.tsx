@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { useAuth } from "@/hooks/useAuth";
 import { useLng } from "@/hooks/useLng";
+import { useClientTranslation } from "@/hooks/useClientTranslation";
 
 interface LoginDialogProps {
   open: boolean;
@@ -9,9 +12,32 @@ interface LoginDialogProps {
 }
 
 export default function LoginDialog({ open, onClose }: LoginDialogProps) {
+  const { signIn } = useAuth();
   const lng = useLng();
+  const { t } = useClientTranslation(lng, "auth");
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   if (!open) return null;
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      await signIn(email, password);
+      setEmail("");
+      setPassword("");
+      onClose();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : t("login.error"));
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div
@@ -30,27 +56,52 @@ export default function LoginDialog({ open, onClose }: LoginDialogProps) {
           ✕
         </button>
 
-        <h2 className="mb-2 text-xl font-bold text-foreground">Sign in to continue</h2>
+        <h2 className="mb-1 text-xl font-bold text-foreground">{t("login.title")}</h2>
         <p className="mb-6 text-sm text-muted-foreground">
           You need an account to like, comment, and follow authors.
         </p>
 
-        <div className="flex flex-col gap-3">
-          <Link
-            href={`/${lng}/login`}
-            onClick={onClose}
-            className="flex items-center justify-center rounded-full bg-foreground px-6 py-2.5 text-sm font-semibold text-background transition-colors hover:bg-foreground/85"
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">{t("login.email")}</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-foreground/40 focus:ring-2 focus:ring-[#c8e63d]/20"
+            />
+          </div>
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">{t("login.password")}</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-foreground/40 focus:ring-2 focus:ring-[#c8e63d]/20"
+            />
+          </div>
+          {error && <p className="text-sm text-red-600">{error}</p>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full rounded-full bg-[#c8e63d] px-6 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-[#c8e63d]/85 disabled:opacity-60"
           >
-            Log in
-          </Link>
+            {loading ? t("login.submitting") : t("login.submit")}
+          </button>
+        </form>
+
+        <p className="mt-4 text-center text-sm text-muted-foreground">
+          {t("login.no_account")}{" "}
           <Link
             href={`/${lng}/register`}
             onClick={onClose}
-            className="flex items-center justify-center rounded-full bg-[#a4c639] px-6 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-[#a4c639]/85"
+            className="font-medium text-foreground hover:underline"
           >
-            Create account
+            {t("login.register_link")}
           </Link>
-        </div>
+        </p>
       </div>
     </div>
   );
