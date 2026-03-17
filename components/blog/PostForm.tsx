@@ -1,9 +1,41 @@
 "use client";
 
 import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import BlockEditor, { BlocksDoc } from "./BlockEditor";
 import ImageUpload from "./ImageUpload";
 import { PostCategory, PostLevel, PostVisibility, PlayerFeedback } from "@/hooks/blog/usePost";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+
+// ── Select built on Radix DropdownMenu (portal = no overflow) ──
+interface SelectOption { value: string; label: string }
+function SelectField({ value, onChange, options }: { value: string; onChange: (v: string) => void; options: SelectOption[] }) {
+  const selected = options.find((o) => o.value === value);
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          className="flex w-full items-center justify-between rounded-xl border border-border bg-white px-3 py-2 text-sm text-foreground outline-none transition-colors hover:border-gray-400 data-[state=open]:border-gray-400"
+        >
+          <span>{selected?.label ?? "—"}</span>
+          <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform duration-200 in-data-[state=open]:rotate-180" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-(--radix-dropdown-menu-trigger-width) p-1 duration-200 data-[state=open]:slide-in-from-top-1 data-[state=closed]:slide-out-to-top-1">
+        {options.map((o) => (
+          <DropdownMenuItem
+            key={o.value}
+            onClick={() => onChange(o.value)}
+            className={`rounded-lg px-3 py-2 text-sm cursor-pointer ${o.value === value ? "font-semibold text-[#317F5F] bg-green-50 focus:bg-green-50" : ""}`}
+          >
+            {o.label}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 export interface PostFormValues {
   title: string;
@@ -186,28 +218,26 @@ export default function PostForm({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="mb-1.5 block text-sm font-medium text-foreground">Category</label>
-              <select
+              <SelectField
                 value={category}
-                onChange={(e) => setCategory(e.target.value as PostCategory)}
-                className="w-full rounded-xl border border-border bg-white px-3 py-2 text-sm text-foreground outline-none focus:border-gray-400"
-              >
-                <option value="blog">Blog</option>
-                <option value="baohay">Báo hay</option>
-                <option value="audiochat">Audio chat</option>
-              </select>
+                onChange={(v) => setCategory(v as PostCategory)}
+                options={[
+                  { value: "blog", label: "Blog" },
+                  { value: "baohay", label: "Báo hay" },
+                  { value: "audiochat", label: "Audio chat" },
+                ]}
+              />
             </div>
             <div>
               <label className="mb-1.5 block text-sm font-medium text-foreground">CEFR Level</label>
-              <select
+              <SelectField
                 value={level}
-                onChange={(e) => setLevel(e.target.value as PostLevel | "")}
-                className="w-full rounded-xl border border-border bg-white px-3 py-2 text-sm text-foreground outline-none focus:border-gray-400"
-              >
-                <option value="">None</option>
-                {(Object.entries(LEVEL_LABELS) as [PostLevel, string][]).map(([val, label]) => (
-                  <option key={val} value={val}>{label}</option>
-                ))}
-              </select>
+                onChange={(v) => setLevel(v as PostLevel | "")}
+                options={[
+                  { value: "", label: "None" },
+                  ...(Object.entries(LEVEL_LABELS) as [PostLevel, string][]).map(([val, label]) => ({ value: val, label })),
+                ]}
+              />
             </div>
           </div>
 
@@ -364,12 +394,12 @@ export default function PostForm({
 
       <div className="flex items-center gap-3 border-t border-border pt-4">
         <button type="submit" disabled={loading}
-          className="rounded-full bg-accent px-6 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent/85 disabled:opacity-50 disabled:cursor-not-allowed">
+          className="rounded-full bg-[#225D2D] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#225D2D]/85 disabled:opacity-50 disabled:cursor-not-allowed">
           {loading ? "Saving..." : submitLabel}
         </button>
         {onCancel && (
           <button type="button" onClick={onCancel} disabled={loading}
-            className="rounded-full border border-border px-6 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-gray-50 disabled:opacity-50">
+            className="rounded-full border-2 border-border px-6 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-gray-400 hover:bg-gray-50 disabled:opacity-50">
             Cancel
           </button>
         )}

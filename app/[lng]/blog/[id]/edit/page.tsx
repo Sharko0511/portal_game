@@ -59,15 +59,15 @@ function EditPostContent({ id }: { id: string }) {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
-      <div className="mb-8 flex items-center gap-4">
+    <div className="mx-auto max-w-3xl md:px-6 md:py-8">
+      <div className="mb-6 flex items-center gap-4 px-4 pt-6 md:px-0 md:pt-0">
         <Link href={`/${lng}/blog/${id}`} className="text-sm text-muted-foreground hover:text-foreground">
           ← Back to Post
         </Link>
         <h1 className="text-2xl font-bold text-foreground">Edit Post</h1>
       </div>
 
-      <div className="rounded-2xl border border-border bg-card p-8">
+      <div className="rounded-none border-y border-border bg-card p-4 md:rounded-2xl md:border md:p-8">
         <PostForm
           initialValues={{
             title: post.title,
