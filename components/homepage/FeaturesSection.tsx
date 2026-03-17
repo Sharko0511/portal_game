@@ -14,11 +14,11 @@ export default function FeaturesSection() {
     <section className="w-full bg-background py-8">
       <div className="mx-auto px-4 md:px-21">
         <div className="text-center mb-6 md:mb-8">
-          <h2 className="text-3xl md:text-5xl lg:text-[64px] font-bold md:leading-27 text-[#a4c639] mb-2">
+          <h2 className="text-[40px] md:text-5xl lg:text-[64px] font-bold md:leading-27 text-[#a4c639] mb-2">
             {t("title")}
             <span className="text-[#317F5F]">.</span>
           </h2>
-          <p className="text-xl md:text-3xl lg:text-[40px] text-[#317F5F] font-bold md:leading-12">
+          <p className="text-[24px] md:text-3xl lg:text-[40px] text-[#317F5F] font-bold md:leading-12">
             {t("subtitle")}
           </p>
         </div>

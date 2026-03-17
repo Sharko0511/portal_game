@@ -30,7 +30,7 @@ export default async function LngLayout({ children, params }: Props) {
     <TranslationSeed seed={seed}>
       <div className="flex min-h-screen flex-col bg-background overflow-x-hidden">
         <Navbar />
-        <main className="flex-1 w-full">
+        <main className="flex-1 w-full pt-14">
           {children}
         </main>
         <Footer />

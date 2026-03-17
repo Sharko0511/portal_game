@@ -20,7 +20,7 @@ const THEMES = [
   { value: "system",label: "System",icon: Monitor },
 ] as const
 
-export function SettingsDropdown() {
+export function SettingsDropdown({ mobile = false }: { mobile?: boolean }) {
   const router = useRouter()
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
@@ -35,6 +35,58 @@ export function SettingsDropdown() {
     router.push(newPath)
   }
 
+  // ── Mobile inline version ─────────────────────────────────────
+  if (mobile) {
+    return (
+      <div className="flex flex-col gap-5 border-t border-border pt-6">
+        {/* Language */}
+        <div>
+          <div className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+            <Globe className="h-4 w-4" />
+            <span>Language</span>
+          </div>
+          <div className="flex gap-2">
+            {LANGUAGES.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => switchLanguage(lang.code)}
+                className={`flex-1 rounded-full border py-2.5 text-sm font-semibold transition-colors
+                  ${currentLang === lang.code
+                    ? "border-[#317F5F] bg-[#317F5F]/10 text-[#317F5F]"
+                    : "border-border text-foreground hover:border-[#317F5F] hover:text-[#317F5F]"}`}
+              >
+                {lang.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Theme */}
+        <div>
+          <div className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+            {!mounted || theme === "dark" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+            <span>Theme</span>
+          </div>
+          <div className="flex gap-2">
+            {THEMES.map(({ value, label }) => (
+              <button
+                key={value}
+                onClick={() => setTheme(value)}
+                className={`flex-1 rounded-full border py-2.5 text-sm font-semibold transition-colors
+                  ${mounted && theme === value
+                    ? "border-[#317F5F] bg-[#317F5F]/10 text-[#317F5F]"
+                    : "border-border text-foreground hover:border-[#317F5F] hover:text-[#317F5F]"}`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // ── Desktop icon + dropdown version ──────────────────────────
   if (!mounted) {
     return (
       <Button variant="ghost" size="icon" className="rounded-full w-9 h-9">

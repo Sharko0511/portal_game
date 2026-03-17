@@ -19,6 +19,27 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const searchWrapperRef = useRef<HTMLDivElement>(null);
+  const lastScrollY = useRef(0);
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    lastScrollY.current = window.scrollY;
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      const el = headerRef.current;
+      if (!el) return;
+      if (currentY > lastScrollY.current && currentY > 60) {
+        el.style.transition = "transform 300ms ease";
+        el.style.transform = "translateY(-100%)";
+      } else if (currentY < lastScrollY.current) {
+        el.style.transition = "transform 200ms ease";
+        el.style.transform = "translateY(0)";
+      }
+      lastScrollY.current = currentY;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     if (!searchOpen) return;
@@ -35,15 +56,16 @@ export default function Navbar() {
   }, [searchOpen]);
 
   return (
-    <header className="w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 shrink-0">
+    <>
+    <header ref={headerRef} className="fixed top-0 left-0 right-0 z-40 w-full border-b bg-background">
       <div className="w-full flex h-14 items-center justify-between px-4 md:px-6 xl:px-21">
         {/* Logo */}
         <div className="flex items-center">
           <Link href={`/${lng}`} className="flex items-center">
-            <span className="font-bold text-xl xl:text-2xl 2xl:text-3xl whitespace-nowrap">
+            <span className="font-bold text-[26px] xl:text-2xl 2xl:text-3xl whitespace-nowrap">
               The Good Learning
             </span>
-            <span className="text-[#317F5F] text-xl xl:text-2xl 2xl:text-3xl">
+            <span className="text-[#317F5F] text-[26px] xl:text-2xl 2xl:text-3xl">
               .
             </span>
           </Link>
@@ -57,14 +79,10 @@ export default function Navbar() {
           variant="ghost"
           size="icon"
           className="xl:hidden h-8 w-8"
-          onClick={() => setMobileOpen(!mobileOpen)}
+          onClick={() => setMobileOpen(true)}
         >
-          {mobileOpen ? (
-            <X className="h-5 w-5" />
-          ) : (
-            <Menu className="h-5 w-5" />
-          )}
-          <span className="sr-only">Toggle menu</span>
+          <Menu className="h-5 w-5" />
+          <span className="sr-only">Open menu</span>
         </Button>
 
         {/* Desktop nav — only at lg+ */}
@@ -176,88 +194,87 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu — shown below lg */}
-      {mobileOpen && (
-        <div className="xl:hidden px-4 py-4 border-t border-border bg-background">
-          <nav className="flex flex-col space-y-4">
-            <Link
-              href={`/${lng}`}
-              onClick={() => setMobileOpen(false)}
-              className="text-base font-semibold hover:text-[#317F5F] py-1"
-            >
-              {t("navigation.home")}
-            </Link>
-            <Link
-              href={`/${lng}/baohay`}
-              onClick={() => setMobileOpen(false)}
-              className="text-base font-semibold hover:text-[#317F5F] py-1"
-            >
-              {t("navigation.blog")}
-            </Link>
-            <Link
-              href={`/${lng}/audiochat`}
-              onClick={() => setMobileOpen(false)}
-              className="text-base font-semibold hover:text-[#317F5F] py-1"
-            >
-              {t("navigation.audio")}
-            </Link>
-            <Link
-              href={`/${lng}/games`}
-              onClick={() => setMobileOpen(false)}
-              className="text-base font-semibold hover:text-[#317F5F] py-1"
-            >
-              {t("navigation.games")}
-            </Link>
-            {user && profile && (
-              <Link
-                href={`/${lng}/blog`}
-                onClick={() => setMobileOpen(false)}
-                className="text-base font-semibold hover:text-[#317F5F] py-1"
-              >
-                {t("navigation.feed")}
-              </Link>
-            )}
+    </header>
 
-            {/* Mobile search */}
-            <div className="relative w-full py-1">
+      {/* Mobile menu — full-screen overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-background xl:hidden">
+          {/* Overlay header */}
+          <div className="flex h-14 shrink-0 items-center justify-between border-b border-border px-4">
+            <Link href={`/${lng}`} onClick={() => setMobileOpen(false)} className="flex items-center">
+              <span className="font-bold text-xl">The Good Learning</span>
+              <span className="text-[#317F5F] text-xl">.</span>
+            </Link>
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setMobileOpen(false)}>
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+
+          {/* Scrollable body */}
+          <div className="flex flex-1 flex-col overflow-y-auto px-4 py-6">
+            {/* Search */}
+            <div className="relative mb-6">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 type="text"
                 placeholder={t("search.placeholder")}
-                className="pr-8 rounded-full border-[#8C9199] focus-visible:ring-0 focus-visible:ring-offset-0 h-9 bg-[rgba(34,93,45,0.50)] placeholder:text-[#eeeeee] focus:placeholder:text-transparent text-white"
+                className="h-10 rounded-full border-border bg-muted pl-10 pr-4 focus-visible:ring-1 focus-visible:ring-[#317F5F]"
               />
-              <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#eeeeee]" />
             </div>
 
-            <div className="flex justify-start py-1">
-              <SettingsDropdown />
-            </div>
+            {/* Nav links */}
+            <nav className="flex flex-col">
+              {[
+                { href: `/${lng}`, label: t("navigation.home") },
+                { href: `/${lng}/baohay`, label: t("navigation.blog") },
+                { href: `/${lng}/audiochat`, label: t("navigation.audio") },
+                { href: `/${lng}/games`, label: t("navigation.games") },
+                ...(user && profile ? [{ href: `/${lng}/blog`, label: t("navigation.feed") }] : []),
+                ...(user && profile?.role === "admin" ? [{ href: `/${lng}/admin`, label: t("navigation.admin") }] : []),
+              ].map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-between border-b border-border py-4 text-lg font-semibold transition-colors hover:text-[#317F5F]"
+                >
+                  {label}
+                  <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                </Link>
+              ))}
+            </nav>
 
-            {!loading &&
-              (user && profile ? (
-                <div className="py-1">
+            {/* Settings */}
+            <SettingsDropdown mobile />
+
+            {/* Auth */}
+            {!loading && (
+              user && profile ? (
+                <div className="mt-6">
                   <UserMenu />
                 </div>
               ) : (
-                <>
-                  <Link
-                    href={`/${lng}/login`}
-                    onClick={() => setMobileOpen(false)}
-                    className="text-base font-semibold text-muted-foreground hover:text-[#317F5F] py-1"
-                  >
-                    {t("navigation.login")}
-                  </Link>
+                <div className="mt-6 flex flex-col gap-3 pb-8">
                   <Link
                     href={`/${lng}/register`}
                     onClick={() => setMobileOpen(false)}
-                    className="inline-block w-fit rounded-full bg-[#a4c639] px-5 py-2 font-semibold text-foreground hover:bg-[#a4c639]/85"
+                    className="flex h-11 items-center justify-center rounded-full bg-[#a4c639] font-semibold text-foreground transition-colors hover:bg-[#a4c639]/85"
                   >
                     {t("navigation.register")}
                   </Link>
-                </>
-              ))}
-          </nav>
+                  <Link
+                    href={`/${lng}/login`}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex h-11 items-center justify-center rounded-full border border-border font-semibold text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {t("navigation.login")}
+                  </Link>
+                </div>
+              )
+            )}
+          </div>
         </div>
       )}
-    </header>
+    </>
   );
 }

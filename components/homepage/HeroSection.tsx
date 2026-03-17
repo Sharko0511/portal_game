@@ -17,7 +17,7 @@ export default function HeroSection() {
 
         {/* Mobile layout */}
         <div className="flex flex-col md:hidden w-full">
-          <h1 className="text-4xl font-bold text-white leading-tight mb-4">
+          <h1 className="text-[36px] font-bold text-white leading-tight mb-4">
             {t("hero.title")}<span className="text-[#225D2D]">.</span>
           </h1>
           <div className="w-full mb-4">
@@ -36,7 +36,7 @@ export default function HeroSection() {
           />
           <div className="mt-auto">
             <Button
-              className="w-full bg-[#225D2D] hover:bg-[#225D2D]/90 text-white rounded-full px-8 py-4 h-16 text-2xl font-semibold cursor-pointer"
+              className="w-full bg-[#225D2D] hover:bg-[#225D2D]/90 text-white rounded-full px-6 h-12 text-base font-semibold cursor-pointer"
               onClick={() => router.push(`/${lng}/blog`)}
             >
               {t("hero.button")}
