@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { Post, PostLevel } from "@/hooks/blog/usePost";
+import { useLng } from "@/hooks/useLng";
+import { useClientTranslation } from "@/hooks/useClientTranslation";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("vi-VN", {
@@ -33,6 +35,8 @@ interface LevelGroupProps {
 }
 
 function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
+  const lng = useLng();
+  const { t } = useClientTranslation(lng, "blog");
   return (
     <section className={`${first ? "" : "border-t border-border pt-8"}`}>
       {posts.map((post, i) => (
@@ -47,7 +51,7 @@ function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
                   href={`/${category}?level=${level}`}
                   className="mt-1 inline-block text-sm text-muted-foreground hover:text-foreground"
                 >
-                  more on this topic ↗
+                  {t("more_on_topic")} ↗
                 </Link>
               </>
             ) : null}
@@ -77,7 +81,7 @@ function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
             {/* Col 3 (5/8) — read time + date at top, title at bottom */}
             <Link href={`/blog/${post.id}`} className="col-span-5 group flex flex-col justify-between gap-3 self-stretch pt-1">
               <div className="flex items-center justify-between text-sm text-muted-foreground">
-                {post.reading_time > 0 && <span>{post.reading_time} phút đọc</span>}
+                {post.reading_time > 0 && <span>{post.reading_time} {t("reading_time")}</span>}
                 <span>{formatDate(post.created_at)}</span>
               </div>
               <h3 className="text-lg font-semibold text-foreground leading-snug group-hover:underline">

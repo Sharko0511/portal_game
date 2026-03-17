@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import { TranslationSeed } from "@/components/TranslationSeed";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
-const PRELOAD_NS = ["common", "footer", "homepage", "homepage_features", "auth", "games"];
+const PRELOAD_NS = ["common", "footer", "homepage", "homepage_features", "auth", "games", "blog_post", "audiochat"];
 
 async function fetchTranslations(lng: string, ns: string): Promise<Record<string, string>> {
   const supabase = getSupabaseAdmin();

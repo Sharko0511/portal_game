@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useBaohay, Post } from "@/hooks/blog/usePost";
 import ArticleListByLevel from "@/components/blog/ArticleListByLevel";
 import { useLng } from "@/hooks/useLng";
+import { useClientTranslation } from "@/hooks/useClientTranslation";
 
 const LEVEL_LABELS: Record<string, string> = {
   A1: "A1 - Beginner",
@@ -36,6 +37,8 @@ function extractExcerpt(content: Record<string, unknown>, maxLen = 220): string 
 // ── Hero — full-screen-width, 2×2 grid of squares ─────────────
 
 function HeroDetailCard({ post, className = "" }: { post: Post; className?: string }) {
+  const lng = useLng();
+  const { t } = useClientTranslation(lng, "blog");
   return (
     <Link
       href={`/blog/${post.id}`}
@@ -49,7 +52,7 @@ function HeroDetailCard({ post, className = "" }: { post: Post; className?: stri
           </span>
         )}
         {post.reading_time > 0 && (
-          <span className="shrink-0 text-sm text-white/60">{post.reading_time} phút đọc</span>
+          <span className="shrink-0 text-sm text-white/60">{post.reading_time} {t("reading_time")}</span>
         )}
       </div>
       {/* Title */}
@@ -134,7 +137,7 @@ export default function BaohayPage() {
       )}
 
       {/* Article list — constrained width */}
-      <div className="px-10 pt-12 pb-12">
+      <div className="px-4 pt-12 pb-12 md:px-6 xl:px-21">
         {isLoading ? (
           <div className="space-y-4">
             <div className="h-8 w-48 animate-pulse rounded-lg bg-gray-100" />

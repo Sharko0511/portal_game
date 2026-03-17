@@ -4,6 +4,8 @@ import { useState } from "react";
 import CommentItem from "./CommentItem";
 import { useComments, useAddComment, useDeleteComment } from "@/hooks/blog/useComments";
 import { useAuth } from "@/hooks/useAuth";
+import { useLng } from "@/hooks/useLng";
+import { useClientTranslation } from "@/hooks/useClientTranslation";
 
 interface CommentSectionProps {
   postId: string;
@@ -13,6 +15,8 @@ interface CommentSectionProps {
 export default function CommentSection({ postId, onLoginRequired }: CommentSectionProps) {
   const [text, setText] = useState("");
   const { user } = useAuth();
+  const lng = useLng();
+  const { t } = useClientTranslation(lng, "blog_post");
   const commentsQuery = useComments(postId);
   const addComment = useAddComment(postId);
   const deleteComment = useDeleteComment(postId);
@@ -31,7 +35,7 @@ export default function CommentSection({ postId, onLoginRequired }: CommentSecti
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-2">
-        <h2 className="text-lg font-semibold text-foreground">Comments</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t("comments.title")}</h2>
         {!commentsQuery.isLoading && (
           <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-muted-foreground">
             {comments.length}
@@ -51,7 +55,7 @@ export default function CommentSection({ postId, onLoginRequired }: CommentSecti
                 handleSubmit(e as unknown as React.FormEvent);
               }
             }}
-            placeholder="Write a comment... (Enter to submit)"
+            placeholder={t("comments.placeholder")}
             rows={2}
             className="flex-1 resize-none rounded-xl border border-border bg-white px-4 py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
           />
@@ -60,7 +64,7 @@ export default function CommentSection({ postId, onLoginRequired }: CommentSecti
             disabled={!text.trim() || addComment.isPending}
             className="self-end rounded-full bg-[#c8e63d] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[#c8e63d]/85 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {addComment.isPending ? "..." : "Post"}
+            {addComment.isPending ? "..." : t("comments.post")}
           </button>
         </form>
       ) : (
@@ -68,7 +72,7 @@ export default function CommentSection({ postId, onLoginRequired }: CommentSecti
           onClick={onLoginRequired}
           className="w-full rounded-xl border border-border bg-gray-50 px-4 py-3 text-left text-sm text-muted-foreground hover:bg-gray-100 transition-colors"
         >
-          Sign in to leave a comment...
+          {t("comments.sign_in")}
         </button>
       )}
 
@@ -93,7 +97,7 @@ export default function CommentSection({ postId, onLoginRequired }: CommentSecti
           ))}
         </div>
       ) : comments.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No comments yet. Be the first!</p>
+        <p className="text-sm text-muted-foreground">{t("comments.empty")}</p>
       ) : (
         <div className="divide-y divide-gray-100">
           {comments.map((c) => (

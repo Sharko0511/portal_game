@@ -4,12 +4,14 @@ import Link from "next/link";
 import { useAudiochat } from "@/hooks/blog/usePost";
 import ArticleListByLevel from "@/components/blog/ArticleListByLevel";
 import { useLng } from "@/hooks/useLng";
+import { useClientTranslation } from "@/hooks/useClientTranslation";
 
 // ── Page ──────────────────────────────────────────────────────
 
 export default function AudiochatPage() {
   const { data: posts, isLoading } = useAudiochat();
   const lng = useLng();
+  const { t } = useClientTranslation(lng, "audiochat");
 
   return (
     <>
@@ -28,14 +30,14 @@ export default function AudiochatPage() {
         <div className="relative z-10 flex h-full flex-col justify-between px-4 py-6 md:px-6 xl:px-21">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-sm text-white/70">
-            <Link href={`/${lng}`} className="hover:text-white">Trang chủ</Link>
+            <Link href={`/${lng}`} className="hover:text-white">{t("breadcrumb.home")}</Link>
             <span>›</span>
             <span className="font-medium text-[#c8e63d]">Audio chat</span>
           </nav>
 
           {/* Tagline */}
           <p className="text-2xl font-bold text-white md:text-3xl">
-            Cải thiện khả năng nghe qua audio.
+            {t("hero.tagline")}
           </p>
         </div>
       </section>

@@ -2,6 +2,8 @@
 
 import { useLikeStatus, useToggleLike } from "@/hooks/blog/useLike";
 import { useAuth } from "@/hooks/useAuth";
+import { useLng } from "@/hooks/useLng";
+import { useClientTranslation } from "@/hooks/useClientTranslation";
 
 interface LikeButtonProps {
   postId: string;
@@ -11,6 +13,8 @@ interface LikeButtonProps {
 
 export default function LikeButton({ postId, likeCount, onLoginRequired }: LikeButtonProps) {
   const { user } = useAuth();
+  const lng = useLng();
+  const { t } = useClientTranslation(lng, "blog_post");
   const statusQuery = useLikeStatus(postId);
   const toggle = useToggleLike(postId);
 
@@ -41,7 +45,7 @@ export default function LikeButton({ postId, likeCount, onLoginRequired }: LikeB
         />
       </svg>
       <span>
-        {liked ? "Liked" : "Like"} · {likeCount}
+        {liked ? t("liked") : t("like")} · {likeCount}
       </span>
     </button>
   );
