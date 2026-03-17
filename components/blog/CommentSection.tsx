@@ -3,13 +3,16 @@
 import { useState } from "react";
 import CommentItem from "./CommentItem";
 import { useComments, useAddComment, useDeleteComment } from "@/hooks/blog/useComments";
+import { useAuth } from "@/hooks/useAuth";
 
 interface CommentSectionProps {
   postId: string;
+  onLoginRequired?: () => void;
 }
 
-export default function CommentSection({ postId }: CommentSectionProps) {
+export default function CommentSection({ postId, onLoginRequired }: CommentSectionProps) {
   const [text, setText] = useState("");
+  const { user } = useAuth();
   const commentsQuery = useComments(postId);
   const addComment = useAddComment(postId);
   const deleteComment = useDeleteComment(postId);
@@ -37,28 +40,37 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       </div>
 
       {/* Add comment */}
-      <form onSubmit={handleSubmit} className="flex gap-3">
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              handleSubmit(e as unknown as React.FormEvent);
-            }
-          }}
-          placeholder="Write a comment... (Enter to submit)"
-          rows={2}
-          className="flex-1 resize-none rounded-xl border border-border bg-white px-4 py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
-        />
+      {user ? (
+        <form onSubmit={handleSubmit} className="flex gap-3">
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e as unknown as React.FormEvent);
+              }
+            }}
+            placeholder="Write a comment... (Enter to submit)"
+            rows={2}
+            className="flex-1 resize-none rounded-xl border border-border bg-white px-4 py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+          />
+          <button
+            type="submit"
+            disabled={!text.trim() || addComment.isPending}
+            className="self-end rounded-full bg-[#c8e63d] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[#c8e63d]/85 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {addComment.isPending ? "..." : "Post"}
+          </button>
+        </form>
+      ) : (
         <button
-          type="submit"
-          disabled={!text.trim() || addComment.isPending}
-          className="self-end rounded-full bg-[#c8e63d] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[#c8e63d]/85 disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={onLoginRequired}
+          className="w-full rounded-xl border border-border bg-gray-50 px-4 py-3 text-left text-sm text-muted-foreground hover:bg-gray-100 transition-colors"
         >
-          {addComment.isPending ? "..." : "Post"}
+          Sign in to leave a comment...
         </button>
-      </form>
+      )}
 
       {/* Error */}
       {addComment.isError && (

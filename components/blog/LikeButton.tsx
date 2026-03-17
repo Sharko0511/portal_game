@@ -1,13 +1,16 @@
 "use client";
 
 import { useLikeStatus, useToggleLike } from "@/hooks/blog/useLike";
+import { useAuth } from "@/hooks/useAuth";
 
 interface LikeButtonProps {
   postId: string;
   likeCount: number;
+  onLoginRequired?: () => void;
 }
 
-export default function LikeButton({ postId, likeCount }: LikeButtonProps) {
+export default function LikeButton({ postId, likeCount, onLoginRequired }: LikeButtonProps) {
+  const { user } = useAuth();
   const statusQuery = useLikeStatus(postId);
   const toggle = useToggleLike(postId);
 
@@ -16,8 +19,8 @@ export default function LikeButton({ postId, likeCount }: LikeButtonProps) {
 
   return (
     <button
-      onClick={() => toggle.mutate()}
-      disabled={pending || statusQuery.isLoading}
+      onClick={() => { if (!user) { onLoginRequired?.(); return; } toggle.mutate(); }}
+      disabled={!!user && (pending || statusQuery.isLoading)}
       className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 ${
         liked
           ? "border-[#c8e63d] bg-[#c8e63d] text-foreground"

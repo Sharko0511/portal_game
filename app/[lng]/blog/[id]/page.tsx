@@ -8,6 +8,7 @@ import LikeButton from "@/components/blog/LikeButton";
 import FollowButton from "@/components/blog/FollowButton";
 import CommentSection from "@/components/blog/CommentSection";
 import ShareButton from "@/components/blog/ShareButton";
+import LoginDialog from "@/components/blog/LoginDialog";
 import { usePost, useBaohay, useAudiochat, Post } from "@/hooks/blog/usePost";
 import { useAuth } from "@/hooks/useAuth";
 import { useLng } from "@/hooks/useLng";
@@ -177,6 +178,7 @@ function PostContent({ id }: { id: string }) {
   const { profile } = useAuth();
   const postQuery = usePost(id);
   const lng = useLng();
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
 
   if (postQuery.isLoading) {
     return (
@@ -378,22 +380,22 @@ function PostContent({ id }: { id: string }) {
               spread the words
             </p>
             <div className="flex items-center gap-3">
-              <LikeButton postId={post.id} likeCount={post.like_count} />
+              <LikeButton postId={post.id} likeCount={post.like_count} onLoginRequired={() => setLoginDialogOpen(true)} />
               <ShareButton title={post.title} />
             </div>
           </div>
 
-          {/* Comments */}
-          {profile && (
-            <div className="rounded-2xl border border-border bg-card p-6">
-              <CommentSection postId={post.id} />
-            </div>
-          )}
+          {/* Comments — always visible; login dialog for visitors */}
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <CommentSection postId={post.id} onLoginRequired={() => setLoginDialogOpen(true)} />
+          </div>
         </article>
 
         {/* ── Sidebar ── */}
         <PopularSidebar currentId={post.id} category={post.category} />
       </div>
+
+      <LoginDialog open={loginDialogOpen} onClose={() => setLoginDialogOpen(false)} />
     </div>
   );
 }
