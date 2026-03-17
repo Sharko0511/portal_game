@@ -334,7 +334,7 @@ function PostContent({ id }: { id: string }) {
                 {post.player_feedback.map((fb, i) => (
                   <blockquote
                     key={i}
-                    className="rounded-2xl border border-border bg-gray-50 px-6 py-5 text-sm leading-relaxed text-foreground"
+                    className="border-l-4 border-[#317F5F] pl-5 py-1 text-sm leading-relaxed text-foreground"
                   >
                     &ldquo;{fb.content}&rdquo;
                   </blockquote>
