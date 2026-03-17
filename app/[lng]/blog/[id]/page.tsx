@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useState, useRef, useMemo } from "react";
 import Link from "next/link";
 import { BlocksRenderer, BlocksDoc } from "@/components/blog/BlockEditor";
 import TipTapEditor from "@/components/blog/TipTapEditor";
@@ -45,42 +45,73 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 function AudioPlayer({ src }: { src: string }) {
   const [playing, setPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  // Bar container is 20px tall; bars oscillate ±delta around their base height.
+  const bars = useMemo(() =>
+    Array.from({ length: 160 }, (_, i) => {
+      const base = Math.round(4 + Math.abs(Math.sin(i * 0.55) * 6 + Math.sin(i * 1.3) * 5));
+      const delta = Math.round(2 + Math.abs(Math.sin(i * 0.9)) * 4);
+      return {
+        base,
+        min: Math.max(2, base - delta),
+        max: Math.min(18, base + delta),
+        duration: 380 + ((i * 97) % 320),
+        delay: (i * 53) % 700,
+      };
+    }),
+    []
+  );
 
   function toggle() {
-    const audio = document.getElementById("post-audio") as HTMLAudioElement | null;
+    const audio = audioRef.current;
     if (!audio) return;
     if (playing) { audio.pause(); setPlaying(false); }
     else { audio.play(); setPlaying(true); }
   }
 
   return (
-    <div className="mb-6 flex items-center gap-3 rounded-2xl border border-border bg-gray-50 px-5 py-4">
-      <button
-        type="button"
-        onClick={toggle}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-foreground text-background hover:bg-foreground/85 transition-colors"
-        aria-label={playing ? "Pause" : "Play"}
-      >
-        {playing
-          ? <span className="text-sm">❚❚</span>
-          : <span className="ml-0.5 text-sm">▶</span>
+    <>
+      <style>{`
+        @keyframes waveform-bar {
+          0%, 100% { height: var(--h-min); }
+          50% { height: var(--h-max); }
         }
-      </button>
-      <div className="min-w-0 flex-1">
-        <p className="mb-1 text-xs text-muted-foreground">Limiting your screentime? Listen instead.</p>
-        {/* Fake waveform bars */}
-        <div className="flex h-6 items-end gap-px overflow-hidden">
-          {Array.from({ length: 60 }, (_, i) => (
-            <div
-              key={i}
-              className="w-1 shrink-0 rounded-sm bg-gray-300"
-              style={{ height: `${20 + Math.sin(i * 0.7) * 14 + Math.random() * 8}%` }}
-            />
-          ))}
+      `}</style>
+      <p className="mb-2 text-xs text-muted-foreground">Limiting your screentime? Listen instead.</p>
+      <div className="mb-6 w-full rounded-xl border border-border bg-gray-50 px-3" style={{ height: "48px" }}>
+        <div className="flex h-full items-center gap-3">
+          <button
+            type="button"
+            onClick={toggle}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-foreground text-background hover:bg-foreground/85 transition-colors"
+            aria-label={playing ? "Pause" : "Play"}
+          >
+            {playing ? <span className="text-xs">❚❚</span> : <span className="ml-0.5 text-xs">▶</span>}
+          </button>
+          <div className="flex flex-1 h-5 items-end gap-px px-3">
+              {bars.map((bar, i) => (
+                <div
+                  key={i}
+                  className="flex-1 rounded-sm"
+                  style={{
+                    height: `${bar.base}px`,
+                    backgroundColor: playing ? "#317F5F" : "#d1d5db",
+                    ["--h-min" as string]: `${bar.min}px`,
+                    ["--h-max" as string]: `${bar.max}px`,
+                    animationName: playing ? "waveform-bar" : "none",
+                    animationDuration: `${bar.duration}ms`,
+                    animationDelay: `${bar.delay}ms`,
+                    animationTimingFunction: "ease-in-out",
+                    animationIterationCount: "infinite",
+                  }}
+                />
+              ))}
+          </div>
         </div>
+        <audio ref={audioRef} src={src} onEnded={() => setPlaying(false)} />
       </div>
-      <audio id="post-audio" src={src} onEnded={() => setPlaying(false)} />
-    </div>
+    </>
   );
 }
 
