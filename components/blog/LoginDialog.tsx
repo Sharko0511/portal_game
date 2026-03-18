@@ -69,7 +69,7 @@ export default function LoginDialog({ open, onClose }: LoginDialogProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-foreground/40 focus:ring-2 focus:ring-[#c8e63d]/20"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-foreground/40 focus:ring-2 focus:ring-brand-lime-bright/20"
             />
           </div>
           <div>
@@ -79,14 +79,14 @@ export default function LoginDialog({ open, onClose }: LoginDialogProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-foreground/40 focus:ring-2 focus:ring-[#c8e63d]/20"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-foreground/40 focus:ring-2 focus:ring-brand-lime-bright/20"
             />
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-full bg-[#c8e63d] px-6 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-[#c8e63d]/85 disabled:opacity-60"
+            className="w-full rounded-full bg-brand-lime-bright px-6 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-brand-lime-bright/85 disabled:opacity-60"
           >
             {loading ? t("login.submitting") : t("login.submit")}
           </button>

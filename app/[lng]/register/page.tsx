@@ -64,7 +64,7 @@ export default function RegisterPage() {
             <div key={label}>
               <label className="mb-1.5 block text-sm font-medium text-foreground">{label}</label>
               <input type={type} value={value} onChange={(e) => onChange(e.target.value)} required
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-foreground/40 focus:ring-2 focus:ring-[#c8e63d]/20" />
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-foreground/40 focus:ring-2 focus:ring-brand-lime-bright/20" />
             </div>
           ))}
           {error && <p className="text-sm text-red-600">{error}</p>}

@@ -27,7 +27,7 @@ function SelectField({ value, onChange, options }: { value: string; onChange: (v
           <DropdownMenuItem
             key={o.value}
             onClick={() => onChange(o.value)}
-            className={`rounded-lg px-3 py-2 text-sm cursor-pointer ${o.value === value ? "font-semibold text-[#317F5F] bg-green-50 focus:bg-green-50" : ""}`}
+            className={`rounded-lg px-3 py-2 text-sm cursor-pointer ${o.value === value ? "font-semibold text-brand-primary bg-brand-primary/10 focus:bg-brand-primary/10" : ""}`}
           >
             {o.label}
           </DropdownMenuItem>
@@ -394,7 +394,7 @@ export default function PostForm({
 
       <div className="flex items-center gap-3 border-t border-border pt-4">
         <button type="submit" disabled={loading}
-          className="rounded-full bg-[#225D2D] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#225D2D]/85 disabled:opacity-50 disabled:cursor-not-allowed">
+          className="rounded-full bg-brand-dark px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-dark/85 disabled:opacity-50 disabled:cursor-not-allowed">
           {loading ? "Saving..." : submitLabel}
         </button>
         {onCancel && (

@@ -2,6 +2,7 @@ import { Geist, Geist_Mono, Montserrat } from "next/font/google";
 import AuthProvider from "@/components/AuthProvider";
 import QueryProvider from "@/components/QueryProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { fetchThemeCss } from "@/lib/theme";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,9 +25,17 @@ export const metadata = {
   description: "Improve your English through blog posts, articles, and games.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  let themeCss = "";
+  try { themeCss = await fetchThemeCss(); } catch { /* fallback to globals.css */ }
+
   return (
     <html lang="en" suppressHydrationWarning>
+      {themeCss && (
+        <head>
+          <style dangerouslySetInnerHTML={{ __html: themeCss }} />
+        </head>
+      )}
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} antialiased font-montserrat min-h-screen flex flex-col bg-background text-foreground`}
         style={{ fontFamily: "var(--font-montserrat), var(--font-geist-sans), sans-serif" }}

@@ -22,7 +22,7 @@ function BlogFeedContent() {
           </p>
           <Link
             href="/blog/new"
-            className="rounded-full bg-[#c8e63d] px-5 py-2 text-sm font-medium text-gray-900 transition-colors hover:bg-[#c8e63d]/85"
+            className="rounded-full bg-brand-lime-bright px-5 py-2 text-sm font-medium text-gray-900 transition-colors hover:bg-brand-lime-bright/85"
           >
             + New Post
           </Link>

@@ -14,21 +14,47 @@ const LANGUAGES = [
   { code: "vi", label: "Tiếng Việt" },
 ]
 
-const THEMES = [
-  { value: "light", label: "Light", icon: Sun },
-  { value: "dark",  label: "Dark",  icon: Moon },
-  { value: "system",label: "System",icon: Monitor },
-] as const
+interface ThemeOption {
+  value: string
+  label: string
+}
+
+const FALLBACK_THEMES: ThemeOption[] = [
+  { value: "light", label: "Light" },
+  { value: "dark",  label: "Dark"  },
+]
+
+function themeIcon(theme: string) {
+  if (theme === "dark")   return <Moon className="h-3.5 w-3.5" />
+  if (theme === "system") return <Monitor className="h-3.5 w-3.5" />
+  return <Sun className="h-3.5 w-3.5" />
+}
 
 export function SettingsDropdown({ mobile = false }: { mobile?: boolean }) {
-  const router = useRouter()
+  const router   = useRouter()
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [themes, setThemes]   = useState<ThemeOption[]>(FALLBACK_THEMES)
 
   const currentLang = pathname?.split("/")[1] || "en"
 
   useEffect(() => { setMounted(true) }, [])
+
+  // Fetch available themes from DB, append System
+  useEffect(() => {
+    fetch("/api/theme")
+      .then((r) => r.json())
+      .then(({ data }: { data: Record<string, unknown> }) => {
+        if (!data) return
+        const options: ThemeOption[] = Object.keys(data).map((n) => ({
+          value: n,
+          label: n.charAt(0).toUpperCase() + n.slice(1),
+        }))
+        setThemes(options)
+      })
+      .catch(() => { /* keep fallback */ })
+  }, [])
 
   const switchLanguage = (lang: string) => {
     const newPath = pathname?.replace(/^\/[^/]+/, `/${lang}`) || `/${lang}`
@@ -52,8 +78,8 @@ export function SettingsDropdown({ mobile = false }: { mobile?: boolean }) {
                 onClick={() => switchLanguage(lang.code)}
                 className={`flex-1 rounded-full border py-2.5 text-sm font-semibold transition-colors
                   ${currentLang === lang.code
-                    ? "border-[#317F5F] bg-[#317F5F]/10 text-[#317F5F]"
-                    : "border-border text-foreground hover:border-[#317F5F] hover:text-[#317F5F]"}`}
+                    ? "border-brand-primary bg-brand-primary/10 text-brand-primary"
+                    : "border-border text-foreground hover:border-brand-primary hover:text-brand-primary"}`}
               >
                 {lang.label}
               </button>
@@ -67,15 +93,15 @@ export function SettingsDropdown({ mobile = false }: { mobile?: boolean }) {
             {!mounted || theme === "dark" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
             <span>Theme</span>
           </div>
-          <div className="flex gap-2">
-            {THEMES.map(({ value, label }) => (
+          <div className="flex flex-wrap gap-2">
+            {themes.map(({ value, label }) => (
               <button
                 key={value}
                 onClick={() => setTheme(value)}
                 className={`flex-1 rounded-full border py-2.5 text-sm font-semibold transition-colors
                   ${mounted && theme === value
-                    ? "border-[#317F5F] bg-[#317F5F]/10 text-[#317F5F]"
-                    : "border-border text-foreground hover:border-[#317F5F] hover:text-[#317F5F]"}`}
+                    ? "border-brand-primary bg-brand-primary/10 text-brand-primary"
+                    : "border-border text-foreground hover:border-brand-primary hover:text-brand-primary"}`}
               >
                 {label}
               </button>
@@ -117,7 +143,7 @@ export function SettingsDropdown({ mobile = false }: { mobile?: boolean }) {
               onClick={() => switchLanguage(lang.code)}
               className={`w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors hover:bg-accent
                 ${currentLang === lang.code
-                  ? "font-semibold text-[#317F5F]"
+                  ? "font-semibold text-brand-primary"
                   : "text-foreground"}`}
             >
               {lang.label}
@@ -129,17 +155,17 @@ export function SettingsDropdown({ mobile = false }: { mobile?: boolean }) {
 
         {/* Theme */}
         <div className="flex items-center gap-1.5 mb-2 text-xs text-muted-foreground">
-          {theme === "dark" ? <Moon className="h-3.5 w-3.5" /> : <Sun className="h-3.5 w-3.5" />}
+          {themeIcon(theme)}
           <span>Theme</span>
         </div>
         <div className="flex flex-col gap-0.5">
-          {THEMES.map(({ value, label }) => (
+          {themes.map(({ value, label }) => (
             <button
               key={value}
               onClick={() => setTheme(value)}
               className={`w-full text-left px-2 py-1.5 rounded-md text-sm transition-colors hover:bg-accent
                 ${theme === value
-                  ? "font-semibold text-[#317F5F]"
+                  ? "font-semibold text-brand-primary"
                   : "text-foreground"}`}
             >
               {label}

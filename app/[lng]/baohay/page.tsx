@@ -50,11 +50,11 @@ function HeroDetailCard({ post, className = "" }: { post: Post; className?: stri
   return (
     <Link
       href={`/blog/${post.id}`}
-      className={`group flex flex-col gap-4 rounded-2xl bg-[#1b5e20] py-6 px-2 hover:bg-[#236b27] transition-colors ${className}`}
+      className={`group flex flex-col gap-4 rounded-2xl bg-brand-footer py-6 px-2 hover:bg-brand-footer-hover transition-colors ${className}`}
     >
       <div className="flex items-center justify-between gap-2">
         {post.level && (
-          <span className="inline-flex h-7.5 items-center justify-center rounded-full bg-[#F47121] px-3 text-sm font-semibold text-white">
+          <span className="inline-flex h-7.5 items-center justify-center rounded-full bg-brand-orange px-3 text-sm font-semibold text-white">
             {LEVEL_LABELS[post.level] ?? post.level}
           </span>
         )}
@@ -86,7 +86,7 @@ function HeroCoverCell({ post, className = "" }: { post: Post; className?: strin
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
       ) : (
-        <div className="flex h-full items-center justify-center bg-[#164a18]">
+        <div className="flex h-full items-center justify-center bg-brand-footer-dark">
           <span className="text-7xl font-bold text-white/20">{post.title.charAt(0)}</span>
         </div>
       )}
@@ -96,7 +96,7 @@ function HeroCoverCell({ post, className = "" }: { post: Post; className?: strin
 
 function BaohayHero({ lng, first, second }: { lng: string; first: Post; second?: Post }) {
   return (
-    <section className="w-full bg-[#1b5e20] px-4 py-6 md:px-21 md:py-8">
+    <section className="w-full bg-brand-footer px-4 py-6 md:px-21 md:py-8">
       <nav className="mb-4 flex items-center gap-1.5 text-sm text-white/60">
         <Link href={`/${lng}`} className="hover:text-white">Trang chủ</Link>
         <span>›</span>
@@ -146,7 +146,7 @@ function FlatArticleList({ posts }: { posts: Post[] }) {
             <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 {post.level && (
-                  <span className="inline-flex items-center rounded-full bg-[#F47121] px-2 py-0.5 text-xs font-semibold text-white">
+                  <span className="inline-flex items-center rounded-full bg-brand-orange px-2 py-0.5 text-xs font-semibold text-white">
                     {LEVEL_LABELS[post.level]}
                   </span>
                 )}
@@ -175,7 +175,7 @@ function FlatArticleList({ posts }: { posts: Post[] }) {
               <div className="flex items-center justify-between text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   {post.level && (
-                    <span className="inline-flex items-center rounded-full bg-[#F47121] px-2 py-0.5 text-xs font-semibold text-white">
+                    <span className="inline-flex items-center rounded-full bg-brand-orange px-2 py-0.5 text-xs font-semibold text-white">
                       {LEVEL_LABELS[post.level]}
                     </span>
                   )}
@@ -255,14 +255,14 @@ function BaohayContent() {
         {/* Level hero */}
         <section
           className="w-full px-4 py-8 md:px-21 md:py-10"
-          style={{ background: "#1b5e20" }}
+          className="bg-brand-footer"
         >
           <nav className="mb-4 flex items-center gap-1.5 text-sm text-white/70">
             <Link href={`/${lng}`} className="hover:text-white">Trang chủ</Link>
             <span>›</span>
             <Link href={`/${lng}/baohay`} className="hover:text-white">Báo hay</Link>
             <span>›</span>
-            <span className="font-medium text-[#c8e63d]">{LEVEL_LABELS[levelParam]}</span>
+            <span className="font-medium text-brand-lime-bright">{LEVEL_LABELS[levelParam]}</span>
           </nav>
           <h1 className="text-3xl font-bold text-white md:text-4xl">
             Trình độ tiếng Anh {levelParam}

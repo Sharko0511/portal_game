@@ -62,7 +62,7 @@ export default function CommentSection({ postId, onLoginRequired }: CommentSecti
           <button
             type="submit"
             disabled={!text.trim() || addComment.isPending}
-            className="self-end rounded-full bg-[#c8e63d] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[#c8e63d]/85 disabled:cursor-not-allowed disabled:opacity-50"
+            className="self-end rounded-full bg-brand-lime-bright px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-brand-lime-bright/85 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {addComment.isPending ? "..." : t("comments.post")}
           </button>

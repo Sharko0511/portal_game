@@ -3,7 +3,7 @@
 import type * as React from "react"
 import { createContext, useContext, useEffect, useState } from "react"
 
-type Theme = "dark" | "light" | "system"
+type Theme = string // "light" | "dark" | "system" | any custom theme name
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -36,11 +36,16 @@ export function ThemeProvider({ children, defaultTheme = "system" }: ThemeProvid
 
   useEffect(() => {
     const root = window.document.documentElement
-    root.classList.remove("light", "dark")
+    // Remove any previously applied theme classes
+    root.className = root.className
+      .split(" ")
+      .filter((c) => !c || c.startsWith("__") || c === "")
+      .join(" ")
+      .trim()
+
     if (theme === "system") {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
       root.classList.add(systemTheme)
-      // Also listen for OS changes while on "system"
       const mq = window.matchMedia("(prefers-color-scheme: dark)")
       const handler = (e: MediaQueryListEvent) => {
         root.classList.remove("light", "dark")

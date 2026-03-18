@@ -28,7 +28,7 @@ export default function FollowButton({ targetUserId, followerCount }: FollowButt
         className={`rounded-full border px-5 py-2 text-sm font-medium transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 ${
           following
             ? "border-gray-300 bg-white text-foreground hover:border-red-300 hover:text-red-600"
-            : "border-transparent bg-[#c8e63d] text-foreground hover:bg-[#c8e63d]/85"
+            : "border-transparent bg-brand-lime-bright text-foreground hover:bg-brand-lime-bright/85"
         }`}
       >
         {pending ? "..." : following ? "Following" : "Follow"}

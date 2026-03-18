@@ -50,7 +50,7 @@ export default function Home() {
             A collection of classic arcade games built with vanilla JS and Canvas.
           </p>
           <div className="flex items-center gap-3">
-            <Link href="/leaderboard" className="rounded-full bg-[#c8e63d] px-6 py-2.5 text-sm font-medium text-gray-900 hover:bg-[#c8e63d]/85 transition-colors">
+            <Link href="/leaderboard" className="rounded-full bg-brand-lime-bright px-6 py-2.5 text-sm font-medium text-gray-900 hover:bg-brand-lime-bright/85 transition-colors">
               View Leaderboard
             </Link>
             <Link href="/register" className="rounded-full border border-white/20 px-6 py-2.5 text-sm font-medium text-white hover:bg-white/10 transition-colors">
@@ -58,8 +58,8 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#c8e63d]/10" />
-        <div className="absolute -bottom-10 right-20 h-40 w-40 rounded-full bg-[#c8e63d]/5" />
+        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-brand-lime-bright/10" />
+        <div className="absolute -bottom-10 right-20 h-40 w-40 rounded-full bg-brand-lime-bright/5" />
       </div>
 
       <div className="mb-3">
@@ -84,7 +84,7 @@ export default function Home() {
               <div className="p-5">
                 <h3 className="mb-1 text-lg font-semibold text-gray-900">{game.display_name}</h3>
                 <p className="mb-4 text-sm text-gray-500">{game.description}</p>
-                <span className="inline-block rounded-full border border-gray-200 px-3 py-0.5 text-xs text-gray-500 group-hover:border-accent group-hover:bg-[#c8e63d] group-hover:text-gray-900 transition-colors">
+                <span className="inline-block rounded-full border border-gray-200 px-3 py-0.5 text-xs text-gray-500 group-hover:border-accent group-hover:bg-brand-lime-bright group-hover:text-gray-900 transition-colors">
                   Play Now
                 </span>
               </div>

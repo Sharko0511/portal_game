@@ -67,7 +67,7 @@ export default function GamesPage() {
                 <p className="mb-4 text-sm text-muted-foreground">
                   {game.description}
                 </p>
-                <span className="inline-block rounded-full border border-border px-3 py-0.5 text-xs text-muted-foreground transition-colors group-hover:border-[#c8e63d] group-hover:bg-[#c8e63d] group-hover:text-foreground">
+                <span className="inline-block rounded-full border border-border px-3 py-0.5 text-xs text-muted-foreground transition-colors group-hover:border-brand-lime-bright group-hover:bg-brand-lime-bright group-hover:text-foreground">
                   {t("play")}
                 </span>
               </div>

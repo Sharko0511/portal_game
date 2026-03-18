@@ -12,13 +12,13 @@ export default function HeroSection() {
   const { t } = useClientTranslation(lng, "homepage")
 
   return (
-    <section className="w-full bg-[#94B506] py-8 md:py-16">
+    <section className="w-full bg-brand-hero py-8 md:py-16">
       <div className="mx-auto px-4 md:px-21 flex flex-col md:flex-row md:items-start md:gap-10">
 
         {/* Mobile layout */}
         <div className="flex flex-col md:hidden w-full">
           <h1 className="text-[36px] font-bold text-white leading-tight mb-4">
-            {t("hero.title")}<span className="text-[#225D2D]">.</span>
+            {t("hero.title")}<span className="text-brand-dark">.</span>
           </h1>
           <div className="w-full mb-4">
             <Image
@@ -36,7 +36,7 @@ export default function HeroSection() {
           />
           <div className="mt-auto">
             <Button
-              className="w-full bg-[#225D2D] hover:bg-[#225D2D]/90 text-white rounded-full px-6 h-12 text-base font-semibold cursor-pointer"
+              className="w-full bg-brand-dark hover:bg-brand-dark/90 text-white rounded-full px-6 h-12 text-base font-semibold cursor-pointer"
               onClick={() => router.push(`/${lng}/blog`)}
             >
               {t("hero.button")}
@@ -47,10 +47,10 @@ export default function HeroSection() {
         {/* Desktop — Text left 70% */}
         <div className="hidden md:flex md:w-[70%] flex-col gap-6">
           <h1 className="md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white md:leading-[1.2]">
-            {t("hero.title")}<span className="text-[#225D2D]">.</span>
+            {t("hero.title")}<span className="text-brand-dark">.</span>
           </h1>
           <Button
-            className="w-auto self-start text-2xl font-semibold bg-[#225D2D] hover:bg-[#225D2D]/90 text-white rounded-full px-8 py-4 h-16 cursor-pointer"
+            className="w-auto self-start text-2xl font-semibold bg-brand-dark hover:bg-brand-dark/90 text-white rounded-full px-8 py-4 h-16 cursor-pointer"
             onClick={() => router.push(`/${lng}/blog`)}
           >
             {t("hero.button")}

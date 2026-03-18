@@ -239,7 +239,7 @@ function PostContent({ id }: { id: string }) {
       <nav className="mb-6 flex items-center gap-1.5 text-sm text-muted-foreground">
         <Link href={`/${lng}`} className="hover:text-foreground">{t("breadcrumb.home")}</Link>
         <span>›</span>
-        <Link href={`/${lng}/${post.category}`} className="font-medium text-[#317F5F] hover:text-[#317F5F]/80">
+        <Link href={`/${lng}/${post.category}`} className="font-medium text-brand-primary hover:text-brand-primary/80">
           {categoryLabel}
         </Link>
       </nav>
@@ -289,7 +289,7 @@ function PostContent({ id }: { id: string }) {
           {/* Level badge */}
           {post.level && (
             <div className="mb-6">
-              <span className="inline-flex h-7.5 items-center justify-center rounded-full bg-[#F47121] px-3 text-sm font-semibold text-white">
+              <span className="inline-flex h-7.5 items-center justify-center rounded-full bg-brand-orange px-3 text-sm font-semibold text-white">
                 {LEVEL_LABELS[post.level] ?? post.level}
               </span>
             </div>
@@ -340,7 +340,7 @@ function PostContent({ id }: { id: string }) {
                 {post.player_feedback.map((fb, i) => (
                   <blockquote
                     key={i}
-                    className="border-l-4 border-[#317F5F] pl-5 py-1 text-sm leading-relaxed text-foreground"
+                    className="border-l-4 border-brand-primary pl-5 py-1 text-sm leading-relaxed text-foreground"
                   >
                     &ldquo;{fb.content}&rdquo;
                   </blockquote>

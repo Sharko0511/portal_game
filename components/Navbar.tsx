@@ -68,7 +68,7 @@ export default function Navbar() {
               <span className="font-bold text-[26px] xl:text-2xl 2xl:text-3xl whitespace-nowrap">
                 The Good Learning
               </span>
-              <span className="text-[#317F5F] text-[26px] xl:text-2xl 2xl:text-3xl">
+              <span className="text-brand-primary text-[26px] xl:text-2xl 2xl:text-3xl">
                 .
               </span>
             </Link>
@@ -89,32 +89,32 @@ export default function Navbar() {
           <div className="hidden xl:flex items-center gap-4 2xl:gap-6">
             <Link
               href={`/${lng}`}
-              className="text-sm 2xl:text-base font-semibold transition-colors hover:text-[#317F5F] whitespace-nowrap"
+              className="text-sm 2xl:text-base font-semibold transition-colors hover:text-brand-primary whitespace-nowrap"
             >
               {t("navigation.home")}
             </Link>
             <Link
               href={`/${lng}/baohay`}
-              className="text-sm 2xl:text-base font-semibold transition-colors hover:text-[#317F5F] whitespace-nowrap"
+              className="text-sm 2xl:text-base font-semibold transition-colors hover:text-brand-primary whitespace-nowrap"
             >
               {t("navigation.blog")}
             </Link>
             <Link
               href={`/${lng}/audiochat`}
-              className="text-sm 2xl:text-base font-semibold transition-colors hover:text-[#317F5F] whitespace-nowrap"
+              className="text-sm 2xl:text-base font-semibold transition-colors hover:text-brand-primary whitespace-nowrap"
             >
               {t("navigation.audio")}
             </Link>
             <Link
               href={`/${lng}/games`}
-              className="text-sm 2xl:text-base font-semibold transition-colors hover:text-[#317F5F] whitespace-nowrap"
+              className="text-sm 2xl:text-base font-semibold transition-colors hover:text-brand-primary whitespace-nowrap"
             >
               {t("navigation.games")}
             </Link>
             {user && profile && (
               <Link
                 href={`/${lng}/blog`}
-                className="text-sm 2xl:text-base font-semibold transition-colors hover:text-[#317F5F] whitespace-nowrap"
+                className="text-sm 2xl:text-base font-semibold transition-colors hover:text-brand-primary whitespace-nowrap"
               >
                 {t("navigation.feed")}
               </Link>
@@ -129,7 +129,7 @@ export default function Navbar() {
                     ref={searchRef}
                     type="text"
                     placeholder={t("search.placeholder")}
-                    className="pr-8 rounded-full border-[#8C9199] focus-visible:ring-0 focus-visible:ring-offset-0 h-8 text-sm bg-[rgba(34,93,45,0.50)] placeholder:text-[#eeeeee] focus:placeholder:text-transparent text-white"
+                    className="pr-8 rounded-full border-mediumgray focus-visible:ring-0 focus-visible:ring-offset-0 h-8 text-sm bg-brand-dark/50 placeholder:text-[#eeeeee] focus:placeholder:text-transparent text-white"
                   />
                   <button
                     type="submit"
@@ -162,7 +162,7 @@ export default function Navbar() {
                     {profile.role === "admin" && (
                       <Link
                         href={`/${lng}/admin`}
-                        className="text-sm font-semibold text-muted-foreground transition-colors hover:text-[#317F5F] whitespace-nowrap"
+                        className="text-sm font-semibold text-muted-foreground transition-colors hover:text-brand-primary whitespace-nowrap"
                       >
                         {t("navigation.admin")}
                       </Link>
@@ -173,13 +173,13 @@ export default function Navbar() {
                   <>
                     <Link
                       href={`/${lng}/login`}
-                      className="text-sm font-semibold text-muted-foreground transition-colors hover:text-[#317F5F] whitespace-nowrap"
+                      className="text-sm font-semibold text-muted-foreground transition-colors hover:text-brand-primary whitespace-nowrap"
                     >
                       {t("navigation.login")}
                     </Link>
                     <Link
                       href={`/${lng}/register`}
-                      className="rounded-full bg-[#a4c639] px-3 py-1.5 text-sm font-semibold text-foreground transition-colors hover:bg-[#a4c639]/85 whitespace-nowrap"
+                      className="rounded-full bg-brand-lime px-3 py-1.5 text-sm font-semibold text-foreground transition-colors hover:bg-brand-lime/85 whitespace-nowrap"
                     >
                       {t("navigation.register")}
                     </Link>
@@ -204,7 +204,7 @@ export default function Navbar() {
               className="flex items-center"
             >
               <span className="font-bold text-xl">The Good Learning</span>
-              <span className="text-[#317F5F] text-xl">.</span>
+              <span className="text-brand-primary text-xl">.</span>
             </Link>
             <Button
               variant="ghost"
@@ -224,7 +224,7 @@ export default function Navbar() {
               <Input
                 type="text"
                 placeholder={t("search.placeholder")}
-                className="h-10 rounded-full border-border bg-muted pl-10 pr-4 focus-visible:ring-1 focus-visible:ring-[#317F5F]"
+                className="h-10 rounded-full border-border bg-muted pl-10 pr-4 focus-visible:ring-1 focus-visible:ring-brand-primary"
               />
             </div>
 
@@ -246,7 +246,7 @@ export default function Navbar() {
                   key={href}
                   href={href}
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-between border-b border-border py-4 text-lg font-semibold transition-colors hover:text-[#317F5F]"
+                  className="flex items-center justify-between border-b border-border py-4 text-lg font-semibold transition-colors hover:text-brand-primary"
                 >
                   {label}
                   <ArrowRight className="h-4 w-4 text-muted-foreground" />
@@ -268,7 +268,7 @@ export default function Navbar() {
                   <Link
                     href={`/${lng}/register`}
                     onClick={() => setMobileOpen(false)}
-                    className="flex h-11 items-center justify-center rounded-full bg-[#a4c639] font-semibold text-foreground transition-colors hover:bg-[#a4c639]/85"
+                    className="flex h-11 items-center justify-center rounded-full bg-brand-lime font-semibold text-foreground transition-colors hover:bg-brand-lime/85"
                   >
                     {t("navigation.register")}
                   </Link>

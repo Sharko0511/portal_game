@@ -16,6 +16,7 @@ function AdminLayout({ children }: { children: ReactNode }) {
     { href: `/${lng}/admin/scores`, label: "Scores", icon: "🏆" },
     { href: `/${lng}/admin/games`, label: "Games", icon: "🎮" },
     { href: `/${lng}/admin/config`, label: "Config", icon: "⚙️" },
+    { href: `/${lng}/admin/theme`, label: "Theme", icon: "🎨" },
   ];
 
   return (
@@ -31,7 +32,7 @@ function AdminLayout({ children }: { children: ReactNode }) {
                 href={item.href}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
                   isActive
-                    ? "bg-[#c8e63d] text-foreground font-medium"
+                    ? "bg-brand-lime-bright text-foreground font-medium"
                     : "text-muted-foreground hover:bg-gray-50 hover:text-foreground"
                 }`}
               >

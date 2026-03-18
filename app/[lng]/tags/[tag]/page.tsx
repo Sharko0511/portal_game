@@ -61,7 +61,7 @@ export default function TagPage({ params }: TagPageProps) {
         <nav className="mb-5 flex items-center gap-1.5 text-sm text-white/70">
           <Link href={`/${lng}`} className="hover:text-white">Trang chủ</Link>
           <span>›</span>
-          <span className="font-medium text-[#c8e63d]">Tag</span>
+          <span className="font-medium text-brand-lime-bright">Tag</span>
         </nav>
 
         {/* Tag label */}
@@ -87,13 +87,13 @@ export default function TagPage({ params }: TagPageProps) {
 
           {/* Level dropdown */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center justify-center gap-2 rounded-full border border-transparent bg-[#8dc63f] py-2.5 px-4 text-sm font-semibold text-white outline-none cursor-pointer whitespace-nowrap">
+            <DropdownMenuTrigger className="flex items-center justify-center gap-2 rounded-full border border-transparent bg-brand-lime py-2.5 px-4 text-sm font-semibold text-white outline-none cursor-pointer whitespace-nowrap">
               {levelFilter ? LEVEL_LABELS[levelFilter] : "Tất cả trình độ"}
               <ChevronDownIcon className="size-4 shrink-0" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem
-                className={!levelFilter ? "bg-[#4a90d9] text-white focus:bg-[#4a90d9] focus:text-white" : ""}
+                className={!levelFilter ? "bg-brand-primary text-white focus:bg-brand-primary focus:text-white" : ""}
                 onSelect={() => setLevelFilter("")}
               >
                 Tất cả trình độ
@@ -101,7 +101,7 @@ export default function TagPage({ params }: TagPageProps) {
               {LEVELS.map((l) => (
                 <DropdownMenuItem
                   key={l}
-                  className={levelFilter === l ? "bg-[#4a90d9] text-white focus:bg-[#4a90d9] focus:text-white" : ""}
+                  className={levelFilter === l ? "bg-brand-primary text-white focus:bg-brand-primary focus:text-white" : ""}
                   onSelect={() => setLevelFilter(l)}
                 >
                   {LEVEL_LABELS[l]}
@@ -150,7 +150,7 @@ export default function TagPage({ params }: TagPageProps) {
                   <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
                       {post.level && (
-                        <span className="inline-flex items-center rounded-full bg-[#F47121] px-2 py-0.5 text-xs font-semibold text-white">
+                        <span className="inline-flex items-center rounded-full bg-brand-orange px-2 py-0.5 text-xs font-semibold text-white">
                           {LEVEL_LABELS[post.level]}
                         </span>
                       )}
@@ -179,7 +179,7 @@ export default function TagPage({ params }: TagPageProps) {
                     <div className="flex items-center justify-between text-sm text-muted-foreground">
                       <div className="flex items-center gap-2">
                         {post.level && (
-                          <span className="inline-flex items-center rounded-full bg-[#F47121] px-2 py-0.5 text-xs font-semibold text-white">
+                          <span className="inline-flex items-center rounded-full bg-brand-orange px-2 py-0.5 text-xs font-semibold text-white">
                             {LEVEL_LABELS[post.level]}
                           </span>
                         )}

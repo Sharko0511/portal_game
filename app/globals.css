@@ -2,59 +2,35 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ─────────────────────────────────────────────────────────────
+   BRAND / DESIGN TOKENS  (admin-overridable via CSS variables)
+   These are the values the admin theme API will override.
+───────────────────────────────────────────────────────────── */
 :root {
+  /* Brand greens */
+  --brand-primary: #317f5f;
+  --brand-dark: #225d2d;
+  --brand-hero: #94b506;
+  --brand-footer: #1b5e20;
+  --brand-footer-hover: #236b27;
+  --brand-footer-dark: #164a18;
+
+  /* Brand accent limes */
+  --brand-lime: #a4c639;
+  --brand-lime-bright: #c8e63d;
+
+  /* Brand orange (level badges) */
+  --brand-orange: #f47121;
+
+  /* Brand hero gradient (used as inline style or bg utility) */
+  --brand-hero-gradient: linear-gradient(135deg, #004d40 0%, #00695c 60%, #2e7d32 100%);
+
+  /* Semantic UI tokens — light mode */
   --background: #ffffff;
   --foreground: #111827;
   --foreground-muted: #6b7280;
   --card: #f9fafb;
   --card-hover: #f3f4f6;
-  --border: #e5e7eb;
-  --accent: #c8e63d;
-  --accent-foreground: #111827;
-  --success: #16a34a;
-  --danger: #dc2626;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  /* The Good Learning design tokens */
-  --color-green: #317f5f;
-  --color-darkgray: #262626;
-  --color-mediumgray: #8c9199;
-  --color-navy: #040415;
-  --color-lightgray: #a8afb9;
-  /* Aliases for existing app */
-  --color-success: #16a34a;
-  --color-danger: #dc2626;
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-}
-
-:root {
-  --radius: 0.625rem;
-  --background: #ffffff;
-  --foreground: #111827;
-  --card: #f9fafb;
   --card-foreground: #111827;
   --popover: #ffffff;
   --popover-foreground: #111827;
@@ -69,9 +45,17 @@
   --destructive: #dc2626;
   --border: #e5e7eb;
   --input: #e5e7eb;
-  --ring: #c8e63d;
+  --ring: var(--brand-lime-bright);
+  --radius: 0.625rem;
+
+  /* Scrollbar */
+  --scrollbar-thumb: #d1d5db;
+  --scrollbar-thumb-hover: #9ca3af;
 }
 
+/* ─────────────────────────────────────────────────────────────
+   DARK MODE OVERRIDES
+───────────────────────────────────────────────────────────── */
 html.dark {
   --background: #0f1117;
   --foreground: #f3f4f6;
@@ -91,10 +75,70 @@ html.dark {
   --accent-foreground: #f3f4f6;
   --border: #2d3148;
   --input: #2d3148;
-  --ring: #c8e63d;
   --destructive: #ef4444;
+
+  --scrollbar-thumb: #3d4166;
+  --scrollbar-thumb-hover: #4f5580;
 }
 
+/* ─────────────────────────────────────────────────────────────
+   TAILWIND v4 THEME MAPPING
+   Exposes CSS variables as Tailwind utility classes.
+   e.g. --color-brand-primary → bg-brand-primary, text-brand-primary
+───────────────────────────────────────────────────────────── */
+@theme inline {
+  /* Brand */
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-hero: var(--brand-hero);
+  --color-brand-footer: var(--brand-footer);
+  --color-brand-footer-hover: var(--brand-footer-hover);
+  --color-brand-footer-dark: var(--brand-footer-dark);
+  --color-brand-lime: var(--brand-lime);
+  --color-brand-lime-bright: var(--brand-lime-bright);
+  --color-brand-orange: var(--brand-orange);
+
+  /* Semantic */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-card: var(--card);
+  --color-card-hover: var(--card-hover);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Legacy aliases kept for compatibility */
+  --color-green: var(--brand-primary);
+  --color-darkgray: #262626;
+  --color-mediumgray: #8c9199;
+  --color-navy: #040415;
+  --color-lightgray: #a8afb9;
+  --color-success: #16a34a;
+  --color-danger: #dc2626;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   BASE
+───────────────────────────────────────────────────────────── */
 html, body {
   background-color: var(--background);
   color: var(--foreground);
@@ -103,15 +147,17 @@ html, body {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #e5e7eb transparent;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 
 *::-webkit-scrollbar { width: 4px; height: 4px; }
 *::-webkit-scrollbar-track { background: transparent; }
-*::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
-*::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+*::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 2px; }
+*::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
 
-/* TipTap / Prose styles */
+/* ─────────────────────────────────────────────────────────────
+   PROSE (TipTap / rich text)
+───────────────────────────────────────────────────────────── */
 .prose h1 { font-size: 1.875rem; font-weight: 700; margin: 1.5rem 0 0.75rem; color: var(--foreground); }
 .prose h2 { font-size: 1.5rem; font-weight: 600; margin: 1.25rem 0 0.625rem; color: var(--foreground); }
 .prose h3 { font-size: 1.25rem; font-weight: 600; margin: 1rem 0 0.5rem; color: var(--foreground); }
@@ -127,11 +173,13 @@ html, body {
 .prose li { margin: 0.25rem 0; line-height: 1.75; }
 .prose blockquote { border-left: 3px solid var(--border); padding-left: 1rem; color: var(--foreground-muted); margin: 1rem 0; font-style: italic; }
 .prose code { background: var(--card); border-radius: 4px; padding: 0.1em 0.4em; font-size: 0.875em; color: var(--foreground); font-family: monospace; }
-.prose pre { background: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
+.prose pre { background: var(--card); color: var(--foreground); padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); }
 .prose pre code { background: none; padding: 0; color: inherit; }
 .prose hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
 .prose img { max-width: 100%; border-radius: 8px; margin: 1rem 0; }
 
-/* Ensure all interactive elements show pointer cursor */
+/* ─────────────────────────────────────────────────────────────
+   UTILITIES
+───────────────────────────────────────────────────────────── */
 button:not(:disabled), [role="button"], a { cursor: pointer; }
 button:disabled { cursor: not-allowed; }

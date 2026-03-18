@@ -56,7 +56,7 @@ function FlatArticleList({ posts }: { posts: Post[] }) {
             <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 {post.level && (
-                  <span className="inline-flex items-center rounded-full bg-[#F47121] px-2 py-0.5 text-xs font-semibold text-white">
+                  <span className="inline-flex items-center rounded-full bg-brand-orange px-2 py-0.5 text-xs font-semibold text-white">
                     {LEVEL_LABELS[post.level]}
                   </span>
                 )}
@@ -85,7 +85,7 @@ function FlatArticleList({ posts }: { posts: Post[] }) {
               <div className="flex items-center justify-between text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   {post.level && (
-                    <span className="inline-flex items-center rounded-full bg-[#F47121] px-2 py-0.5 text-xs font-semibold text-white">
+                    <span className="inline-flex items-center rounded-full bg-brand-orange px-2 py-0.5 text-xs font-semibold text-white">
                       {LEVEL_LABELS[post.level]}
                     </span>
                   )}
@@ -165,14 +165,14 @@ function AudiochatContent() {
         {/* Level hero */}
         <section
           className="w-full px-4 py-8 md:px-6 xl:px-21"
-          style={{ background: "linear-gradient(135deg, #004d40 0%, #00695c 60%, #2e7d32 100%)" }}
+          style={{ background: "var(--brand-hero-gradient)" }}
         >
           <nav className="mb-4 flex items-center gap-1.5 text-sm text-white/70">
             <Link href={`/${lng}`} className="hover:text-white">Trang chủ</Link>
             <span>›</span>
             <Link href={`/${lng}/audiochat`} className="hover:text-white">Audio chất</Link>
             <span>›</span>
-            <span className="font-medium text-[#c8e63d]">{LEVEL_LABELS[levelParam]}</span>
+            <span className="font-medium text-brand-lime-bright">{LEVEL_LABELS[levelParam]}</span>
           </nav>
           <h1 className="text-3xl font-bold text-white md:text-4xl">
             Trình độ tiếng Anh {levelParam}
@@ -212,7 +212,7 @@ function AudiochatContent() {
           <nav className="flex items-center gap-1.5 text-sm text-white/70">
             <Link href={`/${lng}`} className="hover:text-white">{t("breadcrumb.home")}</Link>
             <span>›</span>
-            <span className="font-medium text-[#c8e63d]">Audio chat</span>
+            <span className="font-medium text-brand-lime-bright">Audio chat</span>
           </nav>
           <p className="text-2xl font-bold text-white md:text-3xl">
             {t("hero.tagline")}

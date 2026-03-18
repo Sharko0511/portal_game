@@ -11,6 +11,7 @@ const navItems = [
   { href: "/admin/scores", label: "Scores", icon: "🏆" },
   { href: "/admin/games", label: "Games", icon: "🎮" },
   { href: "/admin/config", label: "Config", icon: "⚙️" },
+  { href: "/admin/theme", label: "Theme", icon: "🎨" },
 ];
 
 function AdminLayout({ children }: { children: ReactNode }) {
@@ -29,7 +30,7 @@ function AdminLayout({ children }: { children: ReactNode }) {
                 href={item.href}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
                   isActive
-                    ? "bg-[#c8e63d] text-gray-900 font-medium"
+                    ? "bg-brand-lime-bright text-gray-900 font-medium"
                     : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
                 }`}
               >
