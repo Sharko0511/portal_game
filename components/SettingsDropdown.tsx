@@ -96,7 +96,7 @@ export function SettingsDropdown({ mobile = false }: { mobile?: boolean }) {
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full w-9 h-9 cursor-pointer data-[state=open]:pointer-events-auto data-[state=open]:cursor-pointer">
           <Settings className="h-[1.2rem] w-[1.2rem]" />
