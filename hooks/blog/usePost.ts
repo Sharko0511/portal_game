@@ -82,6 +82,39 @@ export function useAudiochat() {
   });
 }
 
+// ── Search public posts ──────────────────────────────────
+
+export interface SearchParams {
+  q?: string;
+  level?: PostLevel | "";
+  tag?: string;
+  category?: PostCategory | "";
+  limit?: number;
+  offset?: number;
+}
+
+export function useSearch(params: SearchParams) {
+  const query = new URLSearchParams();
+  if (params.q) query.set("q", params.q);
+  if (params.level) query.set("level", params.level);
+  if (params.tag) query.set("tag", params.tag);
+  if (params.category) query.set("category", params.category);
+  if (params.limit) query.set("limit", String(params.limit));
+  if (params.offset) query.set("offset", String(params.offset));
+
+  const qs = query.toString();
+
+  return useQuery<Post[]>({
+    queryKey: ["search", qs],
+    queryFn: async () => {
+      const res = await fetch(`/api/blog/search${qs ? `?${qs}` : ""}`);
+      if (!res.ok) throw new Error(`Search failed: ${res.status}`);
+      const json = await res.json();
+      return json.data as Post[];
+    },
+  });
+}
+
 // ── Create post ──────────────────────────────────────────
 
 interface CreatePostInput {

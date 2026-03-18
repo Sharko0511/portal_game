@@ -355,12 +355,13 @@ function PostContent({ id }: { id: string }) {
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("tags")}</p>
               <div className="flex flex-wrap gap-2">
                 {post.tags.map((tag) => (
-                  <span
+                  <Link
                     key={tag}
-                    className="rounded-full border border-border bg-white px-3 py-1 text-xs text-muted-foreground"
+                    href={`/${lng}/tags/${encodeURIComponent(tag)}`}
+                    className="rounded-full border border-border bg-white px-3 py-1 text-xs text-muted-foreground hover:border-foreground/30 hover:text-foreground transition-colors"
                   >
                     {tag}
-                  </span>
+                  </Link>
                 ))}
               </div>
             </div>
