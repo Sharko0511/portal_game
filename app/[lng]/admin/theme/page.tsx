@@ -18,11 +18,14 @@ const GROUP_LABELS: Record<string, string> = {
   scrollbar: "Scrollbar",
 };
 
+const BASE_THEMES = ["light", "dark"];
+
 // ── Color Row ──────────────────────────────────────────────────
-function ColorRow({ row, onSave, saving }: {
+function ColorRow({ row, onSave, saving, readonly }: {
   row: ThemeRow;
   onSave: (variable: string, theme: string, value: string) => void;
   saving: boolean;
+  readonly?: boolean;
 }) {
   const [value, setValue] = useState(row.value);
   const [saved, setSaved] = useState(false);
@@ -36,19 +39,21 @@ function ColorRow({ row, onSave, saving }: {
 
   return (
     <div className="flex items-center gap-3 py-2 border-b border-border last:border-0">
-      {/* Color swatch + picker */}
+      {/* Color swatch (no picker when readonly) */}
       <div className="relative shrink-0">
         <div
-          className="h-8 w-8 rounded-md border border-border cursor-pointer"
-          style={{ background: value }}
+          className="h-8 w-8 rounded-md border border-border"
+          style={{ background: row.value }}
         />
-        <input
-          type="color"
-          value={value.startsWith("#") && value.length === 7 ? value : "#000000"}
-          onChange={(e) => setValue(e.target.value)}
-          className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-          title="Pick color"
-        />
+        {!readonly && (
+          <input
+            type="color"
+            value={value.startsWith("#") && value.length === 7 ? value : "#000000"}
+            onChange={(e) => setValue(e.target.value)}
+            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+            title="Pick color"
+          />
+        )}
       </div>
 
       {/* Label + variable */}
@@ -57,24 +62,28 @@ function ColorRow({ row, onSave, saving }: {
         <p className="text-xs text-muted-foreground truncate">{row.variable}</p>
       </div>
 
-      {/* Hex input */}
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        className="w-28 rounded-md border border-border bg-background px-2 py-1 text-xs font-mono text-foreground"
-        spellCheck={false}
-      />
-
-      {/* Save */}
-      <Button
-        size="sm"
-        variant={saved ? "success" : dirty ? "primary" : "ghost"}
-        onClick={handleSave}
-        disabled={saving || !dirty}
-      >
-        {saved ? "Saved" : "Save"}
-      </Button>
+      {/* Hex value */}
+      {readonly ? (
+        <span className="w-28 px-2 py-1 text-xs font-mono text-muted-foreground">{row.value}</span>
+      ) : (
+        <>
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            className="w-28 rounded-md border border-border bg-background px-2 py-1 text-xs font-mono text-foreground"
+            spellCheck={false}
+          />
+          <Button
+            size="sm"
+            variant={saved ? "success" : dirty ? "primary" : "ghost"}
+            onClick={handleSave}
+            disabled={saving || !dirty}
+          >
+            {saved ? "Saved" : "Save"}
+          </Button>
+        </>
+      )}
     </div>
   );
 }
@@ -157,11 +166,12 @@ function AddThemeDialog({ themes, onAdd, onClose }: {
 }
 
 // ── Collapsible Group ─────────────────────────────────────────
-function ColorGroup({ group, rows, onSave, saving }: {
+function ColorGroup({ group, rows, onSave, saving, readonly }: {
   group: string;
   rows: ThemeRow[];
   onSave: (variable: string, theme: string, value: string) => void;
   saving: boolean;
+  readonly?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -186,6 +196,7 @@ function ColorGroup({ group, rows, onSave, saving }: {
               row={row}
               onSave={onSave}
               saving={saving}
+              readonly={readonly}
             />
           ))}
         </div>
@@ -278,33 +289,37 @@ export default function AdminThemePage() {
 
       {/* Theme tabs */}
       <div className="flex flex-wrap gap-2">
-        {themes.map((t) => (
-          <div key={t} className="flex items-center gap-1">
-            <button
-              onClick={() => setActiveTheme(t)}
-              className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                activeTheme === t
-                  ? "bg-brand-lime-bright text-foreground"
-                  : "bg-muted text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {t}
-            </button>
-            {t !== "light" && t !== "dark" && (
+        {themes.map((t) => {
+          const isBase = BASE_THEMES.includes(t);
+          return (
+            <div key={t} className="flex items-center gap-1">
               <button
-                onClick={() => setConfirmDelete(t)}
-                className="rounded-full p-1 text-xs text-muted-foreground hover:text-red-500 transition-colors"
-                title={`Delete theme "${t}"`}
+                onClick={() => setActiveTheme(t)}
+                className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                  activeTheme === t
+                    ? "bg-brand-lime-bright text-foreground"
+                    : "bg-muted text-muted-foreground hover:text-foreground"
+                }`}
               >
-                ✕
+                {t}
+                {isBase && <span className="text-xs opacity-50">🔒</span>}
               </button>
-            )}
-          </div>
-        ))}
+              {!isBase && (
+                <button
+                  onClick={() => setConfirmDelete(t)}
+                  className="rounded-full p-1 text-xs text-muted-foreground hover:text-red-500 transition-colors"
+                  title={`Delete theme "${t}"`}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Color groups */}
-      <div className="space-y-4">
+<div className="space-y-4">
         {Object.entries(grouped).map(([group, groupRows]) => (
           <ColorGroup
             key={`${activeTheme}-${group}`}
@@ -312,6 +327,7 @@ export default function AdminThemePage() {
             rows={groupRows}
             onSave={handleSave}
             saving={updateVar.isPending}
+            readonly={BASE_THEMES.includes(activeTheme)}
           />
         ))}
       </div>
