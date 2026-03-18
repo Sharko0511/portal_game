@@ -254,8 +254,7 @@ function BaohayContent() {
       <>
         {/* Level hero */}
         <section
-          className="w-full px-4 py-8 md:px-21 md:py-10"
-          className="bg-brand-footer"
+          className="w-full px-4 py-8 md:px-21 md:py-10 bg-brand-footer"
         >
           <nav className="mb-4 flex items-center gap-1.5 text-sm text-white/70">
             <Link href={`/${lng}`} className="hover:text-white">Trang chủ</Link>
