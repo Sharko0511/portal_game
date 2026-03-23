@@ -17,6 +17,7 @@ function AdminLayout({ children }: { children: ReactNode }) {
     { href: `/${lng}/admin/games`, label: "Games", icon: "🎮" },
     { href: `/${lng}/admin/config`, label: "Config", icon: "⚙️" },
     { href: `/${lng}/admin/theme`, label: "Theme", icon: "🎨" },
+    { href: `/${lng}/admin/translations`, label: "Translations", icon: "🌐" },
   ];
 
   return (
