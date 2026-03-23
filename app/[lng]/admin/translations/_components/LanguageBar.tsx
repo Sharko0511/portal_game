@@ -35,14 +35,14 @@ export default function LanguageBar({
               <>
                 <button
                   onClick={() => onRevert(lang)}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="flex items-center justify-center w-8 h-8 rounded-md text-base text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   title={`Revert all ${lang.toUpperCase()} translations`}
                 >
                   ↺
                 </button>
                 <button
                   onClick={() => onSaveDefault(lang)}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="flex items-center justify-center w-8 h-8 rounded-md text-base text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   title={`Save current ${lang.toUpperCase()} as default snapshot`}
                 >
                   💾
@@ -53,7 +53,7 @@ export default function LanguageBar({
             {!isProtected && (
               <button
                 onClick={() => onDeleteLanguage(lang)}
-                className="text-muted-foreground hover:text-red-500 transition-colors"
+                className="flex items-center justify-center w-8 h-8 rounded-md text-base text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
                 title={`Delete language ${lang}`}
               >
                 ✕

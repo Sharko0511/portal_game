@@ -1,8 +1,6 @@
 import { getSupabaseAdmin } from "./supabase-server";
 
-export const SUPPORTED_LANGUAGES = ["en", "vi"] as const;
-export type Language = (typeof SUPPORTED_LANGUAGES)[number];
-export const DEFAULT_LANGUAGE: Language = "en";
+export const DEFAULT_LANGUAGE = "en";
 
 /**
  * Server-side translation helper.
@@ -12,17 +10,25 @@ export async function getTranslation(
   lng: string,
   ns: string
 ): Promise<(key: string) => string> {
-  const language = SUPPORTED_LANGUAGES.includes(lng as Language)
-    ? lng
-    : DEFAULT_LANGUAGE;
+  const language = lng || DEFAULT_LANGUAGE;
 
   const supabase = getSupabaseAdmin();
 
-  const { data } = await supabase
+  let { data } = await supabase
     .from("translations")
     .select("key, value")
     .eq("language", language)
     .eq("namespace", ns);
+
+  // Fall back to EN if the language has no data (e.g. was deleted)
+  if ((!data || data.length === 0) && language !== "en") {
+    const res = await supabase
+      .from("translations")
+      .select("key, value")
+      .eq("language", "en")
+      .eq("namespace", ns);
+    data = res.data;
+  }
 
   const map: Record<string, string> = {};
   for (const row of data ?? []) {

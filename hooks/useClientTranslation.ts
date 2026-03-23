@@ -18,10 +18,11 @@ function cacheSet(key: string, data: Record<string, string>) {
   cache.set(key, { data, expiresAt: Date.now() + CACHE_TTL_MS });
 }
 
-/** Seed the cache from server-fetched data. Called synchronously before render. */
+/** Seed the cache from server-fetched data. Called synchronously before render.
+ *  Server data always wins — overwrites any stale client-side cache. */
 export function seedTranslationCache(seed: Record<string, Record<string, string>>) {
   for (const [key, value] of Object.entries(seed)) {
-    if (!cacheGet(key)) cacheSet(key, value);
+    cacheSet(key, value);
   }
 }
 

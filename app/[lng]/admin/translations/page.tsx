@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 import {
   useAdminTranslations,
   useUpdateTranslation,
+  useAddLanguage,
   useDeleteLanguage,
   useRevertTranslations,
   useSaveDefault,
@@ -18,8 +20,11 @@ import AddLanguageDialog from "./_components/AddLanguageDialog";
 import ConfirmDialog from "./_components/ConfirmDialog";
 
 export default function AdminTranslationsPage() {
+  const router = useRouter();
+  const params = useParams<{ lng: string }>();
   const { data, isLoading } = useAdminTranslations();
   const updateTranslation = useUpdateTranslation();
+  const addLang = useAddLanguage();
   const deleteLang = useDeleteLanguage();
   const revert = useRevertTranslations();
   const saveDefault = useSaveDefault();
@@ -66,6 +71,10 @@ export default function AdminTranslationsPage() {
     try {
       await deleteLang.mutateAsync(lang);
       setDeleteLangConfirm(null);
+      // If we just deleted the active language, go back to EN
+      if (params.lng === lang) {
+        router.push("/en/admin/translations");
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to delete language");
     }
@@ -159,7 +168,15 @@ export default function AdminTranslationsPage() {
       {showAddLang && (
         <AddLanguageDialog
           existingLanguages={languages}
-          onAdd={(code) => { void code; setShowAddLang(false); }}
+          onAdd={async (code) => {
+            setError("");
+            try {
+              await addLang.mutateAsync(code);
+              setShowAddLang(false);
+            } catch (e) {
+              setError(e instanceof Error ? e.message : "Failed to add language");
+            }
+          }}
           onClose={() => setShowAddLang(false)}
         />
       )}

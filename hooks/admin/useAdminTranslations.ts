@@ -111,6 +111,26 @@ export function useDeleteTranslationKey() {
   });
 }
 
+// Add a new language — creates empty rows for all existing keys
+export function useAddLanguage() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (language: string) => {
+      const res = await adminFetch("/api/admin/translations/add-language", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ language }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error?.message ?? "Failed to add language");
+      }
+      return res.json();
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "translations"] }),
+  });
+}
+
 // Delete an entire custom language (blocked for en/vi in API)
 export function useDeleteLanguage() {
   const queryClient = useQueryClient();

@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
-const SUPPORTED_LANGUAGES = ["en", "vi"];
-
 type Params = { params: Promise<{ lng: string; ns: string }> };
 
 export async function GET(
@@ -10,10 +8,6 @@ export async function GET(
   { params }: Params
 ): Promise<NextResponse> {
   const { lng, ns } = await params;
-
-  if (!SUPPORTED_LANGUAGES.includes(lng)) {
-    return NextResponse.json({ data: {} });
-  }
 
   const supabase = getSupabaseAdmin();
 
@@ -30,8 +24,20 @@ export async function GET(
     );
   }
 
+  let rows = data ?? [];
+
+  // If no rows found (deleted or unknown language), fall back to EN
+  if (rows.length === 0 && lng !== "en") {
+    const { data: fallback } = await supabase
+      .from("translations")
+      .select("key, value")
+      .eq("language", "en")
+      .eq("namespace", ns);
+    rows = fallback ?? [];
+  }
+
   const result: Record<string, string> = {};
-  for (const row of data ?? []) {
+  for (const row of rows) {
     result[row.key] = row.value;
   }
 

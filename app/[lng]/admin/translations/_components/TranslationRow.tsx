@@ -39,6 +39,7 @@ export default function TranslationRow({
               namespace={namespace}
               keyPath={keyPath}
               value={cell?.value ?? ""}
+              placeholder={langValues["en"]?.value || keyPath}
               missing={!cell}
               saving={saving}
               activeCell={activeCell}

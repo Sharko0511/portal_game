@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Button from "@/components/Button";
+import { Check, X } from "lucide-react";
 
 interface EditableCellProps {
   language: string;
   namespace: string;
   keyPath: string;
   value: string;
+  placeholder?: string;
   missing: boolean;
   saving: boolean;
   activeCell: string | null;
@@ -20,6 +21,7 @@ export default function EditableCell({
   namespace,
   keyPath,
   value,
+  placeholder,
   missing,
   saving,
   activeCell,
@@ -31,7 +33,7 @@ export default function EditableCell({
 
   const [draft, setDraft] = useState(value);
   const [saved, setSaved] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const textareaRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (editing) textareaRef.current?.focus();
@@ -50,37 +52,57 @@ export default function EditableCell({
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSave(); }
   }
 
-  if (editing) {
-    return (
-      <div className="flex flex-col gap-1 py-1">
-        <textarea
-          ref={textareaRef}
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={handleKeyDown}
-          rows={2}
-          className="w-full rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground resize-none"
-        />
-        <div className="flex gap-1">
-          <Button size="sm" onClick={handleSave} disabled={saving}>Save</Button>
-          <Button size="sm" variant="ghost" onClick={() => { setDraft(value); onActivate(null); }}>✕</Button>
-        </div>
-      </div>
-    );
-  }
+  const displayContent = missing ? (
+    <span className="italic text-muted-foreground/50 text-xs">— missing —</span>
+  ) : value === "" && placeholder ? (
+    <span className="text-xs italic text-muted-foreground/50 leading-snug wrap-break-word">{placeholder}</span>
+  ) : (
+    <span className={`text-xs leading-snug wrap-break-word ${saved ? "text-green-600" : "text-foreground"}`}>
+      {value || "\u00A0"}
+    </span>
+  );
 
   return (
     <div
-      className={`cursor-pointer rounded px-2 py-1.5 border border-transparent hover:border-border transition-colors ${saved ? "bg-green-50 dark:bg-green-950/20" : ""}`}
-      onClick={() => { setDraft(value); onActivate(cellId); }}
-      title="Click to edit"
+      className={`relative rounded border px-2 py-1.5 transition-colors
+        ${editing ? "border-brand-primary/60" : "border-transparent hover:border-border cursor-pointer"}
+        ${saved ? "bg-green-50 dark:bg-green-950/20" : ""}`}
+      onClick={!editing ? () => { setDraft(value); onActivate(cellId); } : undefined}
     >
-      {missing ? (
-        <span className="italic text-muted-foreground/50 text-xs">— missing —</span>
-      ) : (
-        <span className={`text-xs text-foreground leading-snug break-words ${saved ? "text-green-600" : ""}`}>
-          {value}
-        </span>
+      {/* Always-present display text keeps the cell size stable */}
+      <div className={editing ? "invisible" : "visible"}>
+        {displayContent}
+      </div>
+
+      {/* Input overlays exactly on top when editing */}
+      {editing && (
+        <>
+          <input
+            ref={textareaRef}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            className="absolute inset-0 w-full rounded bg-background py-1.5 pl-2 pr-14 text-xs text-foreground outline-none placeholder:text-muted-foreground/40 placeholder:italic"
+          />
+          <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="rounded p-1 text-green-600 hover:bg-green-100 dark:hover:bg-green-950/40 disabled:opacity-40 transition-colors"
+              title="Save (Enter)"
+            >
+              <Check className="h-3.5 w-3.5" />
+            </button>
+            <button
+              onClick={() => { setDraft(value); onActivate(null); }}
+              className="rounded p-1 text-muted-foreground hover:bg-muted transition-colors"
+              title="Cancel (Escape)"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </>
       )}
     </div>
   );

@@ -9,10 +9,18 @@ import { Globe, Moon, Sun, Monitor, Settings } from "lucide-react"
 import { useTheme } from "@/components/ThemeProvider"
 import { useEffect, useState } from "react"
 
-const LANGUAGES = [
-  { code: "en", label: "English" },
-  { code: "vi", label: "Tiếng Việt" },
-]
+interface LanguageOption {
+  code: string
+  label: string
+}
+
+function langLabel(code: string): string {
+  try {
+    return new Intl.DisplayNames([code, "en"], { type: "language" }).of(code) ?? code.toUpperCase()
+  } catch {
+    return code.toUpperCase()
+  }
+}
 
 interface ThemeOption {
   value: string
@@ -36,10 +44,25 @@ export function SettingsDropdown({ mobile = false }: { mobile?: boolean }) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [themes, setThemes]   = useState<ThemeOption[]>(FALLBACK_THEMES)
+  const [languages, setLanguages] = useState<LanguageOption[]>([
+    { code: "en", label: "English" },
+    { code: "vi", label: "Tiếng Việt" },
+  ])
 
   const currentLang = pathname?.split("/")[1] || "en"
 
   useEffect(() => { setMounted(true) }, [])
+
+  // Fetch available languages from DB
+  useEffect(() => {
+    fetch("/api/i18n/languages")
+      .then((r) => r.json())
+      .then(({ data }: { data: string[] }) => {
+        if (!Array.isArray(data) || data.length === 0) return
+        setLanguages(data.map((code) => ({ code, label: langLabel(code) })))
+      })
+      .catch(() => { /* keep fallback */ })
+  }, [])
 
   // Fetch available themes from DB, append System
   useEffect(() => {
@@ -72,7 +95,7 @@ export function SettingsDropdown({ mobile = false }: { mobile?: boolean }) {
             <span>Language</span>
           </div>
           <div className="flex gap-2">
-            {LANGUAGES.map((lang) => (
+            {languages.map((lang) => (
               <button
                 key={lang.code}
                 onClick={() => switchLanguage(lang.code)}
@@ -137,7 +160,7 @@ export function SettingsDropdown({ mobile = false }: { mobile?: boolean }) {
           <span>Language</span>
         </div>
         <div className="flex flex-col gap-0.5 mb-3">
-          {LANGUAGES.map((lang) => (
+          {languages.map((lang) => (
             <button
               key={lang.code}
               onClick={() => switchLanguage(lang.code)}
