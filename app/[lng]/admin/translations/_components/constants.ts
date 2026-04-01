@@ -9,7 +9,6 @@ export const NAMESPACE_INFO: Record<string, { pages: string; area: string }> = {
   auth:              { pages: "/login · /register", area: "Auth forms"       },
   admin:             { pages: "/admin/*",           area: "Admin panel"      },
   games:             { pages: "/games",             area: "Games page"       },
-  audiochat:         { pages: "/audiochat",         area: "Audio chat"       },
 };
 
 export const PROTECTED_LANGS = ["en", "vi"];
