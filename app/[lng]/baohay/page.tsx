@@ -96,12 +96,13 @@ function HeroCoverCell({ post, className = "" }: { post: Post; className?: strin
 }
 
 function BaohayHero({ lng, first, second }: { lng: string; first: Post; second?: Post }) {
+  const { t } = useClientTranslation(lng, "blog");
   return (
     <section className="w-full bg-brand-footer px-4 py-6 md:px-21 md:py-8">
       <nav className="mb-4 flex items-center gap-1.5 text-sm text-white/60">
-        <Link href={`/${lng}`} className="hover:text-white">Trang chủ</Link>
+        <Link href={`/${lng}`} className="hover:text-white">{t("breadcrumb.home")}</Link>
         <span>›</span>
-        <span className="font-medium text-white">Báo hay</span>
+        <span className="font-medium text-white">{t("breadcrumb.baohay")}</span>
       </nav>
       <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-6">
         <HeroDetailCard post={first} className="order-1 h-auto md:order-2 md:h-72" />
@@ -253,6 +254,7 @@ function YouMayLike({ posts, category, currentLevel }: { posts: Post[]; category
 function BaohayContent() {
   const { data: posts, isLoading } = useBaohay();
   const lng = useLng();
+  const { t } = useClientTranslation(lng, "blog");
   const searchParams = useSearchParams();
   const levelParam = searchParams.get("level") as PostLevel | null;
 
@@ -268,9 +270,9 @@ function BaohayContent() {
           className="w-full px-4 py-8 md:px-21 md:py-10 bg-brand-footer"
         >
           <nav className="mb-4 flex items-center gap-1.5 text-sm text-white/70">
-            <Link href={`/${lng}`} className="hover:text-white">Trang chủ</Link>
+            <Link href={`/${lng}`} className="hover:text-white">{t("breadcrumb.home")}</Link>
             <span>›</span>
-            <Link href={`/${lng}/baohay`} className="hover:text-white">Báo hay</Link>
+            <Link href={`/${lng}/baohay`} className="hover:text-white">{t("breadcrumb.baohay")}</Link>
             <span>›</span>
             <span className="font-medium text-brand-lime-bright">{LEVEL_LABELS[levelParam]}</span>
           </nav>

@@ -5,17 +5,20 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import PostList from "@/components/blog/PostList";
 import { usePosts } from "@/hooks/blog/usePosts";
 import { useLng } from "@/hooks/useLng";
+import { useClientTranslation } from "@/hooks/useClientTranslation";
 
 function BlogFeedContent() {
   const postsQuery = usePosts();
   const lng = useLng();
+  const { t } = useClientTranslation(lng, "common");
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">
-      {/* Header */}
-      <div className="mb-3">
-        <p className="text-sm text-muted-foreground">Blog</p>
-      </div>
+      <nav className="mb-3 flex items-center gap-1.5 text-sm text-muted-foreground">
+        <Link href={`/${lng}`} className="hover:text-foreground">{t("navigation.home")}</Link>
+        <span>›</span>
+        <span className="font-medium text-foreground">{t("navigation.feed")}</span>
+      </nav>
       <div className="mb-8 flex items-start justify-between">
         <h1 className="text-3xl font-bold text-foreground">Your Feed</h1>
         <div className="flex items-center gap-3">

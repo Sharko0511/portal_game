@@ -4,6 +4,7 @@ import { use, useState, useDeferredValue } from "react";
 import Link from "next/link";
 import { useSearch, PostLevel } from "@/hooks/blog/usePost";
 import { useLng } from "@/hooks/useLng";
+import { useClientTranslation } from "@/hooks/useClientTranslation";
 import { ChevronDownIcon } from "lucide-react";
 import {
   DropdownMenu,
@@ -39,6 +40,7 @@ export default function TagPage({ params }: TagPageProps) {
   const { tag } = use(params);
   const decodedTag = decodeURIComponent(tag);
   const lng = useLng();
+  const { t } = useClientTranslation(lng, "blog");
 
   const [query, setQuery] = useState("");
   const [levelFilter, setLevelFilter] = useState<PostLevel | "">("");
@@ -59,9 +61,9 @@ export default function TagPage({ params }: TagPageProps) {
       >
         {/* Breadcrumb */}
         <nav className="mb-5 flex items-center gap-1.5 text-sm text-white/70">
-          <Link href={`/${lng}`} className="hover:text-white">Trang chủ</Link>
+          <Link href={`/${lng}`} className="hover:text-white">{t("breadcrumb.home")}</Link>
           <span>›</span>
-          <span className="font-medium text-brand-lime-bright">Tag</span>
+          <span className="font-medium text-brand-lime-bright">{t("breadcrumb.tag")}</span>
         </nav>
 
         {/* Tag label */}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useGamesConfig } from "@/hooks/useGamesConfig";
 import { useLeaderboard } from "@/hooks/useLeaderboard";
 import { useLng } from "@/hooks/useLng";
+import { useClientTranslation } from "@/hooks/useClientTranslation";
 import Button from "@/components/Button";
 
 export default function Leaderboard() {
@@ -12,6 +13,7 @@ export default function Leaderboard() {
   const gamesQuery = useGamesConfig();
   const scoresQuery = useLeaderboard(activeGame);
   const lng = useLng();
+  const { t } = useClientTranslation(lng, "common");
 
   const games = gamesQuery.data ?? [];
   const scores = scoresQuery.data ?? [];
@@ -23,11 +25,14 @@ export default function Leaderboard() {
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">
-      <div className="mb-6 flex items-center justify-between">
-        <Link href={`/${lng}`} className="text-sm text-muted-foreground hover:text-foreground">← Back</Link>
-        <h1 className="text-2xl font-bold text-foreground">Leaderboard</h1>
-        <div />
-      </div>
+      <nav className="mb-6 flex items-center gap-1.5 text-sm text-muted-foreground">
+        <Link href={`/${lng}`} className="hover:text-foreground">{t("navigation.home")}</Link>
+        <span>›</span>
+        <Link href={`/${lng}/games`} className="hover:text-foreground">{t("navigation.games")}</Link>
+        <span>›</span>
+        <span className="font-medium text-foreground">{t("navigation.leaderboard")}</span>
+      </nav>
+      <h1 className="mb-6 text-2xl font-bold text-foreground">{t("navigation.leaderboard")}</h1>
 
       <div className="mb-6 flex flex-wrap gap-2">
         <Button onClick={() => setActiveGame("all")} variant={activeGame === "all" ? "primary" : "secondary"} size="lg">

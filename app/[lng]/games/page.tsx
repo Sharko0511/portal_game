@@ -16,12 +16,15 @@ export default function GamesPage() {
   const gamesQuery = useGamesConfig();
   const games = gamesQuery.data ?? [];
   const { t } = useClientTranslation(lng, "games");
+  const { t: tc } = useClientTranslation(lng, "common");
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">
-      <div className="mb-6">
-        <p className="text-sm text-muted-foreground">Bonus</p>
-      </div>
+      <nav className="mb-6 flex items-center gap-1.5 text-sm text-muted-foreground">
+        <Link href={`/${lng}`} className="hover:text-foreground">{tc("navigation.home")}</Link>
+        <span>›</span>
+        <span className="font-medium text-foreground">{tc("navigation.games")}</span>
+      </nav>
       <div className="mb-8 flex items-start justify-between">
         <h1 className="text-3xl font-bold text-foreground">{t("title")}</h1>
         <Link
