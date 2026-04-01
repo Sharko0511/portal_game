@@ -9,7 +9,7 @@ import FollowButton from "@/components/blog/FollowButton";
 import CommentSection from "@/components/blog/CommentSection";
 import ShareButton from "@/components/blog/ShareButton";
 import LoginDialog from "@/components/blog/LoginDialog";
-import { usePost, useBaohay, useAudiochat, Post } from "@/hooks/blog/usePost";
+import { usePost, useBaohay, Post } from "@/hooks/blog/usePost";
 import { useAuth } from "@/hooks/useAuth";
 import { useLng } from "@/hooks/useLng";
 import { useClientTranslation } from "@/hooks/useClientTranslation";
@@ -39,7 +39,6 @@ const LEVEL_LABELS: Record<string, string> = {
 
 const CATEGORY_LABELS: Record<string, string> = {
   baohay: "Báo hay",
-  audiochat: "Audio chat",
   blog: "Blog",
 };
 
@@ -125,12 +124,9 @@ function PopularSidebar({ currentId, category }: { currentId: string; category: 
   const lng = useLng();
   const { t } = useClientTranslation(lng, "blog_post");
   const baohayQuery = useBaohay();
-  const audiochatQuery = useAudiochat();
 
   const posts = category === "baohay"
     ? (baohayQuery.data ?? [])
-    : category === "audiochat"
-    ? (audiochatQuery.data ?? [])
     : [];
 
   const popular = posts.filter((p) => p.id !== currentId).slice(0, 3);

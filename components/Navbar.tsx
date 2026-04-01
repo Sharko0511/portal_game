@@ -100,12 +100,6 @@ export default function Navbar() {
               {t("navigation.blog")}
             </Link>
             <Link
-              href={`/${lng}/audiochat`}
-              className="text-sm 2xl:text-base font-semibold transition-colors hover:text-brand-primary whitespace-nowrap"
-            >
-              {t("navigation.audio")}
-            </Link>
-            <Link
               href={`/${lng}/games`}
               className="text-sm 2xl:text-base font-semibold transition-colors hover:text-brand-primary whitespace-nowrap"
             >
@@ -233,7 +227,6 @@ export default function Navbar() {
               {[
                 { href: `/${lng}`, label: t("navigation.home") },
                 { href: `/${lng}/baohay`, label: t("navigation.blog") },
-                { href: `/${lng}/audiochat`, label: t("navigation.audio") },
                 { href: `/${lng}/games`, label: t("navigation.games") },
                 ...(user && profile
                   ? [{ href: `/${lng}/blog`, label: t("navigation.feed") }]

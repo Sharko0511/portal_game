@@ -3,7 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminFetch } from "@/lib/admin-fetch";
 
-export type PostCategory = "blog" | "baohay" | "audiochat";
+export type PostCategory = "blog" | "baohay";
 export type PostLevel = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
 export type PostVisibility = "private" | "share" | "public";
 
@@ -54,7 +54,7 @@ export function usePost(id: string) {
   });
 }
 
-// ── Fetch baohay posts (public) ──────────────────────────
+// ── Fetch all public posts — blog + baohay (public) ─────
 
 export function useBaohay() {
   return useQuery<Post[]>({

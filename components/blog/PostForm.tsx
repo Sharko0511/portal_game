@@ -224,7 +224,6 @@ export default function PostForm({
                 options={[
                   { value: "blog", label: "Blog" },
                   { value: "baohay", label: "Báo hay" },
-                  { value: "audiochat", label: "Audio chat" },
                 ]}
               />
             </div>

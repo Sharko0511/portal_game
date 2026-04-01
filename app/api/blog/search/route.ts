@@ -8,7 +8,7 @@ import { getSupabaseAdmin } from "@/lib/supabase-server";
 //   q        — text search on title (case-insensitive contains)
 //   level    — filter by CEFR level: A1 | A2 | B1 | B2 | C1 | C2
 //   tag      — filter posts that contain this tag
-//   category — filter by category: baohay | audiochat | blog
+//   category — filter by category: baohay | blog | audiochat (backwards-compat alias for audio_url IS NOT NULL)
 //   limit    — max results (default 50, max 100)
 //   offset   — pagination offset (default 0)
 
@@ -57,7 +57,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (tag) {
     query = query.contains("tags", [tag]);
   }
-  if (category) {
+  if (category === "audiochat") {
+    // Backwards-compatible: ?category=audiochat now means "has audio"
+    query = query.not("audio_url", "is", null);
+  } else if (category) {
     query = query.eq("category", category);
   }
 

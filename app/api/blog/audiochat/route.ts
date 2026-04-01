@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
 // Public endpoint — no auth required.
-// Returns published admin-authored posts with category = 'audiochat',
+// Returns published posts that have an audio_url (any category),
 // ordered newest first.
 export async function GET(_request: NextRequest): Promise<NextResponse> {
   const supabase = getSupabaseAdmin();
@@ -10,7 +10,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
   const { data, error } = await supabase
     .from("posts_with_counts")
     .select("*")
-    .eq("category", "audiochat")
+    .not("audio_url", "is", null)
     .eq("visibility", "public")
     .order("created_at", { ascending: false });
 

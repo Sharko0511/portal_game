@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { Headphones } from "lucide-react";
 import { useBaohay, Post, PostLevel } from "@/hooks/blog/usePost";
 import ArticleListByLevel from "@/components/blog/ArticleListByLevel";
 import { useLng } from "@/hooks/useLng";
@@ -133,7 +134,7 @@ function FlatArticleList({ posts }: { posts: Post[] }) {
         <div key={post.id} className={i !== 0 ? "mt-6 border-t border-border pt-6" : ""}>
           {/* Mobile */}
           <Link href={`/blog/${post.id}`} className="group block md:hidden">
-            <div className="h-48 w-full overflow-hidden rounded-xl bg-gray-100">
+            <div className="relative h-48 w-full overflow-hidden rounded-xl bg-gray-100">
               {post.cover_image_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={post.cover_image_url} alt={post.title} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
@@ -141,6 +142,11 @@ function FlatArticleList({ posts }: { posts: Post[] }) {
                 <div className="flex h-full items-center justify-center bg-gray-100">
                   <span className="text-2xl font-bold text-gray-300">{post.title.charAt(0)}</span>
                 </div>
+              )}
+              {post.audio_url && (
+                <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-brand-orange px-2 py-0.5 text-xs font-semibold text-white">
+                  <Headphones className="h-3 w-3" /> Audio
+                </span>
               )}
             </div>
             <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
@@ -160,7 +166,7 @@ function FlatArticleList({ posts }: { posts: Post[] }) {
           {/* Desktop */}
           <div className="hidden md:grid grid-cols-12 gap-x-12 items-start">
             <Link href={`/blog/${post.id}`} className="col-span-3 block overflow-hidden rounded-xl">
-              <div className="h-40 w-full overflow-hidden rounded-xl bg-gray-100">
+              <div className="relative h-40 w-full overflow-hidden rounded-xl bg-gray-100">
                 {post.cover_image_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={post.cover_image_url} alt={post.title} className="h-full w-full object-cover transition-transform duration-300 hover:scale-105" />
@@ -168,6 +174,11 @@ function FlatArticleList({ posts }: { posts: Post[] }) {
                   <div className="flex h-full items-center justify-center bg-gray-100">
                     <span className="text-2xl font-bold text-gray-300">{post.title.charAt(0)}</span>
                   </div>
+                )}
+                {post.audio_url && (
+                  <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-brand-orange px-2 py-0.5 text-xs font-semibold text-white">
+                    <Headphones className="h-3 w-3" /> Audio
+                  </span>
                 )}
               </div>
             </Link>

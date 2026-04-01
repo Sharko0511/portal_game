@@ -66,7 +66,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   return NextResponse.json({ data });
 }
 
-const VALID_CATEGORIES = ["blog", "baohay", "audiochat"] as const;
+const VALID_CATEGORIES = ["blog", "baohay"] as const;
 const VALID_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
 
 const VALID_VISIBILITIES = ["private", "share", "public"] as const;

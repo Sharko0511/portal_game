@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Headphones } from "lucide-react";
 import { Post, PostLevel } from "@/hooks/blog/usePost";
 import { useLng } from "@/hooks/useLng";
 import { useClientTranslation } from "@/hooks/useClientTranslation";
@@ -46,7 +47,7 @@ function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
         {posts.map((post, i) => (
           <div key={post.id} className={i !== 0 ? "mt-6 border-t-2 border-gray-200 pt-6" : ""}>
             <Link href={`/blog/${post.id}`} className="group block">
-              <div className="h-48 w-full overflow-hidden rounded-xl bg-gray-100">
+              <div className="relative h-48 w-full overflow-hidden rounded-xl bg-gray-100">
                 {post.cover_image_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -58,6 +59,11 @@ function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
                   <div className="flex h-full items-center justify-center bg-gray-100">
                     <span className="text-2xl font-bold text-gray-300">{post.title.charAt(0)}</span>
                   </div>
+                )}
+                {post.audio_url && (
+                  <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-brand-orange px-2 py-0.5 text-xs font-semibold text-white">
+                    <Headphones className="h-3 w-3" /> Audio
+                  </span>
                 )}
               </div>
               <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
@@ -103,7 +109,7 @@ function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
             {/* Cols 2+3 (8/12) */}
             <div className={`col-span-8 grid grid-cols-8 gap-x-14 items-start ${i !== 0 ? "border-t-2 border-gray-200 pt-8" : ""}`}>
               <Link href={`/blog/${post.id}`} className="col-span-3 block overflow-hidden rounded-xl">
-                <div className="h-50 w-full overflow-hidden rounded-xl bg-gray-100">
+                <div className="relative h-50 w-full overflow-hidden rounded-xl bg-gray-100">
                   {post.cover_image_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -115,6 +121,11 @@ function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
                     <div className="flex h-full items-center justify-center bg-gray-100">
                       <span className="text-2xl font-bold text-gray-300">{post.title.charAt(0)}</span>
                     </div>
+                  )}
+                  {post.audio_url && (
+                    <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-brand-orange px-2 py-0.5 text-xs font-semibold text-white">
+                      <Headphones className="h-3 w-3" /> Audio
+                    </span>
                   )}
                 </div>
               </Link>

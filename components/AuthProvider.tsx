@@ -71,7 +71,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        supabase.auth.signOut();
+        setLoading(false);
+        return;
+      }
       const u = session?.user ?? null;
       if (u && isSessionExpired()) {
         handleSessionExpired().then(() => setLoading(false));
