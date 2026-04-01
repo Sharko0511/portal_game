@@ -342,6 +342,15 @@ export default function AdminBlogManagement() {
   const [sort, setSort] = useState("newest");
   const [page, setPage] = useState(1);
 
+  // Debounce search input → auto-trigger without needing to click Search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchQuery(search);
+      setPage(1);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [search]);
+
   const postsQuery = useAdminPosts({ page, search: searchQuery, visibility, level, category, sort });
   const changeVisibility = useAdminChangeVisibility();
   const deletePost = useAdminDeletePost();
@@ -356,8 +365,8 @@ export default function AdminBlogManagement() {
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
-    setPage(1);
     setSearchQuery(search);
+    setPage(1);
   }
 
   function handleFilterChange(key: string, value: string) {
@@ -450,7 +459,7 @@ export default function AdminBlogManagement() {
         <div className="flex items-center gap-2 flex-wrap">
           <SlidersHorizontal className="h-3.5 w-3.5 text-gray-400 shrink-0" />
 
-          <Select
+          <FilterDropdown
             value={visibility}
             onChange={(v) => handleFilterChange("visibility", v)}
             options={[
@@ -461,7 +470,7 @@ export default function AdminBlogManagement() {
             ]}
           />
 
-          <Select
+          <FilterDropdown
             value={level}
             onChange={(v) => handleFilterChange("level", v)}
             options={[
@@ -475,7 +484,7 @@ export default function AdminBlogManagement() {
             ]}
           />
 
-          <Select
+          <FilterDropdown
             value={category}
             onChange={(v) => handleFilterChange("category", v)}
             options={[
@@ -485,7 +494,7 @@ export default function AdminBlogManagement() {
             ]}
           />
 
-          <Select
+          <FilterDropdown
             value={sort}
             onChange={(v) => handleFilterChange("sort", v)}
             options={[
@@ -496,12 +505,9 @@ export default function AdminBlogManagement() {
           />
 
           {hasActiveFilters && (
-            <button
-              onClick={clearFilters}
-              className="text-xs text-gray-400 underline-offset-2 hover:text-gray-600 hover:underline"
-            >
+            <Button onClick={clearFilters} variant="secondary" size="sm">
               Clear filters
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -571,7 +577,7 @@ export default function AdminBlogManagement() {
                 </button>
               </div>
               <p className="text-xs text-gray-400">
-                Showing {(page - 1) * 20 + 1}–{Math.min(page * 20, total)} of {total} posts
+                Showing {(page - 1) * 10 + 1}–{Math.min(page * 10, total)} of {total} posts
               </p>
             </div>
           )}
@@ -620,7 +626,7 @@ function StatChip({
   );
 }
 
-function Select({
+function FilterDropdown({
   value,
   onChange,
   options,
@@ -629,18 +635,51 @@ function Select({
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
 }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const current = options.find((o) => o.value === value) ?? options[0];
+  const isFiltered = value !== options[0].value;
+
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
+
   return (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="h-9 rounded-lg border border-border bg-card px-2 text-sm outline-none focus:border-foreground/40"
-    >
-      {options.map((o) => (
-        <option key={o.value} value={o.value}>
-          {o.label}
-        </option>
-      ))}
-    </select>
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className={`inline-flex h-9 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-all ${
+          isFiltered
+            ? "border-gray-900 bg-gray-900 text-white"
+            : "border-border bg-card text-muted-foreground hover:border-foreground/40 hover:text-foreground"
+        }`}
+      >
+        {current.label}
+        <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      {open && (
+        <div className="absolute left-0 top-full z-30 mt-2 min-w-[10rem] rounded-2xl border border-gray-200 bg-white py-2 shadow-xl">
+          {options.map((o) => (
+            <button
+              key={o.value}
+              onClick={() => { onChange(o.value); setOpen(false); }}
+              className={`flex w-full items-center justify-between gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-gray-50 ${
+                value === o.value ? "font-semibold text-gray-900" : "text-gray-600"
+              }`}
+            >
+              <span>{o.label}</span>
+              {value === o.value && <span className="text-gray-400">✓</span>}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -655,12 +694,9 @@ function EmptyState({ hasFilters, onClear }: { hasFilters: boolean; onClear: () 
         {hasFilters ? "Try adjusting your search or filters" : "Posts will appear here once users start writing"}
       </p>
       {hasFilters && (
-        <button
-          onClick={onClear}
-          className="mt-4 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700"
-        >
+        <Button onClick={onClear} variant="primary" size="md" className="mt-4">
           Clear filters
-        </button>
+        </Button>
       )}
     </div>
   );

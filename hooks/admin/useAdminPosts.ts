@@ -34,7 +34,7 @@ export function useAdminPosts(params: AdminPostsParams) {
   return useQuery<{ data: AdminPost[]; total: number; page: number; totalPages: number }>({
     queryKey: ["admin", "posts", params],
     queryFn: async () => {
-      const p = new URLSearchParams({ page: String(params.page), limit: "20" });
+      const p = new URLSearchParams({ page: String(params.page), limit: "10" });
       if (params.search) p.set("search", params.search);
       if (params.visibility !== "all") p.set("visibility", params.visibility);
       if (params.level !== "all") p.set("level", params.level);

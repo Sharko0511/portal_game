@@ -13,44 +13,55 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const category = searchParams.get("category") || "all";
   const sort = searchParams.get("sort") || "newest";
   const page = parseInt(searchParams.get("page") || "1");
-  const limit = parseInt(searchParams.get("limit") || "20");
+  const limit = parseInt(searchParams.get("limit") || "10");
   const offset = (page - 1) * limit;
 
   const supabase = getSupabaseAdmin();
 
-  let query = supabase
+  // ── Count query on posts table (no GROUP BY, fast) ──────────
+  let countQuery = supabase
+    .from("posts")
+    .select("id", { count: "exact", head: true });
+
+  if (search) countQuery = countQuery.ilike("title", `%${search}%`);
+  if (visibility !== "all") countQuery = countQuery.eq("visibility", visibility);
+  if (level !== "all") countQuery = countQuery.eq("level", level);
+  if (category !== "all") countQuery = countQuery.eq("category", category);
+
+  const { count, error: countError } = await countQuery;
+
+  if (countError) {
+    return NextResponse.json(
+      { error: { code: "INTERNAL_ERROR", message: countError.message } },
+      { status: 500 }
+    );
+  }
+
+  // ── Data query on view (includes like/comment counts) ───────
+  let dataQuery = supabase
     .from("posts_with_counts")
     .select(
-      "id, title, slug, author_id, author_name, author_role, visibility, category, level, tags, reading_time, word_count, cover_image_url, like_count, comment_count, created_at, updated_at",
-      { count: "exact" }
+      "id, title, slug, author_id, author_name, author_role, visibility, category, level, tags, reading_time, word_count, cover_image_url, like_count, comment_count, created_at, updated_at"
     );
 
-  if (search) {
-    query = query.ilike("title", `%${search}%`);
-  }
-  if (visibility !== "all") {
-    query = query.eq("visibility", visibility);
-  }
-  if (level !== "all") {
-    query = query.eq("level", level);
-  }
-  if (category !== "all") {
-    query = query.eq("category", category);
-  }
+  if (search) dataQuery = dataQuery.ilike("title", `%${search}%`);
+  if (visibility !== "all") dataQuery = dataQuery.eq("visibility", visibility);
+  if (level !== "all") dataQuery = dataQuery.eq("level", level);
+  if (category !== "all") dataQuery = dataQuery.eq("category", category);
 
   if (sort === "oldest") {
-    query = query.order("created_at", { ascending: true });
+    dataQuery = dataQuery.order("created_at", { ascending: true });
   } else if (sort === "most_liked") {
-    query = query.order("like_count", { ascending: false });
+    dataQuery = dataQuery.order("like_count", { ascending: false });
   } else {
-    query = query.order("created_at", { ascending: false });
+    dataQuery = dataQuery.order("created_at", { ascending: false });
   }
 
-  const { data, count, error } = await query.range(offset, offset + limit - 1);
+  const { data, error: dataError } = await dataQuery.range(offset, offset + limit - 1);
 
-  if (error) {
+  if (dataError) {
     return NextResponse.json(
-      { error: { code: "INTERNAL_ERROR", message: error.message } },
+      { error: { code: "INTERNAL_ERROR", message: dataError.message } },
       { status: 500 }
     );
   }
