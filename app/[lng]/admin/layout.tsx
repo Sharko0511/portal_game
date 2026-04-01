@@ -13,6 +13,7 @@ function AdminLayout({ children }: { children: ReactNode }) {
   const navItems = [
     { href: `/${lng}/admin`, label: "Dashboard", icon: "📊" },
     { href: `/${lng}/admin/users`, label: "Users", icon: "👥" },
+    { href: `/${lng}/admin/posts`, label: "Blog", icon: "📝" },
     { href: `/${lng}/admin/scores`, label: "Scores", icon: "🏆" },
     { href: `/${lng}/admin/games`, label: "Games", icon: "🎮" },
     { href: `/${lng}/admin/config`, label: "Config", icon: "⚙️" },

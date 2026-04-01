@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireAuth, AuthResult, AuthError } from "@/lib/auth";
+import { requireAuth, getUser, AuthResult, AuthError } from "@/lib/auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
 type Params = { params: Promise<{ id: string }> };
@@ -32,6 +32,9 @@ export async function GET(
 
   // Share + private: require authentication
   const auth: AuthResult | AuthError = await requireAuth(request);
+  if (!auth.error && auth.profile.role === "admin") {
+    return NextResponse.json({ data: post });
+  }
   if (auth.error) return auth.error;
 
   const isAuthor = post.author_id === auth.user.id;

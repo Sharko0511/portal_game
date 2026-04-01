@@ -45,7 +45,7 @@ export function usePost(id: string) {
   return useQuery<Post>({
     queryKey: ["post", id],
     queryFn: async () => {
-      const res = await fetch(`/api/blog/posts/${id}`);
+      const res = await adminFetch(`/api/blog/posts/${id}`);
       if (!res.ok) throw new Error(`Failed to fetch post: ${res.status}`);
       const json = await res.json();
       return json.data as Post;
