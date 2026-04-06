@@ -9,11 +9,11 @@ const SUPABASE_URL = "https://eamozesrfwowbdegrfdl.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_oClZjSnjYK-n6NRBbgNjMg_3QVn7I4b";
 
 const USER1_EMAIL = "user@user.com";       // regular user (post author)
-const USER1_PASSWORD = "useruser";
+const USER1_PASSWORD = "user@123";
 const USER2_EMAIL = "admin@admin.com";     // admin
 const USER2_PASSWORD = "admin@123";
 const USER3_EMAIL = "user2@user.com";      // regular user (non-author, non-admin)
-const USER3_PASSWORD = "user2user2";
+const USER3_PASSWORD = "user2@123";
 
 const state = {
   user1_token: "",
@@ -190,9 +190,9 @@ async function run() {
     assert(typeof body.data.comment_count === "number", "missing comment_count");
   });
 
-  await test("3.3 Non-follower (user2) cannot read user1 post → 403", async () => {
+  await test("3.3 Non-follower regular user (user3) cannot read user1 post → 403", async () => {
     const { status, body } = await api("GET", `/api/blog/posts/${state.post_id}`, {
-      token: state.user2_token,
+      token: state.user3_token,
     });
     assert(status === 403, `expected 403, got ${status}`);
     assert(body.error.code === "FORBIDDEN", `code: ${body.error.code}`);

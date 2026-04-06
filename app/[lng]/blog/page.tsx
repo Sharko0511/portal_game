@@ -3,6 +3,8 @@
 import Link from "next/link";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import PostList from "@/components/blog/PostList";
+import FeedLeftSidebar from "@/components/blog/feed/FeedLeftSidebar";
+import FeedRightSidebar from "@/components/blog/feed/FeedRightSidebar";
 import { usePosts } from "@/hooks/blog/usePosts";
 import { useLng } from "@/hooks/useLng";
 import { useClientTranslation } from "@/hooks/useClientTranslation";
@@ -13,13 +15,16 @@ function BlogFeedContent() {
   const { t } = useClientTranslation(lng, "common");
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-8">
+    <div className="mx-auto max-w-7xl px-4 py-8">
+      {/* Breadcrumb */}
       <nav className="mb-3 flex items-center gap-1.5 text-sm text-muted-foreground">
         <Link href={`/${lng}`} className="hover:text-foreground">{t("navigation.home")}</Link>
         <span>›</span>
         <span className="font-medium text-foreground">{t("navigation.feed")}</span>
       </nav>
-      <div className="mb-8 flex items-start justify-between">
+
+      {/* Header */}
+      <div className="mb-6 flex items-start justify-between">
         <h1 className="text-3xl font-bold text-foreground">Your Feed</h1>
         <div className="flex items-center gap-3">
           <p className="hidden max-w-xs text-right text-sm text-muted-foreground sm:block">
@@ -34,11 +39,25 @@ function BlogFeedContent() {
         </div>
       </div>
 
-      <PostList
-        posts={postsQuery.data ?? []}
-        loading={postsQuery.isLoading}
-        emptyMessage="No posts yet. Follow people or write your first post!"
-      />
+      {/* 3-column layout */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[260px_1fr_260px]">
+        <aside className="hidden lg:block">
+          <FeedLeftSidebar />
+        </aside>
+
+        <main className="min-w-0">
+          <PostList
+            posts={postsQuery.data ?? []}
+            loading={postsQuery.isLoading}
+            emptyMessage="No posts yet. Follow people or write your first post!"
+            singleColumn
+          />
+        </main>
+
+        <aside className="hidden lg:block">
+          <FeedRightSidebar />
+        </aside>
+      </div>
     </div>
   );
 }

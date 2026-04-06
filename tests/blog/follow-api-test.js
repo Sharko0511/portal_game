@@ -10,7 +10,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_oClZjSnjYK-n6NRBbgNjMg_3QVn7I4b";
 
 // Uses the two existing test users
 const USER1_EMAIL = "user@user.com";
-const USER1_PASSWORD = "useruser";
+const USER1_PASSWORD = "user@123";
 const USER2_EMAIL = "admin@admin.com";
 const USER2_PASSWORD = "admin@123";
 
@@ -98,6 +98,21 @@ async function run() {
     state.user2_token = body.access_token;
     state.user2_id = body.user.id;
     console.log(`       user2_id: ${state.user2_id}`);
+  });
+
+  // ─── 1.3 Ensure clean state (user1 NOT following user2) ──
+
+  await test("1.3 Ensure user1 is NOT following user2 before tests", async () => {
+    const { status, body } = await api("GET", `/api/blog/users/${state.user2_id}/follow`, {
+      token: state.user1_token,
+    });
+    assert(status === 200, `expected 200, got ${status}`);
+    if (body.data.following === true) {
+      // Already following — unfollow to reset
+      await api("POST", `/api/blog/users/${state.user2_id}/follow`, {
+        token: state.user1_token,
+      });
+    }
   });
 
   // ─── 2. Follow Status ──────────────────────────────

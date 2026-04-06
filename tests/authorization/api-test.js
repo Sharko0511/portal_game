@@ -9,9 +9,9 @@ const SUPABASE_URL = "https://eamozesrfwowbdegrfdl.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_oClZjSnjYK-n6NRBbgNjMg_3QVn7I4b";
 
 const ADMIN_EMAIL = "admin@admin.com";
-const ADMIN_PASSWORD = "adminadmin";
+const ADMIN_PASSWORD = "admin@123";
 const USER_EMAIL = "user@user.com";
-const USER_PASSWORD = "useruser";
+const USER_PASSWORD = "user@123";
 
 // State shared between tests
 const state = {
