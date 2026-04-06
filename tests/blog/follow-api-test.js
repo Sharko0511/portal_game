@@ -10,7 +10,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_oClZjSnjYK-n6NRBbgNjMg_3QVn7I4b";
 
 // Uses the two existing test users
 const USER1_EMAIL = "user@user.com";
-const USER1_PASSWORD = "useruser";
+const USER1_PASSWORD = "user@123";
 const USER2_EMAIL = "admin@admin.com";
 const USER2_PASSWORD = "admin@123";
 

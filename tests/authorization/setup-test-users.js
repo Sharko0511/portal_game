@@ -13,7 +13,7 @@ async function setup() {
   const { data: adminData, error: adminError } =
     await supabase.auth.admin.createUser({
       email: "admin@admin.com",
-      password: "adminadmin",
+      password: "admin@123",
       email_confirm: true,
       user_metadata: { display_name: "Admin" },
     });
@@ -40,7 +40,7 @@ async function setup() {
   const { data: userData, error: userError } =
     await supabase.auth.admin.createUser({
       email: "user@user.com",
-      password: "useruser",
+      password: "user@123",
       email_confirm: true,
       user_metadata: { display_name: "User" },
     });
@@ -55,7 +55,7 @@ async function setup() {
   const { data: user2Data, error: user2Error } =
     await supabase.auth.admin.createUser({
       email: "user2@user.com",
-      password: "user2user2",
+      password: "user2@123",
       email_confirm: true,
       user_metadata: { display_name: "User2" },
     });

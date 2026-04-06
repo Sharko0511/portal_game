@@ -9,11 +9,11 @@ const SUPABASE_URL = "https://eamozesrfwowbdegrfdl.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_oClZjSnjYK-n6NRBbgNjMg_3QVn7I4b";
 
 const USER1_EMAIL = "user@user.com";       // regular user (post author)
-const USER1_PASSWORD = "useruser";
+const USER1_PASSWORD = "user@123";
 const USER2_EMAIL = "admin@admin.com";     // admin
 const USER2_PASSWORD = "admin@123";
 const USER3_EMAIL = "user2@user.com";      // regular user (non-author, non-admin)
-const USER3_PASSWORD = "user2user2";
+const USER3_PASSWORD = "user2@123";
 
 const state = {
   user1_token: "",
