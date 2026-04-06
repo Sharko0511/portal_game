@@ -40,9 +40,11 @@ function EditPostContent({ id }: { id: string }) {
   }
 
   const post = postQuery.data;
+  const isAdmin = profile?.role === "admin";
+  const isAuthor = profile?.id === post.author_id;
 
   // Only the author can edit
-  if (profile && post.author_id !== profile.id && profile.role !== "admin") {
+  if (profile && !isAuthor && !isAdmin) {
     return (
       <div className="flex h-64 flex-col items-center justify-center gap-3">
         <p className="text-sm text-red-600">You are not allowed to edit this post.</p>
@@ -90,7 +92,8 @@ function EditPostContent({ id }: { id: string }) {
           onCancel={() => router.push(`/${lng}/blog/${id}`)}
           submitLabel="Save Changes"
           loading={updatePost.isPending}
-          isAdmin={profile?.role === "admin"}
+          isAdmin={isAdmin}
+          readOnlyBase={isAdmin && !isAuthor}
         />
       </div>
     </div>
