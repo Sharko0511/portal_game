@@ -29,6 +29,7 @@ export function useFollowStatus(targetUserId: string) {
 
 export function useToggleFollow(targetUserId: string) {
   const qc = useQueryClient();
+  const { user } = useAuth();
 
   return useMutation({
     mutationFn: async () => {
@@ -53,6 +54,10 @@ export function useToggleFollow(targetUserId: string) {
     onSettled: () => {
       qc.invalidateQueries({ queryKey: ["follow-status", targetUserId] });
       qc.invalidateQueries({ queryKey: ["followers", targetUserId] });
+      if (user?.id) {
+        qc.invalidateQueries({ queryKey: ["following", user.id] });
+        qc.invalidateQueries({ queryKey: ["followers", user.id] });
+      }
       qc.invalidateQueries({ queryKey: ["posts"] });
     },
   });
