@@ -20,7 +20,7 @@ export default function PostList({
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
-            className="h-24 animate-pulse rounded-2xl border border-gray-200 bg-gray-100"
+            className="h-24 animate-pulse rounded-2xl border border-border bg-gray-100"
           />
         ))}
       </div>
@@ -29,8 +29,8 @@ export default function PostList({
 
   if (posts.length === 0) {
     return (
-      <div className="flex h-48 items-center justify-center rounded-2xl border border-dashed border-gray-200">
-        <p className="text-sm text-gray-400">{emptyMessage}</p>
+      <div className="flex h-48 items-center justify-center rounded-2xl border border-dashed border-border">
+        <p className="text-sm text-muted-foreground">{emptyMessage}</p>
       </div>
     );
   }

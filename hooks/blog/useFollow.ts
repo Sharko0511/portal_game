@@ -2,6 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminFetch } from "@/lib/admin-fetch";
+import { useAuth } from "@/hooks/useAuth";
 
 export interface FollowProfile {
   id: string;
@@ -11,6 +12,7 @@ export interface FollowProfile {
 // ── Follow status ────────────────────────────────────────
 
 export function useFollowStatus(targetUserId: string) {
+  const { user } = useAuth();
   return useQuery<boolean>({
     queryKey: ["follow-status", targetUserId],
     queryFn: async () => {
@@ -19,7 +21,7 @@ export function useFollowStatus(targetUserId: string) {
       const json = await res.json();
       return json.data?.following ?? false;
     },
-    enabled: !!targetUserId,
+    enabled: !!targetUserId && !!user,
   });
 }
 

@@ -3,13 +3,20 @@
 import { useState } from "react";
 import CommentItem from "./CommentItem";
 import { useComments, useAddComment, useDeleteComment } from "@/hooks/blog/useComments";
+import { useAuth } from "@/hooks/useAuth";
+import { useLng } from "@/hooks/useLng";
+import { useClientTranslation } from "@/hooks/useClientTranslation";
 
 interface CommentSectionProps {
   postId: string;
+  onLoginRequired?: () => void;
 }
 
-export default function CommentSection({ postId }: CommentSectionProps) {
+export default function CommentSection({ postId, onLoginRequired }: CommentSectionProps) {
   const [text, setText] = useState("");
+  const { user } = useAuth();
+  const lng = useLng();
+  const { t } = useClientTranslation(lng, "blog_post");
   const commentsQuery = useComments(postId);
   const addComment = useAddComment(postId);
   const deleteComment = useDeleteComment(postId);
@@ -28,37 +35,46 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-2">
-        <h2 className="text-lg font-semibold text-gray-900">Comments</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t("comments.title")}</h2>
         {!commentsQuery.isLoading && (
-          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
+          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-muted-foreground">
             {comments.length}
           </span>
         )}
       </div>
 
       {/* Add comment */}
-      <form onSubmit={handleSubmit} className="flex gap-3">
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              handleSubmit(e as unknown as React.FormEvent);
-            }
-          }}
-          placeholder="Write a comment... (Enter to submit)"
-          rows={2}
-          className="flex-1 resize-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
-        />
+      {user ? (
+        <form onSubmit={handleSubmit} className="flex gap-3">
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e as unknown as React.FormEvent);
+              }
+            }}
+            placeholder={t("comments.placeholder")}
+            rows={2}
+            className="flex-1 resize-none rounded-xl border border-border bg-white px-4 py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+          />
+          <button
+            type="submit"
+            disabled={!text.trim() || addComment.isPending}
+            className="self-end rounded-full bg-brand-lime-bright px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-brand-lime-bright/85 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {addComment.isPending ? "..." : t("comments.post")}
+          </button>
+        </form>
+      ) : (
         <button
-          type="submit"
-          disabled={!text.trim() || addComment.isPending}
-          className="self-end rounded-full bg-[#c8e63d] px-4 py-2 text-sm font-medium text-gray-900 transition-colors hover:bg-[#c8e63d]/85 disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={onLoginRequired}
+          className="w-full rounded-xl border border-border bg-gray-50 px-4 py-3 text-left text-sm text-muted-foreground hover:bg-gray-100 transition-colors"
         >
-          {addComment.isPending ? "..." : "Post"}
+          {t("comments.sign_in")}
         </button>
-      </form>
+      )}
 
       {/* Error */}
       {addComment.isError && (
@@ -81,7 +97,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
           ))}
         </div>
       ) : comments.length === 0 ? (
-        <p className="text-sm text-gray-400">No comments yet. Be the first!</p>
+        <p className="text-sm text-muted-foreground">{t("comments.empty")}</p>
       ) : (
         <div className="divide-y divide-gray-100">
           {comments.map((c) => (

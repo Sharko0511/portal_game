@@ -2,10 +2,12 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminFetch } from "@/lib/admin-fetch";
+import { useAuth } from "@/hooks/useAuth";
 
 // ── Fetch like status ────────────────────────────────────
 
 export function useLikeStatus(postId: string) {
+  const { user } = useAuth();
   return useQuery<boolean>({
     queryKey: ["like", postId],
     queryFn: async () => {
@@ -14,7 +16,7 @@ export function useLikeStatus(postId: string) {
       const json = await res.json();
       return json.data?.liked ?? false;
     },
-    enabled: !!postId,
+    enabled: !!postId && !!user,
   });
 }
 

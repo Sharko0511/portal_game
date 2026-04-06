@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { adminFetch } from "@/lib/admin-fetch";
+import { adminFetch, getAdminToken } from "@/lib/admin-fetch";
 
 export interface Comment {
   id: string;
@@ -21,7 +21,11 @@ export function useComments(postId: string) {
   return useQuery<Comment[]>({
     queryKey: ["comments", postId],
     queryFn: async () => {
-      const res = await adminFetch(`/api/blog/posts/${postId}/comments`);
+      // Send token if available so logged-in users pass auth; visitors get public posts only.
+      const token = await getAdminToken().catch(() => "");
+      const headers: Record<string, string> = {};
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+      const res = await fetch(`/api/blog/posts/${postId}/comments`, { headers });
       if (!res.ok) return [];
       const json = await res.json();
       return json.data as Comment[];

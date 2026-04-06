@@ -1,0 +1,52 @@
+"use client";
+
+import Link from "next/link";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import PostList from "@/components/blog/PostList";
+import { usePosts } from "@/hooks/blog/usePosts";
+import { useLng } from "@/hooks/useLng";
+import { useClientTranslation } from "@/hooks/useClientTranslation";
+
+function BlogFeedContent() {
+  const postsQuery = usePosts();
+  const lng = useLng();
+  const { t } = useClientTranslation(lng, "common");
+
+  return (
+    <div className="mx-auto max-w-6xl px-6 py-8">
+      <nav className="mb-3 flex items-center gap-1.5 text-sm text-muted-foreground">
+        <Link href={`/${lng}`} className="hover:text-foreground">{t("navigation.home")}</Link>
+        <span>›</span>
+        <span className="font-medium text-foreground">{t("navigation.feed")}</span>
+      </nav>
+      <div className="mb-8 flex items-start justify-between">
+        <h1 className="text-3xl font-bold text-foreground">Your Feed</h1>
+        <div className="flex items-center gap-3">
+          <p className="hidden max-w-xs text-right text-sm text-muted-foreground sm:block">
+            Posts from people you follow
+          </p>
+          <Link
+            href={`/${lng}/blog/new`}
+            className="rounded-full bg-brand-lime-bright px-5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-brand-lime-bright/85"
+          >
+            + New Post
+          </Link>
+        </div>
+      </div>
+
+      <PostList
+        posts={postsQuery.data ?? []}
+        loading={postsQuery.isLoading}
+        emptyMessage="No posts yet. Follow people or write your first post!"
+      />
+    </div>
+  );
+}
+
+export default function BlogPage() {
+  return (
+    <ProtectedRoute>
+      <BlogFeedContent />
+    </ProtectedRoute>
+  );
+}

@@ -4,12 +4,14 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { useLng } from "@/hooks/useLng";
 
 export default function UserMenu() {
   const { profile, signOut } = useAuth();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const lng = useLng();
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -24,14 +26,14 @@ export default function UserMenu() {
   async function handleLogout() {
     await signOut();
     setOpen(false);
-    router.push("/");
+    router.push(`/${lng}`);
   }
 
   return (
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 rounded-full border border-gray-200 px-3 py-1.5 text-sm text-gray-500 transition-colors hover:border-foreground/30 hover:text-gray-900"
+        className="flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
       >
         {profile?.display_name || "User"}
         <svg
@@ -45,15 +47,15 @@ export default function UserMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1 w-48 rounded-xl border border-gray-200 bg-white py-1 shadow-md z-50">
-          <div className="border-b border-gray-200 px-4 py-2">
+        <div className="absolute right-0 top-full mt-1 w-48 rounded-xl border border-border bg-white py-1 shadow-md z-50">
+          <div className="border-b border-border px-4 py-2">
             <p className="text-sm font-medium">{profile?.display_name}</p>
-            <p className="text-xs text-gray-500">{profile?.role}</p>
+            <p className="text-xs text-muted-foreground">{profile?.role}</p>
           </div>
           <Link
-            href="/profile"
+            href={`/${lng}/profile`}
             onClick={() => setOpen(false)}
-            className="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+            className="block px-4 py-2 text-sm text-muted-foreground hover:bg-gray-100 hover:text-foreground"
           >
             Profile
           </Link>

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d/Projects/THE_GOOD_LEARNING/thegoodlearning/src/components/homepage/**)",
+      "Read(//d/Projects/THE_GOOD_LEARNING/thegoodlearning/src/components/**)",
+      "Read(//d/Projects/THE_GOOD_LEARNING/thegoodlearning/**)",
+      "Read(//d/Projects/THE_GOOD_LEARNING/**)"
+    ]
+  }
+}

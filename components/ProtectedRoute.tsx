@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect, ReactNode } from "react";
 import Button from "@/components/Button";
+import { useLng } from "@/hooks/useLng";
 
 function BannedMessage() {
   const { signOut } = useAuth();
@@ -23,12 +24,13 @@ function BannedMessage() {
 export default function ProtectedRoute({ children }: { children: ReactNode }) {
   const { user, profile, loading, sessionExpired } = useAuth();
   const router = useRouter();
+  const lng = useLng();
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push(sessionExpired ? "/login?expired=1" : "/login");
+      router.push(sessionExpired ? `/${lng}/login?expired=1` : `/${lng}/login`);
     }
-  }, [loading, user, sessionExpired, router]);
+  }, [loading, user, sessionExpired, router, lng]);
 
   if (loading) {
     return (

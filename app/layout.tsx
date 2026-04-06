@@ -1,7 +1,8 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Montserrat } from "next/font/google";
 import AuthProvider from "@/components/AuthProvider";
 import QueryProvider from "@/components/QueryProvider";
-import Navbar from "@/components/Navbar";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { fetchThemeCss } from "@/lib/theme";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,23 +15,38 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+});
+
 export const metadata = {
-  title: "Game Portal",
-  description: "A collection of vanilla JS canvas games",
+  title: "The Good Learning",
+  description: "Improve your English through blog posts, articles, and games.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  let themeCss = "";
+  try { themeCss = await fetchThemeCss(); } catch { /* fallback to globals.css */ }
+
   return (
-    <html lang="en" className="bg-white">
+    <html lang="en" suppressHydrationWarning>
+      {themeCss && (
+        <head>
+          <style dangerouslySetInnerHTML={{ __html: themeCss }} />
+        </head>
+      )}
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-white text-gray-900`}
+        className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} antialiased font-montserrat min-h-screen flex flex-col bg-background text-foreground`}
+        style={{ fontFamily: "var(--font-montserrat), var(--font-geist-sans), sans-serif" }}
       >
-        <AuthProvider>
-          <QueryProvider>
-            <Navbar />
-            <main className="mx-auto w-full max-w-6xl px-6 py-8 flex-1 bg-white">{children}</main>
-          </QueryProvider>
-        </AuthProvider>
+        <ThemeProvider defaultTheme="system">
+          <AuthProvider>
+            <QueryProvider>
+              {children}
+            </QueryProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

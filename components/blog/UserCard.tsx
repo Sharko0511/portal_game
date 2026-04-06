@@ -17,16 +17,16 @@ export default function UserCard({ userId, displayName, joinedAt }: UserCardProp
   const followingCount = followingQ.data?.length ?? 0;
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6">
+    <div className="rounded-2xl border border-border bg-white p-6">
       {/* Avatar + name */}
       <div className="mb-4 flex items-center gap-4">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-xl font-bold text-gray-600">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-xl font-bold text-muted-foreground">
           {displayName.charAt(0).toUpperCase()}
         </div>
         <div>
-          <h2 className="text-lg font-bold text-gray-900">{displayName}</h2>
+          <h2 className="text-lg font-bold text-foreground">{displayName}</h2>
           {joinedAt && (
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Joined {new Date(joinedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
             </p>
           )}
@@ -36,12 +36,12 @@ export default function UserCard({ userId, displayName, joinedAt }: UserCardProp
       {/* Stats */}
       <div className="mb-4 flex gap-6 text-sm">
         <div>
-          <span className="font-semibold text-gray-900">{followerCount}</span>{" "}
-          <span className="text-gray-500">followers</span>
+          <span className="font-semibold text-foreground">{followerCount}</span>{" "}
+          <span className="text-muted-foreground">followers</span>
         </div>
         <div>
-          <span className="font-semibold text-gray-900">{followingCount}</span>{" "}
-          <span className="text-gray-500">following</span>
+          <span className="font-semibold text-foreground">{followingCount}</span>{" "}
+          <span className="text-muted-foreground">following</span>
         </div>
       </div>
 

@@ -4,7 +4,10 @@ import Link from "next/link";
 import { Post } from "@/hooks/blog/usePost";
 
 /** Extract plain text preview from TipTap JSON */
-function extractPreview(content: Record<string, unknown>, maxLen = 120): string {
+function extractPreview(
+  content: Record<string, unknown>,
+  maxLen = 120,
+): string {
   const parts: string[] = [];
 
   function walk(node: unknown) {
@@ -44,10 +47,10 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
     return (
       <Link
         href={`/blog/${post.id}`}
-        className="group block overflow-hidden rounded-2xl border border-gray-200 bg-white transition-shadow hover:shadow-md"
+        className="group block overflow-hidden rounded-2xl border border-border bg-white transition-shadow hover:shadow-md"
       >
         {/* Cover */}
-        <div className="relative h-64 w-full overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300 sm:h-80">
+        <div className="relative h-64 w-full overflow-hidden bg-linear-to-br from-gray-200 to-gray-300 sm:h-80">
           {post.cover_image_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -56,7 +59,7 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
-            <div className="flex h-full items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+            <div className="flex h-full items-center justify-center bg-linear-to-br from-gray-100 to-gray-200">
               <span className="text-5xl font-bold text-gray-300">
                 {post.title.charAt(0).toUpperCase()}
               </span>
@@ -66,21 +69,25 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
 
         {/* Content */}
         <div className="p-6">
-          <div className="mb-2 flex items-center gap-2 text-xs text-gray-500">
-            <span className="font-medium text-gray-700">{post.author_name}</span>
+          <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="font-medium text-foreground">
+              {post.author_name}
+            </span>
             <span>·</span>
             <span>{formatDate(post.created_at)}</span>
           </div>
-          <h2 className="mb-2 text-xl font-bold text-gray-900 group-hover:underline">
+          <h2 className="mb-2 text-xl font-bold text-foreground group-hover:underline">
             {post.title}
           </h2>
           {preview && (
-            <p className="mb-4 text-sm text-gray-500 line-clamp-2">{preview}</p>
+            <p className="mb-4 text-sm text-muted-foreground line-clamp-2">
+              {preview}
+            </p>
           )}
-          <div className="flex items-center gap-4 text-xs text-gray-400">
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <span>{post.like_count} likes</span>
             <span>{post.comment_count} comments</span>
-            <span className="ml-auto inline-block rounded-full border border-gray-200 px-3 py-0.5 text-gray-500">
+            <span className="ml-auto inline-block rounded-full border border-border px-3 py-0.5 text-muted-foreground">
               Read
             </span>
           </div>
@@ -93,7 +100,7 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
   return (
     <Link
       href={`/blog/${post.id}`}
-      className="group flex gap-4 overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-sm"
+      className="group flex gap-4 overflow-hidden rounded-2xl border border-border bg-white p-4 transition-shadow hover:shadow-sm"
     >
       {/* Thumbnail */}
       <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-gray-100">
@@ -105,7 +112,7 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+          <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-gray-100 to-gray-200">
             <span className="text-xl font-bold text-gray-300">
               {post.title.charAt(0).toUpperCase()}
             </span>
@@ -114,19 +121,23 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
       </div>
 
       {/* Content */}
-      <div className="min-w-0 flex-1">
-        <div className="mb-1 flex items-center gap-1.5 text-xs text-gray-500">
-          <span className="font-medium text-gray-700">{post.author_name}</span>
-          <span>·</span>
-          <span>{formatDate(post.created_at)}</span>
+      <div className="min-w-0 flex-1 flex flex-col justify-between">
+        <div>
+          <div className="mb-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+            <span className="font-medium text-foreground">
+              {post.author_name}
+            </span>
+            <span>·</span>
+            <span>{formatDate(post.created_at)}</span>
+          </div>
+          <h3 className="mb-2 text-sm font-semibold text-foreground group-hover:underline line-clamp-2">
+            {post.title}
+          </h3>
         </div>
-        <h3 className="mb-1 text-sm font-semibold text-gray-900 group-hover:underline line-clamp-2">
-          {post.title}
-        </h3>
-        <div className="flex items-center gap-3 text-xs text-gray-400">
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <span>{post.like_count} likes</span>
           <span>{post.comment_count} comments</span>
-          <span className="ml-auto inline-block rounded-full border border-gray-200 px-2.5 py-0.5 text-gray-500">
+          <span className="ml-auto inline-block rounded-full border border-border px-2.5 py-0.5 text-muted-foreground">
             Read
           </span>
         </div>

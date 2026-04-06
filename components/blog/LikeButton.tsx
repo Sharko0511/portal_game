@@ -1,13 +1,20 @@
 "use client";
 
 import { useLikeStatus, useToggleLike } from "@/hooks/blog/useLike";
+import { useAuth } from "@/hooks/useAuth";
+import { useLng } from "@/hooks/useLng";
+import { useClientTranslation } from "@/hooks/useClientTranslation";
 
 interface LikeButtonProps {
   postId: string;
   likeCount: number;
+  onLoginRequired?: () => void;
 }
 
-export default function LikeButton({ postId, likeCount }: LikeButtonProps) {
+export default function LikeButton({ postId, likeCount, onLoginRequired }: LikeButtonProps) {
+  const { user } = useAuth();
+  const lng = useLng();
+  const { t } = useClientTranslation(lng, "blog_post");
   const statusQuery = useLikeStatus(postId);
   const toggle = useToggleLike(postId);
 
@@ -16,12 +23,12 @@ export default function LikeButton({ postId, likeCount }: LikeButtonProps) {
 
   return (
     <button
-      onClick={() => toggle.mutate()}
-      disabled={pending || statusQuery.isLoading}
+      onClick={() => { if (!user) { onLoginRequired?.(); return; } toggle.mutate(); }}
+      disabled={!!user && (pending || statusQuery.isLoading)}
       className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 ${
         liked
-          ? "border-[#c8e63d] bg-[#c8e63d] text-gray-900"
-          : "border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-gray-900"
+          ? "border-brand-lime-bright bg-brand-lime-bright text-foreground"
+          : "border-border bg-white text-muted-foreground hover:border-gray-400 hover:text-foreground"
       }`}
     >
       <svg
@@ -38,7 +45,7 @@ export default function LikeButton({ postId, likeCount }: LikeButtonProps) {
         />
       </svg>
       <span>
-        {liked ? "Liked" : "Like"} · {likeCount}
+        {liked ? t("liked") : t("like")} · {likeCount}
       </span>
     </button>
   );
