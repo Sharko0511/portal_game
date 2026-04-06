@@ -100,6 +100,21 @@ async function run() {
     console.log(`       user2_id: ${state.user2_id}`);
   });
 
+  // ─── 1.3 Ensure clean state (user1 NOT following user2) ──
+
+  await test("1.3 Ensure user1 is NOT following user2 before tests", async () => {
+    const { status, body } = await api("GET", `/api/blog/users/${state.user2_id}/follow`, {
+      token: state.user1_token,
+    });
+    assert(status === 200, `expected 200, got ${status}`);
+    if (body.data.following === true) {
+      // Already following — unfollow to reset
+      await api("POST", `/api/blog/users/${state.user2_id}/follow`, {
+        token: state.user1_token,
+      });
+    }
+  });
+
   // ─── 2. Follow Status ──────────────────────────────
 
   section("2. GET /api/blog/users/[id]/follow — Status");

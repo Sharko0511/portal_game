@@ -190,9 +190,9 @@ async function run() {
     assert(typeof body.data.comment_count === "number", "missing comment_count");
   });
 
-  await test("3.3 Non-follower (user2) cannot read user1 post → 403", async () => {
+  await test("3.3 Non-follower regular user (user3) cannot read user1 post → 403", async () => {
     const { status, body } = await api("GET", `/api/blog/posts/${state.post_id}`, {
-      token: state.user2_token,
+      token: state.user3_token,
     });
     assert(status === 403, `expected 403, got ${status}`);
     assert(body.error.code === "FORBIDDEN", `code: ${body.error.code}`);
