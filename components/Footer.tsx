@@ -56,9 +56,9 @@ export default function Footer() {
           </div>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link href={`/${lng}`} className="text-white hover:text-white/80">{tc("navigation.home")}</Link>
-            <Link href={`/${lng}/blog`} className="text-white hover:text-white/80">{tc("navigation.blog")}</Link>
-            <Link href={`/${lng}/audio`} className="text-white hover:text-white/80">{tc("navigation.audio")}</Link>
+            <Link href={`/${lng}/baohay`} className="text-white hover:text-white/80">{tc("navigation.blog")}</Link>
             <Link href={`/${lng}/games`} className="text-white hover:text-white/80">{tc("navigation.games")}</Link>
+            <Link href={`/${lng}/blog`} className="text-white hover:text-white/80">{tc("navigation.feed")}</Link>
           </div>
         </div>
       </div>
