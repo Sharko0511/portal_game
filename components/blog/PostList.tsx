@@ -7,12 +7,14 @@ interface PostListProps {
   posts: Post[];
   loading?: boolean;
   emptyMessage?: string;
+  singleColumn?: boolean;
 }
 
 export default function PostList({
   posts,
   loading = false,
   emptyMessage = "No posts yet.",
+  singleColumn = false,
 }: PostListProps) {
   if (loading) {
     return (
@@ -44,7 +46,7 @@ export default function PostList({
 
       {/* Rest are compact */}
       {rest.length > 0 && (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className={`grid gap-4${singleColumn ? "" : " sm:grid-cols-2"}`}>
           {rest.map((post) => (
             <PostCard key={post.id} post={post} />
           ))}

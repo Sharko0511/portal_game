@@ -95,7 +95,16 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "TOKEN_REFRESHED" && !session) {
+        handleSessionExpired();
+        return;
+      }
+      // @ts-expect-error TOKEN_REFRESH_FAILED is a valid event not yet typed in all SDK versions
+      if (event === "TOKEN_REFRESH_FAILED") {
+        handleSessionExpired();
+        return;
+      }
       const u = session?.user ?? null;
       setUser(u);
       if (u) {
