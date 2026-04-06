@@ -62,6 +62,8 @@ interface PostFormProps {
   submitLabel?: string;
   loading?: boolean;
   isAdmin?: boolean;
+  /** When admin edits another user's post — locks title, cover image, content */
+  readOnlyBase?: boolean;
 }
 
 function makeEmptyDoc(): BlocksDoc {
@@ -96,6 +98,7 @@ export default function PostForm({
   submitLabel = "Publish",
   loading = false,
   isAdmin = false,
+  readOnlyBase = false,
 }: PostFormProps) {
   const [title, setTitle] = useState(initialValues?.title ?? "");
   const [doc, setDoc] = useState<BlocksDoc>(() => toBlocksDoc(initialValues?.content));
@@ -134,15 +137,16 @@ export default function PostForm({
     e.preventDefault();
     setError(null);
 
-    if (!title.trim()) { setError("Title is required."); return; }
+    if (!readOnlyBase && !title.trim()) { setError("Title is required."); return; }
 
-    const hasContent = doc.blocks.some((b) => {
-      if (b.type === "image") return true;
-      const nodes = (b.content as { content?: unknown[] }).content ?? [];
-      return nodes.some((n: unknown) => (n as { content?: unknown[] }).content?.length);
-    });
-
-    if (!hasContent) { setError("Post content cannot be empty."); return; }
+    if (!readOnlyBase) {
+      const hasContent = doc.blocks.some((b) => {
+        if (b.type === "image") return true;
+        const nodes = (b.content as { content?: unknown[] }).content ?? [];
+        return nodes.some((n: unknown) => (n as { content?: unknown[] }).content?.length);
+      });
+      if (!hasContent) { setError("Post content cannot be empty."); return; }
+    }
 
     const tags = tagInput
       .split(",")
@@ -177,36 +181,66 @@ export default function PostForm({
       {/* Title */}
       <div>
         <label className="mb-1.5 block text-sm font-medium text-foreground">Title</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter post title..."
-          className="w-full rounded-xl border border-border bg-white px-4 py-3 text-lg font-semibold text-foreground outline-none placeholder:text-muted-foreground focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
-        />
+        {readOnlyBase ? (
+          <div className="w-full rounded-xl border border-border bg-gray-50 px-4 py-3 text-lg font-semibold text-foreground select-none cursor-not-allowed opacity-70">
+            {title || "—"}
+          </div>
+        ) : (
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter post title..."
+            className="w-full rounded-xl border border-border bg-white px-4 py-3 text-lg font-semibold text-foreground outline-none placeholder:text-muted-foreground focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+          />
+        )}
       </div>
 
       {/* Cover image */}
       <div>
-        <ImageUpload label="Cover Image (optional)" onUpload={setCoverImageUrl} initialUrl={coverImageUrl ?? undefined} />
-        {coverImageUrl && (
-          <input
-            type="text"
-            value={coverImageCaption}
-            onChange={(e) => setCoverImageCaption(e.target.value)}
-            placeholder="Cover image caption (optional)..."
-            className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-gray-400"
-          />
+        {readOnlyBase ? (
+          <div>
+            <p className="mb-1.5 text-sm font-medium text-foreground">Cover Image</p>
+            {coverImageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={coverImageUrl} alt="Cover" className="h-48 w-full rounded-xl object-cover opacity-70" />
+            ) : (
+              <div className="flex h-24 items-center justify-center rounded-xl border border-dashed border-border bg-gray-50 text-sm text-muted-foreground">
+                No cover image
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            <ImageUpload label="Cover Image (optional)" onUpload={setCoverImageUrl} initialUrl={coverImageUrl ?? undefined} />
+            {coverImageUrl && (
+              <input
+                type="text"
+                value={coverImageCaption}
+                onChange={(e) => setCoverImageCaption(e.target.value)}
+                placeholder="Cover image caption (optional)..."
+                className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-gray-400"
+              />
+            )}
+          </>
         )}
       </div>
 
       {/* Block editor */}
       <div>
         <label className="mb-1.5 block text-sm font-medium text-foreground">Content</label>
-        <p className="mb-3 text-xs text-muted-foreground">
-          Mix text and image blocks freely. Use the <strong>+ Text block</strong> / <strong>+ Image block</strong> buttons between blocks to add more.
-        </p>
-        <BlockEditor value={doc} onChange={setDoc} />
+        {readOnlyBase ? (
+          <div className="rounded-xl border border-dashed border-border bg-gray-50 px-4 py-3 text-sm text-muted-foreground cursor-not-allowed">
+            Content editing is restricted to the original author.
+          </div>
+        ) : (
+          <>
+            <p className="mb-3 text-xs text-muted-foreground">
+              Mix text and image blocks freely. Use the <strong>+ Text block</strong> / <strong>+ Image block</strong> buttons between blocks to add more.
+            </p>
+            <BlockEditor value={doc} onChange={setDoc} />
+          </>
+        )}
       </div>
 
       {/* ── Admin-only fields ──────────────────────────────── */}
