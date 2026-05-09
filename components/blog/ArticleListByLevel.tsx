@@ -40,13 +40,17 @@ function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
   const { t } = useClientTranslation(lng, "blog");
   return (
     <section className={`${first ? "" : "border-t border-border pt-8"}`}>
-
       {/* ── Mobile layout ── */}
       <div className="md:hidden">
-        <h2 className="mb-4 text-2xl font-bold text-foreground">{LEVEL_LABELS[level]}</h2>
+        <h2 className="mb-4 text-2xl font-bold text-foreground">
+          {LEVEL_LABELS[level]}
+        </h2>
         {posts.map((post, i) => (
-          <div key={post.id} className={i !== 0 ? "mt-6 border-t-2 border-gray-200 pt-6" : ""}>
-            <Link href={`/blog/${post.id}`} className="group block">
+          <div
+            key={post.id}
+            className={i !== 0 ? "mt-6 border-t-2 border-gray-200 pt-6" : ""}
+          >
+            <Link href={`/blog/${post.slug}`} className="group block">
               <div className="relative h-48 w-full overflow-hidden rounded-xl bg-gray-100">
                 {post.cover_image_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -57,7 +61,9 @@ function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center bg-gray-100">
-                    <span className="text-2xl font-bold text-gray-300">{post.title.charAt(0)}</span>
+                    <span className="text-2xl font-bold text-gray-300">
+                      {post.title.charAt(0)}
+                    </span>
                   </div>
                 )}
                 {post.audio_url && (
@@ -67,7 +73,11 @@ function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
                 )}
               </div>
               <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
-                {post.reading_time > 0 && <span>{post.reading_time} {t("reading_time")}</span>}
+                {post.reading_time > 0 && (
+                  <span>
+                    {post.reading_time} {t("reading_time")}
+                  </span>
+                )}
                 <span>{formatDate(post.created_at)}</span>
               </div>
               <h3 className="mt-1 text-lg font-semibold text-foreground leading-snug group-hover:underline">
@@ -89,13 +99,17 @@ function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
       {/* ── Desktop layout ── */}
       <div className="hidden md:block">
         {posts.map((post, i) => (
-          <div key={post.id} className={`grid grid-cols-12 gap-x-12 gap-y-4 items-start mb-8 ${last ? "last:mb-0" : ""}`}>
-
+          <div
+            key={post.id}
+            className={`grid grid-cols-12 gap-x-12 gap-y-4 items-start mb-8 ${last ? "last:mb-0" : ""}`}
+          >
             {/* Col 1 (4/12) — level heading only on first row */}
             <div className="col-span-4">
               {i === 0 ? (
                 <>
-                  <h2 className="text-2xl font-bold text-foreground">{LEVEL_LABELS[level]}</h2>
+                  <h2 className="text-2xl font-bold text-foreground">
+                    {LEVEL_LABELS[level]}
+                  </h2>
                   <Link
                     href={`/${category}?level=${level}`}
                     className="mt-1 inline-block text-sm text-muted-foreground hover:text-foreground"
@@ -107,8 +121,13 @@ function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
             </div>
 
             {/* Cols 2+3 (8/12) */}
-            <div className={`col-span-8 grid grid-cols-8 gap-x-14 items-start ${i !== 0 ? "border-t-2 border-gray-200 pt-8" : ""}`}>
-              <Link href={`/blog/${post.id}`} className="col-span-3 block overflow-hidden rounded-xl">
+            <div
+              className={`col-span-8 grid grid-cols-8 gap-x-14 items-start ${i !== 0 ? "border-t-2 border-gray-200 pt-8" : ""}`}
+            >
+              <Link
+                href={`/blog/${post.slug}`}
+                className="col-span-3 block overflow-hidden rounded-xl"
+              >
                 <div className="relative h-50 w-full overflow-hidden rounded-xl bg-gray-100">
                   {post.cover_image_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -119,7 +138,9 @@ function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center bg-gray-100">
-                      <span className="text-2xl font-bold text-gray-300">{post.title.charAt(0)}</span>
+                      <span className="text-2xl font-bold text-gray-300">
+                        {post.title.charAt(0)}
+                      </span>
                     </div>
                   )}
                   {post.audio_url && (
@@ -129,9 +150,16 @@ function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
                   )}
                 </div>
               </Link>
-              <Link href={`/blog/${post.id}`} className="col-span-5 group flex flex-col justify-between gap-3 self-stretch pt-1">
+              <Link
+                href={`/blog/${post.slug}`}
+                className="col-span-5 group flex flex-col justify-between gap-3 self-stretch pt-1"
+              >
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
-                  {post.reading_time > 0 && <span>{post.reading_time} {t("reading_time")}</span>}
+                  {post.reading_time > 0 && (
+                    <span>
+                      {post.reading_time} {t("reading_time")}
+                    </span>
+                  )}
                   <span>{formatDate(post.created_at)}</span>
                 </div>
                 <h3 className="text-lg font-semibold text-foreground leading-snug group-hover:underline">
@@ -139,11 +167,9 @@ function LevelGroup({ level, posts, category, first, last }: LevelGroupProps) {
                 </h3>
               </Link>
             </div>
-
           </div>
         ))}
       </div>
-
     </section>
   );
 }
@@ -155,7 +181,10 @@ interface ArticleListByLevelProps {
   category: string;
 }
 
-export default function ArticleListByLevel({ posts, category }: ArticleListByLevelProps) {
+export default function ArticleListByLevel({
+  posts,
+  category,
+}: ArticleListByLevelProps) {
   const grouped = new Map<PostLevel, Post[]>();
   for (const post of posts) {
     if (!post.level) continue;
@@ -167,13 +196,24 @@ export default function ArticleListByLevel({ posts, category }: ArticleListByLev
   const levels = LEVEL_ORDER.filter((l) => grouped.has(l));
 
   if (levels.length === 0) {
-    return <p className="py-12 text-center text-sm text-muted-foreground">No articles yet.</p>;
+    return (
+      <p className="py-12 text-center text-sm text-muted-foreground">
+        No articles yet.
+      </p>
+    );
   }
 
   return (
     <div>
       {levels.map((level, i) => (
-        <LevelGroup key={level} level={level} posts={grouped.get(level)!} category={category} first={i === 0} last={i === levels.length - 1} />
+        <LevelGroup
+          key={level}
+          level={level}
+          posts={grouped.get(level)!}
+          category={category}
+          first={i === 0}
+          last={i === levels.length - 1}
+        />
       ))}
     </div>
   );

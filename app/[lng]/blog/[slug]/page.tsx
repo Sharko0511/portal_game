@@ -15,7 +15,7 @@ import { useLng } from "@/hooks/useLng";
 import { useClientTranslation } from "@/hooks/useClientTranslation";
 
 interface PostPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }
 
 // ── Helpers ───────────────────────────────────────────────────
@@ -51,26 +51,34 @@ function AudioPlayer({ src }: { src: string }) {
   const { t } = useClientTranslation(lng, "blog_post");
 
   // Bar container is 20px tall; bars oscillate ±delta around their base height.
-  const bars = useMemo(() =>
-    Array.from({ length: 160 }, (_, i) => {
-      const base = Math.round(4 + Math.abs(Math.sin(i * 0.55) * 6 + Math.sin(i * 1.3) * 5));
-      const delta = Math.round(2 + Math.abs(Math.sin(i * 0.9)) * 4);
-      return {
-        base,
-        min: Math.max(2, base - delta),
-        max: Math.min(18, base + delta),
-        duration: 380 + ((i * 97) % 320),
-        delay: (i * 53) % 700,
-      };
-    }),
-    []
+  const bars = useMemo(
+    () =>
+      Array.from({ length: 160 }, (_, i) => {
+        const base = Math.round(
+          4 + Math.abs(Math.sin(i * 0.55) * 6 + Math.sin(i * 1.3) * 5),
+        );
+        const delta = Math.round(2 + Math.abs(Math.sin(i * 0.9)) * 4);
+        return {
+          base,
+          min: Math.max(2, base - delta),
+          max: Math.min(18, base + delta),
+          duration: 380 + ((i * 97) % 320),
+          delay: (i * 53) % 700,
+        };
+      }),
+    [],
   );
 
   function toggle() {
     const audio = audioRef.current;
     if (!audio) return;
-    if (playing) { audio.pause(); setPlaying(false); }
-    else { audio.play(); setPlaying(true); }
+    if (playing) {
+      audio.pause();
+      setPlaying(false);
+    } else {
+      audio.play();
+      setPlaying(true);
+    }
   }
 
   return (
@@ -82,7 +90,10 @@ function AudioPlayer({ src }: { src: string }) {
         }
       `}</style>
       <p className="mb-2 text-xs text-muted-foreground">{t("audio.label")}</p>
-      <div className="mb-6 w-full rounded-xl border border-border bg-gray-50 px-3" style={{ height: "48px" }}>
+      <div
+        className="mb-6 w-full rounded-xl border border-border bg-gray-50 px-3"
+        style={{ height: "48px" }}
+      >
         <div className="flex h-full items-center gap-3">
           <button
             type="button"
@@ -90,26 +101,30 @@ function AudioPlayer({ src }: { src: string }) {
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-foreground text-background hover:bg-foreground/85 transition-colors"
             aria-label={playing ? "Pause" : "Play"}
           >
-            {playing ? <span className="text-xs">❚❚</span> : <span className="ml-0.5 text-xs">▶</span>}
+            {playing ? (
+              <span className="text-xs">❚❚</span>
+            ) : (
+              <span className="ml-0.5 text-xs">▶</span>
+            )}
           </button>
           <div className="flex flex-1 h-5 items-end gap-px px-3">
-              {bars.map((bar, i) => (
-                <div
-                  key={i}
-                  className="flex-1 rounded-sm"
-                  style={{
-                    height: `${bar.base}px`,
-                    backgroundColor: playing ? "#317F5F" : "#d1d5db",
-                    ["--h-min" as string]: `${bar.min}px`,
-                    ["--h-max" as string]: `${bar.max}px`,
-                    animationName: playing ? "waveform-bar" : "none",
-                    animationDuration: `${bar.duration}ms`,
-                    animationDelay: `${bar.delay}ms`,
-                    animationTimingFunction: "ease-in-out",
-                    animationIterationCount: "infinite",
-                  }}
-                />
-              ))}
+            {bars.map((bar, i) => (
+              <div
+                key={i}
+                className="flex-1 rounded-sm"
+                style={{
+                  height: `${bar.base}px`,
+                  backgroundColor: playing ? "#317F5F" : "#d1d5db",
+                  ["--h-min" as string]: `${bar.min}px`,
+                  ["--h-max" as string]: `${bar.max}px`,
+                  animationName: playing ? "waveform-bar" : "none",
+                  animationDuration: `${bar.duration}ms`,
+                  animationDelay: `${bar.delay}ms`,
+                  animationTimingFunction: "ease-in-out",
+                  animationIterationCount: "infinite",
+                }}
+              />
+            ))}
           </div>
         </div>
         <audio ref={audioRef} src={src} onEnded={() => setPlaying(false)} />
@@ -120,14 +135,18 @@ function AudioPlayer({ src }: { src: string }) {
 
 // ── Popular posts sidebar ─────────────────────────────────────
 
-function PopularSidebar({ currentId, category }: { currentId: string; category: string }) {
+function PopularSidebar({
+  currentId,
+  category,
+}: {
+  currentId: string;
+  category: string;
+}) {
   const lng = useLng();
   const { t } = useClientTranslation(lng, "blog_post");
   const baohayQuery = useBaohay();
 
-  const posts = category === "baohay"
-    ? (baohayQuery.data ?? [])
-    : [];
+  const posts = category === "baohay" ? (baohayQuery.data ?? []) : [];
 
   const popular = posts.filter((p) => p.id !== currentId).slice(0, 3);
 
@@ -136,11 +155,17 @@ function PopularSidebar({ currentId, category }: { currentId: string; category: 
   return (
     <aside className="hidden xl:block w-72 shrink-0">
       <div className="sticky top-8">
-        <h3 className="mb-3 text-base font-semibold text-foreground">{t("sidebar.title")}</h3>
+        <h3 className="mb-3 text-base font-semibold text-foreground">
+          {t("sidebar.title")}
+        </h3>
         <div className="mb-1 border-t-2 border-gray-800" />
         <div>
           {popular.map((p, i) => (
-            <Link key={p.id} href={`/blog/${p.id}`} className={`group flex gap-3 py-3 ${i !== 0 ? "border-t-2 border-gray-300" : ""}`}>
+            <Link
+              key={p.id}
+              href={`/blog/${p.slug}`}
+              className={`group flex gap-3 py-3 ${i !== 0 ? "border-t-2 border-gray-300" : ""}`}
+            >
               <div className="h-16 w-16 shrink-0 rounded-xl overflow-hidden bg-gray-100">
                 {p.cover_image_url && (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -155,7 +180,9 @@ function PopularSidebar({ currentId, category }: { currentId: string; category: 
                 <p className="text-sm font-semibold text-foreground line-clamp-3 group-hover:underline">
                   {p.title}
                 </p>
-                <p className="mt-1 text-xs text-muted-foreground">{formatDate(p.created_at)}</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {formatDate(p.created_at)}
+                </p>
               </div>
             </Link>
           ))}
@@ -175,9 +202,9 @@ function PopularSidebar({ currentId, category }: { currentId: string; category: 
 
 // ── Main post content ─────────────────────────────────────────
 
-function PostContent({ id }: { id: string }) {
+function PostContent({ slug }: { slug: string }) {
   const { profile } = useAuth();
-  const postQuery = usePost(id);
+  const postQuery = usePost(slug);
   const lng = useLng();
   const { t } = useClientTranslation(lng, "blog_post");
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
@@ -199,7 +226,9 @@ function PostContent({ id }: { id: string }) {
       <div className="flex h-64 flex-col items-center justify-center gap-3">
         {is403 ? (
           <>
-            <p className="text-sm text-muted-foreground">You need to be logged in to read this post.</p>
+            <p className="text-sm text-muted-foreground">
+              You need to be logged in to read this post.
+            </p>
             <Link
               href={`/${lng}/login`}
               className="rounded-full bg-accent px-5 py-2 text-sm font-medium text-foreground hover:bg-accent/85"
@@ -210,7 +239,10 @@ function PostContent({ id }: { id: string }) {
         ) : (
           <>
             <p className="text-red-600">Post not found.</p>
-            <Link href={`/${lng}/blog`} className="text-sm text-muted-foreground hover:text-foreground">
+            <Link
+              href={`/${lng}/blog`}
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
               ← Back to Feed
             </Link>
           </>
@@ -225,17 +257,22 @@ function PostContent({ id }: { id: string }) {
   const isAuthor = profile?.id === post.author_id;
   const isAdmin = profile?.role === "admin";
   const categoryLabel = CATEGORY_LABELS[post.category] ?? post.category;
-  const hasStats = post.word_count > 0 || post.event_encounters > 0 || post.cards_count > 0;
+  const hasStats =
+    post.word_count > 0 || post.event_encounters > 0 || post.cards_count > 0;
 
   return (
     <div className="mx-auto max-w-[1440px] px-4 py-8 md:px-6 xl:px-21">
-
       {/* ── Full-width header ── */}
       {/* Breadcrumb */}
       <nav className="mb-6 flex items-center gap-1.5 text-sm text-muted-foreground">
-        <Link href={`/${lng}`} className="hover:text-foreground">{t("breadcrumb.home")}</Link>
+        <Link href={`/${lng}`} className="hover:text-foreground">
+          {t("breadcrumb.home")}
+        </Link>
         <span>›</span>
-        <Link href={`/${lng}/${post.category}`} className="font-medium text-brand-primary hover:text-brand-primary/80">
+        <Link
+          href={`/${lng}/${post.category}`}
+          className="font-medium text-brand-primary hover:text-brand-primary/80"
+        >
           {categoryLabel}
         </Link>
       </nav>
@@ -247,10 +284,12 @@ function PostContent({ id }: { id: string }) {
 
       {/* Date + edit */}
       <div className="mb-6 flex items-center justify-between gap-3">
-        <span className="text-sm text-muted-foreground">{formatDate(post.created_at)}</span>
+        <span className="text-sm text-muted-foreground">
+          {formatDate(post.created_at)}
+        </span>
         {(isAuthor || isAdmin) && (
           <Link
-            href={`/${lng}/blog/${post.id}/edit`}
+            href={`/${lng}/blog/${post.slug}/edit`}
             className="rounded-full border border-border px-4 py-1 text-xs text-muted-foreground hover:bg-gray-50"
           >
             {t("edit_post")}
@@ -281,7 +320,6 @@ function PostContent({ id }: { id: string }) {
       <div className="flex gap-10">
         {/* ── Article column ── */}
         <article className="min-w-0 flex-1">
-
           {/* Level badge */}
           {post.level && (
             <div className="mb-6">
@@ -293,10 +331,11 @@ function PostContent({ id }: { id: string }) {
 
           {/* Body content */}
           <div className="mb-10">
-            {post.content?.type === "blocks"
-              ? <BlocksRenderer doc={post.content as unknown as BlocksDoc} />
-              : <TipTapEditor content={post.content} editable={false} />
-            }
+            {post.content?.type === "blocks" ? (
+              <BlocksRenderer doc={post.content as unknown as BlocksDoc} />
+            ) : (
+              <TipTapEditor content={post.content} editable={false} />
+            )}
           </div>
 
           {/* Stats row */}
@@ -304,20 +343,32 @@ function PostContent({ id }: { id: string }) {
             <div className="mb-10 grid grid-cols-3 gap-x-4 py-8">
               {post.word_count > 0 && (
                 <div className="border-b-2 border-gray-300 pb-3">
-                  <p className="text-4xl font-bold text-foreground">{post.word_count.toLocaleString()}</p>
-                  <p className="text-sm text-muted-foreground">{t("stats.words")}</p>
+                  <p className="text-4xl font-bold text-foreground">
+                    {post.word_count.toLocaleString()}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("stats.words")}
+                  </p>
                 </div>
               )}
               {post.event_encounters > 0 && (
                 <div className="border-b-2 border-gray-300 pb-3">
-                  <p className="text-4xl font-bold text-foreground">{post.event_encounters}</p>
-                  <p className="text-sm text-muted-foreground">{t("stats.event_encounters")}</p>
+                  <p className="text-4xl font-bold text-foreground">
+                    {post.event_encounters}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("stats.event_encounters")}
+                  </p>
                 </div>
               )}
               {post.cards_count > 0 && (
                 <div className="border-b-2 border-gray-300 pb-3">
-                  <p className="text-4xl font-bold text-foreground">{post.cards_count}</p>
-                  <p className="text-sm text-muted-foreground">{t("stats.cards")}</p>
+                  <p className="text-4xl font-bold text-foreground">
+                    {post.cards_count}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("stats.cards")}
+                  </p>
                 </div>
               )}
             </div>
@@ -326,7 +377,9 @@ function PostContent({ id }: { id: string }) {
           {/* Player Feedback */}
           {post.player_feedback.length > 0 && (
             <section className="mb-10">
-              <h2 className="mb-4 text-2xl font-bold text-foreground">{t("player_feedback.title")}</h2>
+              <h2 className="mb-4 text-2xl font-bold text-foreground">
+                {t("player_feedback.title")}
+              </h2>
               {post.feedback_intro && (
                 <p className="mb-6 text-sm leading-relaxed text-muted-foreground">
                   {post.feedback_intro}
@@ -348,7 +401,9 @@ function PostContent({ id }: { id: string }) {
           {/* Tags */}
           {post.tags.length > 0 && (
             <div className="mb-8">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("tags")}</p>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                {t("tags")}
+              </p>
               <div className="flex flex-wrap gap-2">
                 {post.tags.map((tag) => (
                   <Link
@@ -372,7 +427,9 @@ function PostContent({ id }: { id: string }) {
               <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("author.label")}
               </p>
-              <p className="font-semibold text-foreground">{post.author_name}</p>
+              <p className="font-semibold text-foreground">
+                {post.author_name}
+              </p>
             </div>
             <FollowButton targetUserId={post.author_id} />
           </div>
@@ -383,14 +440,21 @@ function PostContent({ id }: { id: string }) {
               {t("spread_the_words")}
             </p>
             <div className="flex items-center gap-3">
-              <LikeButton postId={post.id} likeCount={post.like_count} onLoginRequired={() => setLoginDialogOpen(true)} />
+              <LikeButton
+                postId={post.id}
+                likeCount={post.like_count}
+                onLoginRequired={() => setLoginDialogOpen(true)}
+              />
               <ShareButton title={post.title} />
             </div>
           </div>
 
           {/* Comments — always visible; login dialog for visitors */}
           <div className="rounded-2xl border border-border bg-card p-6">
-            <CommentSection postId={post.id} onLoginRequired={() => setLoginDialogOpen(true)} />
+            <CommentSection
+              postId={post.id}
+              onLoginRequired={() => setLoginDialogOpen(true)}
+            />
           </div>
         </article>
 
@@ -398,12 +462,15 @@ function PostContent({ id }: { id: string }) {
         <PopularSidebar currentId={post.id} category={post.category} />
       </div>
 
-      <LoginDialog open={loginDialogOpen} onClose={() => setLoginDialogOpen(false)} />
+      <LoginDialog
+        open={loginDialogOpen}
+        onClose={() => setLoginDialogOpen(false)}
+      />
     </div>
   );
 }
 
 export default function PostPage({ params }: PostPageProps) {
-  const { id } = use(params);
-  return <PostContent id={id} />;
+  const { slug } = use(params);
+  return <PostContent slug={slug} />;
 }

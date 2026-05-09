@@ -320,7 +320,7 @@ function PostRow({
         />
         <div className="flex items-center gap-1">
           <Link
-            href={`/blog/${post.id}`}
+            href={`/blog/${post.slug}`}
             target="_blank"
             title="View post"
             className="flex h-10 w-10 items-center justify-center rounded-xl text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
@@ -329,7 +329,7 @@ function PostRow({
           </Link>
           {canEdit && (
             <Link
-              href={`/blog/${post.id}/edit`}
+              href={`/blog/${post.slug}/edit`}
               title="Edit post (yours)"
               className="flex h-10 w-10 items-center justify-center rounded-xl text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
             >

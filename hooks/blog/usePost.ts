@@ -39,18 +39,18 @@ export interface Post {
   player_feedback: PlayerFeedback[];
 }
 
-// ── Fetch single post ────────────────────────────────────
+// ── Fetch single post by slug ────────────────────────────────────
 
-export function usePost(id: string) {
+export function usePost(slug: string) {
   return useQuery<Post>({
-    queryKey: ["post", id],
+    queryKey: ["post", slug],
     queryFn: async () => {
-      const res = await adminFetch(`/api/blog/posts/${id}`);
+      const res = await adminFetch(`/api/blog/posts/by-slug/${slug}`);
       if (!res.ok) throw new Error(`Failed to fetch post: ${res.status}`);
       const json = await res.json();
       return json.data as Post;
     },
-    enabled: !!id,
+    enabled: !!slug,
   });
 }
 

@@ -10,13 +10,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLng } from "@/hooks/useLng";
 
 interface EditPostPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }
 
-function EditPostContent({ id }: { id: string }) {
+function EditPostContent({ slug }: { slug: string }) {
   const router = useRouter();
   const { profile } = useAuth();
-  const postQuery = usePost(id);
+  const postQuery = usePost(slug);
   const updatePost = useUpdatePost();
   const lng = useLng();
 
@@ -56,14 +56,15 @@ function EditPostContent({ id }: { id: string }) {
   }
 
   async function handleSubmit(values: PostFormValues) {
+    const { id } = postQuery.data!;
     await updatePost.mutateAsync({ id, ...values });
-    router.push(`/${lng}/blog/${id}`);
+    router.push(`/${lng}/blog/${slug}`);
   }
 
   return (
     <div className="mx-auto max-w-3xl md:px-6 md:py-8">
       <div className="mb-6 flex items-center gap-4 px-4 pt-6 md:px-0 md:pt-0">
-        <Link href={`/${lng}/blog/${id}`} className="text-sm text-muted-foreground hover:text-foreground">
+        <Link href={`/${lng}/blog/${slug}`} className="text-sm text-muted-foreground hover:text-foreground">
           ← Back to Post
         </Link>
         <h1 className="text-2xl font-bold text-foreground">Edit Post</h1>
@@ -89,7 +90,7 @@ function EditPostContent({ id }: { id: string }) {
             player_feedback: post.player_feedback,
           }}
           onSubmit={handleSubmit}
-          onCancel={() => router.push(`/${lng}/blog/${id}`)}
+          onCancel={() => router.push(`/${lng}/blog/${slug}`)}
           submitLabel="Save Changes"
           loading={updatePost.isPending}
           isAdmin={isAdmin}
@@ -101,10 +102,10 @@ function EditPostContent({ id }: { id: string }) {
 }
 
 export default function EditPostPage({ params }: EditPostPageProps) {
-  const { id } = use(params);
+  const { slug } = use(params);
   return (
     <ProtectedRoute>
-      <EditPostContent id={id} />
+      <EditPostContent slug={slug} />
     </ProtectedRoute>
   );
 }

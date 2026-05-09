@@ -3,7 +3,7 @@ import { getSupabaseAdmin } from "@/lib/supabase-server";
 
 type PostLayoutProps = {
   children: React.ReactNode;
-  params: Promise<{ lng: string; id: string }>;
+  params: Promise<{ lng: string; slug: string }>;
 };
 
 type PostSeoData = {
@@ -42,14 +42,14 @@ function toAbsoluteUrl(pathOrUrl: string) {
   return new URL(normalizedPath, getSiteUrl()).toString();
 }
 
-async function getPublicPostSeoData(id: string) {
+async function getPublicPostSeoData(slug: string) {
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from("posts_with_counts")
     .select(
       "id, title, cover_image_url, cover_image_caption, author_name, created_at, updated_at, visibility",
     )
-    .eq("id", id)
+    .eq("slug", slug)
     .eq("visibility", "public")
     .maybeSingle<PostSeoData>();
 
@@ -59,10 +59,10 @@ async function getPublicPostSeoData(id: string) {
 export async function generateMetadata({
   params,
 }: Omit<PostLayoutProps, "children">): Promise<Metadata> {
-  const { id, lng } = await params;
-  const post = await getPublicPostSeoData(id);
+  const { slug, lng } = await params;
+  const post = await getPublicPostSeoData(slug);
 
-  const postUrl = `${getSiteUrl()}/${lng}/blog/${id}`;
+  const postUrl = `${getSiteUrl()}/${lng}/blog/${slug}`;
   const fallbackDescription = "Read this article on The Good Learning.";
 
   if (!post) {
@@ -134,7 +134,7 @@ export async function generateMetadata({
 }
 
 function buildBlogPostingSchema(input: {
-  id: string;
+  slug: string;
   lng: string;
   title: string;
   description: string;
@@ -143,7 +143,7 @@ function buildBlogPostingSchema(input: {
   updatedAt: string;
   authorName: string;
 }) {
-  const postUrl = `${getSiteUrl()}/${input.lng}/blog/${input.id}`;
+  const postUrl = `${getSiteUrl()}/${input.lng}/blog/${input.slug}`;
 
   return {
     "@context": "https://schema.org",
@@ -176,8 +176,8 @@ export default async function PostLayout({
   children,
   params,
 }: PostLayoutProps) {
-  const { id, lng } = await params;
-  const post = await getPublicPostSeoData(id);
+  const { slug, lng } = await params;
+  const post = await getPublicPostSeoData(slug);
 
   if (!post) return children;
 
@@ -185,7 +185,7 @@ export default async function PostLayout({
   const description =
     post.cover_image_caption || "Read this article on The Good Learning.";
   const schema = buildBlogPostingSchema({
-    id,
+    slug,
     lng,
     title: post.title,
     description,

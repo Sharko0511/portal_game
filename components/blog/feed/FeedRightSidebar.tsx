@@ -1,16 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { useHighlightPosts, HighlightPost } from "@/hooks/blog/useHighlightPosts";
+import {
+  useHighlightPosts,
+  HighlightPost,
+} from "@/hooks/blog/useHighlightPosts";
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
 }
 
 function PostMiniCard({ post }: { post: HighlightPost }) {
   return (
     <Link
-      href={`/blog/${post.id}`}
+      href={`/blog/${post.slug}`}
       className="flex items-start gap-2 rounded-lg p-1.5 hover:bg-gray-100"
     >
       <div className="h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-gray-100">

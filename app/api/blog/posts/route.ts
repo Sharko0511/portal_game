@@ -9,10 +9,51 @@ function slugify(title: string): string {
       .toLowerCase()
       .trim()
       .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "") +
-    "-" +
-    Date.now()
+      .replace(/^-|-$/g, "")
   );
+}
+
+async function generateUniqueSlug(
+  title: string,
+  supabase: ReturnType<typeof getSupabaseAdmin>,
+  excludeId?: string
+): Promise<string> {
+  const baseSlug = slugify(title);
+
+  // Check if base slug exists
+  let query = supabase.from("posts").select("id").eq("slug", baseSlug);
+
+  if (excludeId) {
+    query = query.neq("id", excludeId);
+  }
+
+  const { data: existing } = await query;
+
+  // If no collision, return clean slug
+  if (!existing || existing.length === 0) {
+    return baseSlug;
+  }
+
+  // If collision, append counter: -2, -3, -4...
+  let counter = 2;
+  while (true) {
+    const candidateSlug = `${baseSlug}-${counter}`;
+    const { data: found } = await supabase
+      .from("posts")
+      .select("id")
+      .eq("slug", candidateSlug)
+      .then((result) => {
+        if (excludeId && result.data) {
+          return { ...result, data: result.data.filter((row: any) => row.id !== excludeId) };
+        }
+        return result;
+      });
+
+    if (!found || found.length === 0) {
+      return candidateSlug;
+    }
+    counter++;
+  }
 }
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
@@ -121,7 +162,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
   if (!content || typeof content !== "object" ||
-      (content.type !== "doc" && content.type !== "blocks")) {
+    (content.type !== "doc" && content.type !== "blocks")) {
     return NextResponse.json(
       { error: { code: "BAD_REQUEST", message: "content must be a TipTap document or block array" } },
       { status: 400 }
@@ -161,6 +202,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const supabase = getSupabaseAdmin();
 
+  // Generate unique slug with counter suffix if needed
+  const slug = await generateUniqueSlug(title, supabase);
+
   const { data, error } = await supabase
     .from("posts")
     .insert({
@@ -169,7 +213,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       content,
       cover_image_url: cover_image_url ?? null,
       cover_image_caption: cover_image_caption ?? null,
-      slug: slugify(title),
+      slug,
       visibility,
       category,
       level: level ?? null,

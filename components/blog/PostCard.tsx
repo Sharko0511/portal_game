@@ -46,7 +46,7 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
     // Large card — full-width with big image
     return (
       <Link
-        href={`/blog/${post.id}`}
+        href={`/blog/${post.slug}`}
         className="group block overflow-hidden rounded-2xl border border-border bg-white transition-shadow hover:shadow-md"
       >
         {/* Cover */}
@@ -99,7 +99,7 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
   // Compact card — thumbnail left, content right
   return (
     <Link
-      href={`/blog/${post.id}`}
+      href={`/blog/${post.slug}`}
       className="group flex gap-4 overflow-hidden rounded-2xl border border-border bg-white p-4 transition-shadow hover:shadow-sm"
     >
       {/* Thumbnail */}
