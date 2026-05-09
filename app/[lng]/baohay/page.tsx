@@ -2,10 +2,10 @@
 
 import { Suspense } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { Headphones } from "lucide-react";
 import { useBaohay, Post, PostLevel } from "@/hooks/blog/usePost";
-import ArticleListByLevel from "@/components/blog/ArticleListByLevel";
+import { useHotCategories } from "@/hooks/blog/useHotCategories";
+import ArticleListByHotCategory from "@/components/blog/ArticleListByHotCategory";
 import { useLng } from "@/hooks/useLng";
 import { useClientTranslation } from "@/hooks/useClientTranslation";
 
@@ -17,8 +17,6 @@ const LEVEL_LABELS: Record<PostLevel, string> = {
   C1: "C1 - Advanced",
   C2: "C2 - Proficiency",
 };
-
-const VALID_LEVELS: PostLevel[] = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("vi-VN", {
@@ -359,65 +357,10 @@ function YouMayLike({
 
 function BaohayContent() {
   const { data: posts, isLoading } = useBaohay();
+  const hotCategoriesQuery = useHotCategories(8);
   const lng = useLng();
   const { t } = useClientTranslation(lng, "blog");
-  const searchParams = useSearchParams();
-  const levelParam = searchParams.get("level") as PostLevel | null;
-
-  const isLevelPage = !!(levelParam && VALID_LEVELS.includes(levelParam));
-  const levelPosts = isLevelPage
-    ? (posts ?? []).filter((p) => p.level === levelParam)
-    : [];
   const [first, second] = posts ?? [];
-
-  if (isLevelPage && levelParam) {
-    return (
-      <>
-        {/* Level hero */}
-        <section className="w-full py-8 md:py-10 bg-brand-footer flex justify-center">
-          <div className="w-full max-w-[1600px] px-4 md:px-21">
-            <nav className="mb-4 flex items-center gap-1.5 text-sm text-white/70">
-              <Link href={`/${lng}`} className="hover:text-white">
-                {t("breadcrumb.home")}
-              </Link>
-              <span>›</span>
-              <Link href={`/${lng}/baohay`} className="hover:text-white">
-                {t("breadcrumb.baohay")}
-              </Link>
-              <span>›</span>
-              <span className="font-medium text-brand-lime-bright">
-                {LEVEL_LABELS[levelParam]}
-              </span>
-            </nav>
-            <h1 className="text-3xl font-bold text-white md:text-4xl">
-              Trình độ tiếng Anh {levelParam}
-            </h1>
-          </div>
-        </section>
-
-        {/* Articles */}
-        <div className="w-full flex justify-center">
-          <div className="w-full max-w-[1600px] px-4 pt-12 pb-12 md:px-6 xl:px-21">
-            {isLoading ? (
-              <div className="space-y-4">
-                <div className="h-20 animate-pulse rounded-xl bg-gray-100" />
-                <div className="h-20 animate-pulse rounded-xl bg-gray-100" />
-              </div>
-            ) : (
-              <>
-                <FlatArticleList posts={levelPosts} />
-                <YouMayLike
-                  posts={posts ?? []}
-                  category="baohay"
-                  currentLevel={levelParam}
-                />
-              </>
-            )}
-          </div>
-        </div>
-      </>
-    );
-  }
 
   return (
     <>
@@ -429,13 +372,15 @@ function BaohayContent() {
 
       <div className="w-full flex justify-center">
         <div className="w-full max-w-[1600px] px-4 pt-12 pb-12 md:px-6 xl:px-21">
-          {isLoading ? (
+          {isLoading || hotCategoriesQuery.isLoading ? (
             <div className="space-y-4">
               <div className="h-8 w-48 animate-pulse rounded-lg bg-gray-100" />
               <div className="h-20 animate-pulse rounded-xl bg-gray-100" />
             </div>
           ) : (
-            <ArticleListByLevel posts={posts ?? []} category="baohay" />
+            <ArticleListByHotCategory
+              categories={hotCategoriesQuery.data ?? []}
+            />
           )}
         </div>
       </div>

@@ -17,7 +17,7 @@ import LanguageBar from "./_components/LanguageBar";
 import TranslationTable from "./_components/TranslationTable";
 import RevertDialog from "./_components/RevertDialog";
 import AddLanguageDialog from "./_components/AddLanguageDialog";
-import ConfirmDialog from "./_components/ConfirmDialog";
+import ConfirmDialog from "@/components/ui/confirm-dialog";
 
 export default function AdminTranslationsPage() {
   const router = useRouter();
@@ -34,7 +34,9 @@ export default function AdminTranslationsPage() {
   const [error, setError] = useState("");
   const [activeCell, setActiveCell] = useState<string | null>(null);
   const [showAddLang, setShowAddLang] = useState(false);
-  const [deleteLangConfirm, setDeleteLangConfirm] = useState<string | null>(null);
+  const [deleteLangConfirm, setDeleteLangConfirm] = useState<string | null>(
+    null,
+  );
   const [revertLang, setRevertLang] = useState<string | null>(null);
 
   const rows = data?.data ?? [];
@@ -43,13 +45,15 @@ export default function AdminTranslationsPage() {
   const pivot = pivotTranslations(rows);
 
   const displayedNamespaces =
-    activeNamespace === "__all__" ? namespaces : namespaces.filter((ns) => ns === activeNamespace);
+    activeNamespace === "__all__"
+      ? namespaces
+      : namespaces.filter((ns) => ns === activeNamespace);
 
   const filteredPivot: typeof pivot = {};
   for (const ns of displayedNamespaces) {
     if (!pivot[ns]) continue;
     const keys = Object.keys(pivot[ns]).filter((k) =>
-      search ? k.toLowerCase().includes(search.toLowerCase()) : true
+      search ? k.toLowerCase().includes(search.toLowerCase()) : true,
     );
     if (keys.length) {
       filteredPivot[ns] = {};
@@ -57,10 +61,20 @@ export default function AdminTranslationsPage() {
     }
   }
 
-  async function handleSave(lang: string, ns: string, key: string, value: string) {
+  async function handleSave(
+    lang: string,
+    ns: string,
+    key: string,
+    value: string,
+  ) {
     setError("");
     try {
-      await updateTranslation.mutateAsync({ language: lang, namespace: ns, key, value });
+      await updateTranslation.mutateAsync({
+        language: lang,
+        namespace: ns,
+        key,
+        value,
+      });
     } catch {
       setError("Failed to save translation");
     }
@@ -101,18 +115,29 @@ export default function AdminTranslationsPage() {
     }
   }
 
-  if (isLoading) return <p className="text-muted-foreground text-sm">Loading translations…</p>;
+  if (isLoading)
+    return (
+      <p className="text-muted-foreground text-sm">Loading translations…</p>
+    );
 
   const totalKeys = Object.values(filteredPivot).reduce(
     (sum, ns) => sum + Object.keys(ns).length,
-    0
+    0,
   );
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <h1 className="text-2xl font-bold text-foreground">Translation Management</h1>
-        <Button size="md" variant="secondary" onClick={() => setShowAddLang(true)}>+ Language</Button>
+        <h1 className="text-2xl font-bold text-foreground">
+          Translation Management
+        </h1>
+        <Button
+          size="md"
+          variant="secondary"
+          onClick={() => setShowAddLang(true)}
+        >
+          + Language
+        </Button>
       </div>
 
       {error && (
@@ -143,7 +168,9 @@ export default function AdminTranslationsPage() {
       />
 
       {Object.keys(filteredPivot).length === 0 ? (
-        <p className="text-muted-foreground text-sm py-8 text-center">No translations found.</p>
+        <p className="text-muted-foreground text-sm py-8 text-center">
+          No translations found.
+        </p>
       ) : (
         <div className="space-y-6">
           {Object.entries(filteredPivot).map(([ns, keys]) => (
@@ -174,7 +201,9 @@ export default function AdminTranslationsPage() {
               await addLang.mutateAsync(code);
               setShowAddLang(false);
             } catch (e) {
-              setError(e instanceof Error ? e.message : "Failed to add language");
+              setError(
+                e instanceof Error ? e.message : "Failed to add language",
+              );
             }
           }}
           onClose={() => setShowAddLang(false)}
@@ -186,6 +215,7 @@ export default function AdminTranslationsPage() {
           title="Delete Language"
           message={`Delete all "${deleteLangConfirm.toUpperCase()}" translations? This cannot be undone.`}
           confirmLabel="Delete Language"
+          loading={deleteLang.isPending}
           onConfirm={() => handleDeleteLanguage(deleteLangConfirm)}
           onClose={() => setDeleteLangConfirm(null)}
         />

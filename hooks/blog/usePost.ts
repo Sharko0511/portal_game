@@ -3,9 +3,18 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminFetch } from "@/lib/admin-fetch";
 
-export type PostCategory = "blog" | "baohay";
+export type PostCategory = string;
 export type PostLevel = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
 export type PostVisibility = "private" | "share" | "public";
+
+export interface PostCategoryItem {
+  id: string;
+  slug: string;
+  name: string;
+  is_hot?: boolean;
+  is_active?: boolean;
+  sort_order?: number;
+}
 
 export interface PlayerFeedback {
   content: string;
@@ -37,6 +46,7 @@ export interface Post {
   cards_count: number;
   feedback_intro: string | null;
   player_feedback: PlayerFeedback[];
+  categories?: PostCategoryItem[];
 }
 
 // ── Fetch single post by slug ────────────────────────────────────
@@ -89,6 +99,8 @@ export interface SearchParams {
   level?: PostLevel | "";
   tag?: string;
   category?: PostCategory | "";
+  categories?: string[];
+  categoriesMode?: "any" | "all";
   limit?: number;
   offset?: number;
 }
@@ -99,6 +111,8 @@ export function useSearch(params: SearchParams) {
   if (params.level) query.set("level", params.level);
   if (params.tag) query.set("tag", params.tag);
   if (params.category) query.set("category", params.category);
+  if (params.categories?.length) query.set("categories", params.categories.join(","));
+  if (params.categoriesMode) query.set("categoriesMode", params.categoriesMode);
   if (params.limit) query.set("limit", String(params.limit));
   if (params.offset) query.set("offset", String(params.offset));
 
@@ -124,6 +138,7 @@ interface CreatePostInput {
   cover_image_caption?: string | null;
   visibility?: PostVisibility;
   category?: PostCategory;
+  categoryIds?: string[];
   level?: PostLevel | null;
   audio_url?: string | null;
   reading_time?: number;
@@ -162,6 +177,7 @@ interface UpdatePostInput {
   cover_image_caption?: string | null;
   visibility?: PostVisibility;
   category?: PostCategory;
+  categoryIds?: string[];
   level?: PostLevel | null;
   audio_url?: string | null;
   reading_time?: number;

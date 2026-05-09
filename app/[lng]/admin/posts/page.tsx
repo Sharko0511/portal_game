@@ -10,7 +10,9 @@ import {
   useAdminDeletePost,
   AdminPost,
 } from "@/hooks/admin/useAdminPosts";
+import { useAdminCategories } from "@/hooks/admin/useAdminCategories";
 import Button from "@/components/Button";
+import ConfirmDialog from "@/components/ui/confirm-dialog";
 import {
   Search,
   Plus,
@@ -361,6 +363,10 @@ export default function AdminBlogManagement() {
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState("newest");
   const [page, setPage] = useState(1);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
   // Debounce search input → auto-trigger without needing to click Search
   useEffect(() => {
@@ -384,6 +390,7 @@ export default function AdminBlogManagement() {
     level,
     category,
   });
+  const categoriesQuery = useAdminCategories();
   const changeVisibility = useAdminChangeVisibility();
   const deletePost = useAdminDeletePost();
 
@@ -395,6 +402,13 @@ export default function AdminBlogManagement() {
   const privateCount = countsQuery.data?.private ?? 0;
   const shareCount = countsQuery.data?.share ?? 0;
   const totalCount = countsQuery.data?.total ?? 0;
+  const categoryFilterOptions = [
+    { value: "all", label: "All categories" },
+    ...(categoriesQuery.data ?? []).map((c) => ({
+      value: c.slug,
+      label: c.name,
+    })),
+  ];
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -434,13 +448,16 @@ export default function AdminBlogManagement() {
     [changeVisibility],
   );
 
-  const handleDelete = useCallback(
-    (postId: string, title: string) => {
-      if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
-      deletePost.mutate(postId);
-    },
-    [deletePost],
-  );
+  const handleDelete = useCallback((postId: string, title: string) => {
+    setDeleteTarget({ id: postId, title });
+  }, []);
+
+  const handleDeleteConfirm = useCallback(() => {
+    if (!deleteTarget) return;
+    deletePost.mutate(deleteTarget.id, {
+      onSuccess: () => setDeleteTarget(null),
+    });
+  }, [deletePost, deleteTarget]);
 
   const pages = buildPageList(page, totalPages);
 
@@ -548,11 +565,7 @@ export default function AdminBlogManagement() {
           <FilterDropdown
             value={category}
             onChange={(v) => handleFilterChange("category", v)}
-            options={[
-              { value: "all", label: "All categories" },
-              { value: "blog", label: "📖 Blog" },
-              { value: "baohay", label: "📰 Báo Hay" },
-            ]}
+            options={categoryFilterOptions}
           />
 
           <FilterDropdown
@@ -647,6 +660,17 @@ export default function AdminBlogManagement() {
             </div>
           )}
         </>
+      )}
+
+      {deleteTarget && (
+        <ConfirmDialog
+          title="Delete Post"
+          message={`Delete "${deleteTarget.title}"? This cannot be undone.`}
+          confirmLabel="Delete Post"
+          loading={deletePost.isPending}
+          onConfirm={handleDeleteConfirm}
+          onClose={() => setDeleteTarget(null)}
+        />
       )}
     </div>
   );

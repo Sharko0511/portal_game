@@ -9,7 +9,7 @@ import FollowButton from "@/components/blog/FollowButton";
 import CommentSection from "@/components/blog/CommentSection";
 import ShareButton from "@/components/blog/ShareButton";
 import LoginDialog from "@/components/blog/LoginDialog";
-import { usePost, useBaohay, Post } from "@/hooks/blog/usePost";
+import { usePost, useSearch } from "@/hooks/blog/usePost";
 import { useAuth } from "@/hooks/useAuth";
 import { useLng } from "@/hooks/useLng";
 import { useClientTranslation } from "@/hooks/useClientTranslation";
@@ -35,11 +35,6 @@ const LEVEL_LABELS: Record<string, string> = {
   B2: "B2 - Upper Intermediate",
   C1: "C1 - Advanced",
   C2: "C2 - Proficiency",
-};
-
-const CATEGORY_LABELS: Record<string, string> = {
-  baohay: "Báo hay",
-  blog: "Blog",
 };
 
 // ── Audio Player ─────────────────────────────────────────────
@@ -137,16 +132,23 @@ function AudioPlayer({ src }: { src: string }) {
 
 function PopularSidebar({
   currentId,
-  category,
+  categorySlug,
 }: {
   currentId: string;
-  category: string;
+  categorySlug?: string;
 }) {
   const lng = useLng();
   const { t } = useClientTranslation(lng, "blog_post");
-  const baohayQuery = useBaohay();
+  const moreTopicLink = categorySlug
+    ? `/${lng}/c/${categorySlug}`
+    : `/${lng}/blog`;
+  const relatedQuery = useSearch({
+    categories: categorySlug ? [categorySlug] : undefined,
+    categoriesMode: "any",
+    limit: 8,
+  });
 
-  const posts = category === "baohay" ? (baohayQuery.data ?? []) : [];
+  const posts = relatedQuery.data ?? [];
 
   const popular = posts.filter((p) => p.id !== currentId).slice(0, 3);
 
@@ -163,7 +165,7 @@ function PopularSidebar({
           {popular.map((p, i) => (
             <Link
               key={p.id}
-              href={`/blog/${p.slug}`}
+              href={`/${lng}/blog/${p.slug}`}
               className={`group flex gap-3 py-3 ${i !== 0 ? "border-t-2 border-gray-300" : ""}`}
             >
               <div className="h-16 w-16 shrink-0 rounded-xl overflow-hidden bg-gray-100">
@@ -189,7 +191,7 @@ function PopularSidebar({
         </div>
         <div className="mt-3 flex justify-end">
           <Link
-            href={`/coming-soon`}
+            href={moreTopicLink}
             className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
           >
             {t("sidebar.more")} <span>↗</span>
@@ -256,7 +258,11 @@ function PostContent({ slug }: { slug: string }) {
   const post = postQuery.data;
   const isAuthor = profile?.id === post.author_id;
   const isAdmin = profile?.role === "admin";
-  const categoryLabel = CATEGORY_LABELS[post.category] ?? post.category;
+  const primaryCategory = post.categories?.[0];
+  const categoryLabel = primaryCategory?.name ?? post.category;
+  const categoryLink = primaryCategory?.slug
+    ? `/${lng}/c/${primaryCategory.slug}`
+    : `/${lng}/blog`;
   const hasStats =
     post.word_count > 0 || post.event_encounters > 0 || post.cards_count > 0;
 
@@ -270,7 +276,7 @@ function PostContent({ slug }: { slug: string }) {
         </Link>
         <span>›</span>
         <Link
-          href={`/${lng}/${post.category}`}
+          href={categoryLink}
           className="font-medium text-brand-primary hover:text-brand-primary/80"
         >
           {categoryLabel}
@@ -284,9 +290,18 @@ function PostContent({ slug }: { slug: string }) {
 
       {/* Date + edit */}
       <div className="mb-6 flex items-center justify-between gap-3">
-        <span className="text-sm text-muted-foreground">
-          {formatDate(post.created_at)}
-        </span>
+        <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <span>{formatDate(post.created_at)}</span>
+          {post.categories?.map((category) => (
+            <Link
+              key={category.id}
+              href={`/${lng}/c/${category.slug}`}
+              className="rounded-full border border-border bg-white px-2 py-0.5 text-xs text-foreground hover:bg-gray-50"
+            >
+              {category.name}
+            </Link>
+          ))}
+        </div>
         {(isAuthor || isAdmin) && (
           <Link
             href={`/${lng}/blog/${post.slug}/edit`}
@@ -459,7 +474,10 @@ function PostContent({ slug }: { slug: string }) {
         </article>
 
         {/* ── Sidebar ── */}
-        <PopularSidebar currentId={post.id} category={post.category} />
+        <PopularSidebar
+          currentId={post.id}
+          categorySlug={primaryCategory?.slug}
+        />
       </div>
 
       <LoginDialog

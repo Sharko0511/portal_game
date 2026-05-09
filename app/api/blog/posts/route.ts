@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, AuthResult, AuthError } from "@/lib/auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { sendTelegramMessage } from "@/lib/telegram";
+import {
+  getActiveCategoriesByIds,
+  getCategoryBySlug,
+  replacePostCategoryMappings,
+  uniqueCategoryIds,
+} from "@/lib/category-utils";
 
 function slugify(title: string): string {
   return (
@@ -107,7 +113,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   return NextResponse.json({ data });
 }
 
-const VALID_CATEGORIES = ["blog", "baohay"] as const;
 const VALID_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
 
 const VALID_VISIBILITIES = ["private", "share", "public"] as const;
@@ -129,6 +134,7 @@ type PostBody = {
   cards_count?: number;
   feedback_intro?: string | null;
   player_feedback?: { content: string }[];
+  categoryIds?: string[];
 };
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -154,6 +160,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   } = body;
 
   const isAdmin = auth.profile.role === "admin";
+  const normalizedCategoryIds = Array.isArray(body.categoryIds)
+    ? uniqueCategoryIds(body.categoryIds)
+    : [];
 
   if (!title?.trim()) {
     return NextResponse.json(
@@ -168,11 +177,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { status: 400 }
     );
   }
-  if (!VALID_CATEGORIES.includes(category as typeof VALID_CATEGORIES[number])) {
-    return NextResponse.json(
-      { error: { code: "BAD_REQUEST", message: `category must be one of: ${VALID_CATEGORIES.join(", ")}` } },
-      { status: 400 }
-    );
+  if (body.categoryIds !== undefined) {
+    if (!Array.isArray(body.categoryIds) || normalizedCategoryIds.length === 0) {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: "categoryIds must be a non-empty array" } },
+        { status: 400 }
+      );
+    }
   }
   if (level !== null && level !== undefined && !VALID_LEVELS.includes(level as typeof VALID_LEVELS[number])) {
     return NextResponse.json(
@@ -201,6 +212,42 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   const supabase = getSupabaseAdmin();
+  let legacyCategory = category;
+  let primaryCategoryId: string | null = null;
+  let mappingCategoryIds: string[] = [];
+
+  if (normalizedCategoryIds.length > 0) {
+    const categories = await getActiveCategoriesByIds(supabase, normalizedCategoryIds);
+    if (categories.length !== normalizedCategoryIds.length) {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: "One or more categoryIds are invalid or inactive" } },
+        { status: 400 }
+      );
+    }
+
+    const categoryMap = new Map(categories.map((c) => [c.id, c]));
+    mappingCategoryIds = normalizedCategoryIds;
+    const primary = categoryMap.get(normalizedCategoryIds[0]);
+    if (!primary) {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: "Primary category not found" } },
+        { status: 400 }
+      );
+    }
+
+    legacyCategory = primary.slug;
+    primaryCategoryId = primary.id;
+  } else {
+    const primary = await getCategoryBySlug(supabase, legacyCategory);
+    if (!primary) {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: `Category '${legacyCategory}' is not active` } },
+        { status: 400 }
+      );
+    }
+    primaryCategoryId = primary.id;
+    mappingCategoryIds = [primary.id];
+  }
 
   // Generate unique slug with counter suffix if needed
   const slug = await generateUniqueSlug(title, supabase);
@@ -215,7 +262,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       cover_image_caption: cover_image_caption ?? null,
       slug,
       visibility,
-      category,
+      category: legacyCategory,
+      primary_category_id: primaryCategoryId,
       level: level ?? null,
       audio_url,
       reading_time,
@@ -232,6 +280,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (error) {
     return NextResponse.json(
       { error: { code: "INTERNAL_ERROR", message: error.message } },
+      { status: 500 }
+    );
+  }
+
+  try {
+    await replacePostCategoryMappings(supabase, data.id, mappingCategoryIds);
+  } catch (mappingError) {
+    await supabase.from("posts").delete().eq("id", data.id);
+    return NextResponse.json(
+      { error: { code: "INTERNAL_ERROR", message: (mappingError as Error).message } },
       { status: 500 }
     );
   }

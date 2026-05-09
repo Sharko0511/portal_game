@@ -32,7 +32,10 @@ function EditPostContent({ slug }: { slug: string }) {
     return (
       <div className="flex h-64 flex-col items-center justify-center gap-3">
         <p className="text-sm text-red-600">Post not found.</p>
-        <Link href={`/${lng}/blog`} className="text-sm text-muted-foreground hover:text-foreground">
+        <Link
+          href={`/${lng}/blog`}
+          className="text-sm text-muted-foreground hover:text-foreground"
+        >
           ← Back to Blog
         </Link>
       </div>
@@ -47,8 +50,13 @@ function EditPostContent({ slug }: { slug: string }) {
   if (profile && !isAuthor && !isAdmin) {
     return (
       <div className="flex h-64 flex-col items-center justify-center gap-3">
-        <p className="text-sm text-red-600">You are not allowed to edit this post.</p>
-        <Link href={`/${lng}/blog`} className="text-sm text-muted-foreground hover:text-foreground">
+        <p className="text-sm text-red-600">
+          You are not allowed to edit this post.
+        </p>
+        <Link
+          href={`/${lng}/blog`}
+          className="text-sm text-muted-foreground hover:text-foreground"
+        >
           ← Back to Blog
         </Link>
       </div>
@@ -64,7 +72,10 @@ function EditPostContent({ slug }: { slug: string }) {
   return (
     <div className="mx-auto max-w-3xl md:px-6 md:py-8">
       <div className="mb-6 flex items-center gap-4 px-4 pt-6 md:px-0 md:pt-0">
-        <Link href={`/${lng}/blog/${slug}`} className="text-sm text-muted-foreground hover:text-foreground">
+        <Link
+          href={`/${lng}/blog/${slug}`}
+          className="text-sm text-muted-foreground hover:text-foreground"
+        >
           ← Back to Post
         </Link>
         <h1 className="text-2xl font-bold text-foreground">Edit Post</h1>
@@ -79,6 +90,7 @@ function EditPostContent({ slug }: { slug: string }) {
             cover_image_caption: post.cover_image_caption,
             visibility: post.visibility,
             category: post.category,
+            categoryIds: (post.categories ?? []).map((c) => c.id),
             level: post.level,
             audio_url: post.audio_url,
             reading_time: post.reading_time,
@@ -89,6 +101,11 @@ function EditPostContent({ slug }: { slug: string }) {
             feedback_intro: post.feedback_intro,
             player_feedback: post.player_feedback,
           }}
+          initialCategoryOptions={(post.categories ?? []).map((c) => ({
+            id: c.id,
+            slug: c.slug,
+            name: c.name,
+          }))}
           onSubmit={handleSubmit}
           onCancel={() => router.push(`/${lng}/blog/${slug}`)}
           submitLabel="Save Changes"

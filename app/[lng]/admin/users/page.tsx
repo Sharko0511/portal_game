@@ -9,12 +9,17 @@ import {
   useDeleteUser,
 } from "@/hooks/admin/useAdminUsers";
 import Button from "@/components/Button";
+import ConfirmDialog from "@/components/ui/confirm-dialog";
 
 export default function AdminUsers() {
   const { profile } = useAuth();
   const [search, setSearch] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string;
+    displayName: string;
+  } | null>(null);
 
   const usersQuery = useAdminUsers(page, searchQuery);
   const toggleBan = useToggleBan();
@@ -39,9 +44,14 @@ export default function AdminUsers() {
     await changeRole.mutateAsync({ userId, role });
   }
 
-  async function handleDelete(userId: string, displayName: string) {
-    if (!confirm(`Delete user "${displayName}"? This cannot be undone.`)) return;
-    await deleteUser.mutateAsync(userId);
+  function handleDelete(userId: string, displayName: string) {
+    setDeleteTarget({ id: userId, displayName });
+  }
+
+  async function handleDeleteConfirm() {
+    if (!deleteTarget) return;
+    await deleteUser.mutateAsync(deleteTarget.id);
+    setDeleteTarget(null);
   }
 
   return (
@@ -56,9 +66,7 @@ export default function AdminUsers() {
             onChange={(e) => setSearch(e.target.value)}
             className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm outline-none focus:border-foreground/40"
           />
-          <Button type="submit">
-            Search
-          </Button>
+          <Button type="submit">Search</Button>
         </form>
       </div>
 
@@ -84,14 +92,18 @@ export default function AdminUsers() {
                   return (
                     <tr key={u.id} className="border-b border-border/50">
                       <td className="px-4 py-3">{u.display_name}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{u.email}</td>
+                      <td className="px-4 py-3 text-muted-foreground">
+                        {u.email}
+                      </td>
                       <td className="px-4 py-3">
                         {isSelf ? (
                           <span className="text-foreground">{u.role}</span>
                         ) : (
                           <select
                             value={u.role}
-                            onChange={(e) => handleChangeRole(u.id, e.target.value)}
+                            onChange={(e) =>
+                              handleChangeRole(u.id, e.target.value)
+                            }
                             className="rounded border border-border bg-card px-2 py-1 text-sm"
                           >
                             <option value="user">user</option>
@@ -99,7 +111,9 @@ export default function AdminUsers() {
                           </select>
                         )}
                       </td>
-                      <td className="px-4 py-3 font-mono text-foreground">{u.score_count}</td>
+                      <td className="px-4 py-3 font-mono text-foreground">
+                        {u.score_count}
+                      </td>
                       <td className="px-4 py-3">
                         {u.is_banned ? (
                           <span className="text-red-600">Banned</span>
@@ -114,7 +128,9 @@ export default function AdminUsers() {
                           <div className="flex gap-2">
                             <Button
                               onClick={() => handleToggleBan(u.id, u.is_banned)}
-                              variant={u.is_banned ? "success-ghost" : "danger-ghost"}
+                              variant={
+                                u.is_banned ? "success-ghost" : "danger-ghost"
+                              }
                               size="sm"
                             >
                               {u.is_banned ? "Unban" : "Ban"}
@@ -160,6 +176,17 @@ export default function AdminUsers() {
             </div>
           )}
         </>
+      )}
+
+      {deleteTarget && (
+        <ConfirmDialog
+          title="Delete User"
+          message={`Delete user "${deleteTarget.displayName}"? This cannot be undone.`}
+          confirmLabel="Delete User"
+          loading={deleteUser.isPending}
+          onConfirm={handleDeleteConfirm}
+          onClose={() => setDeleteTarget(null)}
+        />
       )}
     </div>
   );

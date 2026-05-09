@@ -9,7 +9,7 @@ export interface AdminPost {
   author_name: string;
   author_role: "admin" | "user";
   visibility: "private" | "share" | "public";
-  category: "blog" | "baohay" | "audiochat";
+  category: string;
   level: "A1" | "A2" | "B1" | "B2" | "C1" | "C2" | null;
   tags: string[];
   reading_time: number;

@@ -94,7 +94,7 @@ export default function Navbar() {
               {t("navigation.home")}
             </Link>
             <Link
-              href={`/${lng}/baohay`}
+              href={`/${lng}/hub`}
               className="text-sm 2xl:text-base font-semibold transition-colors hover:text-brand-primary whitespace-nowrap"
             >
               {t("navigation.blog")}
@@ -226,7 +226,7 @@ export default function Navbar() {
             <nav className="flex flex-col">
               {[
                 { href: `/${lng}`, label: t("navigation.home") },
-                { href: `/${lng}/baohay`, label: t("navigation.blog") },
+                { href: `/${lng}/hub`, label: t("navigation.blog") },
                 { href: `/${lng}/games`, label: t("navigation.games") },
                 ...(user && profile
                   ? [{ href: `/${lng}/blog`, label: t("navigation.feed") }]

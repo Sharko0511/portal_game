@@ -17,14 +17,17 @@ function NewPostContent() {
 
   async function handleSubmit(values: PostFormValues) {
     const post = await createPost.mutateAsync(values);
-    router.push(`/${lng}/blog/${post.id}`);
+    router.push(`/${lng}/blog/${post.slug}`);
   }
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-8">
       {/* Header */}
       <div className="mb-8 flex items-center gap-4">
-        <Link href={`/${lng}/blog`} className="text-sm text-muted-foreground hover:text-foreground">
+        <Link
+          href={`/${lng}/blog`}
+          className="text-sm text-muted-foreground hover:text-foreground"
+        >
           ← Back to Blog
         </Link>
         <h1 className="text-2xl font-bold text-foreground">New Post</h1>

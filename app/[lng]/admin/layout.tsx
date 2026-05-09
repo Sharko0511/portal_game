@@ -14,6 +14,7 @@ function AdminLayout({ children }: { children: ReactNode }) {
     { href: `/${lng}/admin`, label: "Dashboard", icon: "📊" },
     { href: `/${lng}/admin/users`, label: "Users", icon: "👥" },
     { href: `/${lng}/admin/posts`, label: "Blog", icon: "📝" },
+    { href: `/${lng}/admin/categories`, label: "Categories", icon: "🏷️" },
     { href: `/${lng}/admin/scores`, label: "Scores", icon: "🏆" },
     { href: `/${lng}/admin/games`, label: "Games", icon: "🎮" },
     { href: `/${lng}/admin/config`, label: "Config", icon: "⚙️" },
@@ -24,7 +25,9 @@ function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex gap-6 min-h-[calc(100vh-5.5rem)] px-6 py-8 max-w-6xl mx-auto w-full">
       <aside className="w-48 shrink-0">
-        <div className="mb-4 text-sm font-semibold uppercase tracking-widest text-muted-foreground">Admin</div>
+        <div className="mb-4 text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+          Admin
+        </div>
         <nav className="space-y-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
@@ -50,7 +53,11 @@ function AdminLayout({ children }: { children: ReactNode }) {
   );
 }
 
-export default function AdminLayoutWrapper({ children }: { children: ReactNode }) {
+export default function AdminLayoutWrapper({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
     <AdminRoute>
       <AdminLayout>{children}</AdminLayout>

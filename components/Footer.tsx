@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useLng } from "@/hooks/useLng"
-import { useClientTranslation } from "@/hooks/useClientTranslation"
-import { Facebook, Twitter, Instagram, Youtube } from "lucide-react"
+import Link from "next/link";
+import { useLng } from "@/hooks/useLng";
+import { useClientTranslation } from "@/hooks/useClientTranslation";
+import { Facebook, Twitter, Instagram, Youtube } from "lucide-react";
 
 export default function Footer() {
-  const lng = useLng()
-  const { t } = useClientTranslation(lng, "footer")
-  const { t: tc } = useClientTranslation(lng, "common")
-  const year = new Date().getFullYear()
+  const lng = useLng();
+  const { t } = useClientTranslation(lng, "footer");
+  const { t: tc } = useClientTranslation(lng, "common");
+  const year = new Date().getFullYear();
 
   return (
     <footer className="bg-brand-footer text-white py-14 pb-8 mt-0 flex justify-center">
@@ -23,20 +23,40 @@ export default function Footer() {
             <div className="">
               <h3 className="text-sm font-medium mb-4">{t("social.follow")}</h3>
               <div className="flex space-x-4">
-                <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer"
-                  className="text-white hover:text-white/80 transition-colors" aria-label="Facebook">
+                <Link
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-white/80 transition-colors"
+                  aria-label="Facebook"
+                >
                   <Facebook size={20} />
                 </Link>
-                <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer"
-                  className="text-white hover:text-white/80 transition-colors" aria-label="Twitter">
+                <Link
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-white/80 transition-colors"
+                  aria-label="Twitter"
+                >
                   <Twitter size={20} />
                 </Link>
-                <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer"
-                  className="text-white hover:text-white/80 transition-colors" aria-label="Instagram">
+                <Link
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-white/80 transition-colors"
+                  aria-label="Instagram"
+                >
                   <Instagram size={20} />
                 </Link>
-                <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer"
-                  className="text-white hover:text-white/80 transition-colors" aria-label="YouTube">
+                <Link
+                  href="https://youtube.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-white/80 transition-colors"
+                  aria-label="YouTube"
+                >
                   <Youtube size={20} />
                 </Link>
               </div>
@@ -46,7 +66,10 @@ export default function Footer() {
           {/* Right block - exactly 50% width */}
           <div className="md:w-1/2">
             <h3 className="text-xl font-bold mb-4">{t("about.title")}</h3>
-            <p className="text-white/90 leading-relaxed" dangerouslySetInnerHTML={{ __html: t("about.description") }} />
+            <p
+              className="text-white/90 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: t("about.description") }}
+            />
           </div>
         </div>
 
@@ -55,13 +78,30 @@ export default function Footer() {
             <p className="text-white/70">{t("copyright")}</p>
           </div>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link href={`/${lng}`} className="text-white hover:text-white/80">{tc("navigation.home")}</Link>
-            <Link href={`/${lng}/baohay`} className="text-white hover:text-white/80">{tc("navigation.blog")}</Link>
-            <Link href={`/${lng}/games`} className="text-white hover:text-white/80">{tc("navigation.games")}</Link>
-            <Link href={`/${lng}/blog`} className="text-white hover:text-white/80">{tc("navigation.feed")}</Link>
+            <Link href={`/${lng}`} className="text-white hover:text-white/80">
+              {tc("navigation.home")}
+            </Link>
+            <Link
+              href={`/${lng}/hub`}
+              className="text-white hover:text-white/80"
+            >
+              {tc("navigation.blog")}
+            </Link>
+            <Link
+              href={`/${lng}/games`}
+              className="text-white hover:text-white/80"
+            >
+              {tc("navigation.games")}
+            </Link>
+            <Link
+              href={`/${lng}/blog`}
+              className="text-white hover:text-white/80"
+            >
+              {tc("navigation.feed")}
+            </Link>
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }

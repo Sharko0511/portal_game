@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, getUser, AuthResult, AuthError } from "@/lib/auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import {
+  addPostCategoryMapping,
+  getActiveCategoriesByIds,
+  getCategoryBySlug,
+  replacePostCategoryMappings,
+  uniqueCategoryIds,
+} from "@/lib/category-utils";
 
 type Params = { params: Promise<{ id: string }> };
 type Visibility = "private" | "share" | "public";
@@ -120,6 +127,7 @@ export async function PATCH(
     cards_count?: number;
     feedback_intro?: string | null;
     player_feedback?: { content: string }[];
+    categoryIds?: string[];
   };
   try {
     body = await request.json();
@@ -157,12 +165,56 @@ export async function PATCH(
   }
 
   const updates: Record<string, unknown> = { updated_at: new Date().toISOString() };
+  const normalizedCategoryIds = Array.isArray(body.categoryIds)
+    ? uniqueCategoryIds(body.categoryIds)
+    : [];
+
+  if (body.categoryIds !== undefined) {
+    if (!Array.isArray(body.categoryIds) || normalizedCategoryIds.length === 0) {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: "categoryIds must be a non-empty array" } },
+        { status: 400 }
+      );
+    }
+
+    const categories = await getActiveCategoriesByIds(supabase, normalizedCategoryIds);
+    if (categories.length !== normalizedCategoryIds.length) {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: "One or more categoryIds are invalid or inactive" } },
+        { status: 400 }
+      );
+    }
+
+    const categoryMap = new Map(categories.map((c) => [c.id, c]));
+    const primaryCategory = categoryMap.get(normalizedCategoryIds[0]);
+    if (!primaryCategory) {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: "Primary category not found" } },
+        { status: 400 }
+      );
+    }
+
+    updates.primary_category_id = primaryCategory.id;
+    updates.category = primaryCategory.slug;
+  }
+
+  if (body.category !== undefined && body.categoryIds === undefined) {
+    const primaryCategory = await getCategoryBySlug(supabase, body.category);
+    if (!primaryCategory) {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: `Category '${body.category}' is not active` } },
+        { status: 400 }
+      );
+    }
+    updates.category = primaryCategory.slug;
+    updates.primary_category_id = primaryCategory.id;
+  }
+
   if (body.title !== undefined) updates.title = body.title;
   if (body.content !== undefined) updates.content = body.content;
   if (body.cover_image_url !== undefined) updates.cover_image_url = body.cover_image_url;
   if (body.cover_image_caption !== undefined) updates.cover_image_caption = body.cover_image_caption;
   if (body.visibility !== undefined) updates.visibility = body.visibility;
-  if (body.category !== undefined) updates.category = body.category;
   if (body.level !== undefined) updates.level = body.level;
   if (body.audio_url !== undefined) updates.audio_url = body.audio_url;
   if (body.reading_time !== undefined) updates.reading_time = body.reading_time;
@@ -183,6 +235,19 @@ export async function PATCH(
   if (error) {
     return NextResponse.json(
       { error: { code: "INTERNAL_ERROR", message: error.message } },
+      { status: 500 }
+    );
+  }
+
+  try {
+    if (body.categoryIds !== undefined) {
+      await replacePostCategoryMappings(supabase, id, normalizedCategoryIds);
+    } else if (body.category !== undefined && data.primary_category_id) {
+      await addPostCategoryMapping(supabase, id, data.primary_category_id);
+    }
+  } catch (mappingError) {
+    return NextResponse.json(
+      { error: { code: "INTERNAL_ERROR", message: (mappingError as Error).message } },
       { status: 500 }
     );
   }
