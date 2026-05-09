@@ -19,7 +19,7 @@ export default function GamesPage() {
   const { t: tc } = useClientTranslation(lng, "common");
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-8">
+    <div className="mx-auto max-w-[1600px] px-4 py-8 md:px-6 xl:px-21">
       <nav className="mb-6 flex items-center gap-1.5 text-sm text-muted-foreground">
         <Link href={`/${lng}`} className="hover:text-foreground">{tc("navigation.home")}</Link>
         <span>›</span>

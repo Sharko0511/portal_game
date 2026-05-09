@@ -59,9 +59,9 @@ export default function Navbar() {
     <>
       <header
         ref={headerRef}
-        className="fixed top-0 left-0 right-0 z-40 w-full border-b bg-background"
+        className="fixed top-0 left-0 right-0 z-40 w-full border-b bg-background flex justify-center"
       >
-        <div className="w-full flex h-14 items-center justify-between px-4 md:px-6 xl:px-21">
+        <div className="w-full max-w-[1600px] flex h-14 items-center justify-between px-4 md:px-6 xl:px-21">
           {/* Logo */}
           <div className="flex items-center">
             <Link href={`/${lng}`} className="flex items-center">

@@ -15,7 +15,7 @@ function BlogFeedContent() {
   const { t } = useClientTranslation(lng, "common");
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
+    <div className="mx-auto max-w-[1600px] px-4 py-8 md:px-6 xl:px-21">
       {/* Breadcrumb */}
       <nav className="mb-3 flex items-center gap-1.5 text-sm text-muted-foreground">
         <Link href={`/${lng}`} className="hover:text-foreground">{t("navigation.home")}</Link>

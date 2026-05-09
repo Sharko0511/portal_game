@@ -228,7 +228,7 @@ function PostContent({ id }: { id: string }) {
   const hasStats = post.word_count > 0 || post.event_encounters > 0 || post.cards_count > 0;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 xl:px-21">
+    <div className="mx-auto max-w-[1440px] px-4 py-8 md:px-6 xl:px-21">
 
       {/* ── Full-width header ── */}
       {/* Breadcrumb */}

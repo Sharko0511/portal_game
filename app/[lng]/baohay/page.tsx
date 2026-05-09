@@ -98,23 +98,25 @@ function HeroCoverCell({ post, className = "" }: { post: Post; className?: strin
 function BaohayHero({ lng, first, second }: { lng: string; first: Post; second?: Post }) {
   const { t } = useClientTranslation(lng, "blog");
   return (
-    <section className="w-full bg-brand-footer px-4 py-6 md:px-21 md:py-8">
-      <nav className="mb-4 flex items-center gap-1.5 text-sm text-white/60">
-        <Link href={`/${lng}`} className="hover:text-white">{t("breadcrumb.home")}</Link>
-        <span>›</span>
-        <span className="font-medium text-white">{t("breadcrumb.baohay")}</span>
-      </nav>
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-6">
-        <HeroDetailCard post={first} className="order-1 h-auto md:order-2 md:h-72" />
-        <HeroCoverCell post={first} className="order-2 h-56 md:order-1 md:h-72" />
-      </div>
-      {second && <div className="mt-8 mb-2 md:my-8 h-px bg-white/20" />}
-      {second && (
+    <section className="w-full bg-brand-footer py-6 md:py-8 flex justify-center">
+      <div className="w-full max-w-[1600px] px-4 md:px-21">
+        <nav className="mb-4 flex items-center gap-1.5 text-sm text-white/60">
+          <Link href={`/${lng}`} className="hover:text-white">{t("breadcrumb.home")}</Link>
+          <span>›</span>
+          <span className="font-medium text-white">{t("breadcrumb.baohay")}</span>
+        </nav>
         <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-6">
-          <HeroDetailCard post={second} className="h-auto md:h-72" />
-          <HeroCoverCell post={second} className="h-56 md:h-72" />
+          <HeroDetailCard post={first} className="order-1 h-auto md:order-2 md:h-72" />
+          <HeroCoverCell post={first} className="order-2 h-56 md:order-1 md:h-72" />
         </div>
-      )}
+        {second && <div className="mt-8 mb-2 md:my-8 h-px bg-white/20" />}
+        {second && (
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-6">
+            <HeroDetailCard post={second} className="h-auto md:h-72" />
+            <HeroCoverCell post={second} className="h-56 md:h-72" />
+          </div>
+        )}
+      </div>
     </section>
   );
 }
@@ -267,33 +269,37 @@ function BaohayContent() {
       <>
         {/* Level hero */}
         <section
-          className="w-full px-4 py-8 md:px-21 md:py-10 bg-brand-footer"
+          className="w-full py-8 md:py-10 bg-brand-footer flex justify-center"
         >
-          <nav className="mb-4 flex items-center gap-1.5 text-sm text-white/70">
-            <Link href={`/${lng}`} className="hover:text-white">{t("breadcrumb.home")}</Link>
-            <span>›</span>
-            <Link href={`/${lng}/baohay`} className="hover:text-white">{t("breadcrumb.baohay")}</Link>
-            <span>›</span>
-            <span className="font-medium text-brand-lime-bright">{LEVEL_LABELS[levelParam]}</span>
-          </nav>
-          <h1 className="text-3xl font-bold text-white md:text-4xl">
-            Trình độ tiếng Anh {levelParam}
-          </h1>
+          <div className="w-full max-w-[1600px] px-4 md:px-21">
+            <nav className="mb-4 flex items-center gap-1.5 text-sm text-white/70">
+              <Link href={`/${lng}`} className="hover:text-white">{t("breadcrumb.home")}</Link>
+              <span>›</span>
+              <Link href={`/${lng}/baohay`} className="hover:text-white">{t("breadcrumb.baohay")}</Link>
+              <span>›</span>
+              <span className="font-medium text-brand-lime-bright">{LEVEL_LABELS[levelParam]}</span>
+            </nav>
+            <h1 className="text-3xl font-bold text-white md:text-4xl">
+              Trình độ tiếng Anh {levelParam}
+            </h1>
+          </div>
         </section>
 
         {/* Articles */}
-        <div className="px-4 pt-12 pb-12 md:px-6 xl:px-21">
-          {isLoading ? (
-            <div className="space-y-4">
-              <div className="h-20 animate-pulse rounded-xl bg-gray-100" />
-              <div className="h-20 animate-pulse rounded-xl bg-gray-100" />
-            </div>
-          ) : (
-            <>
-              <FlatArticleList posts={levelPosts} />
-              <YouMayLike posts={posts ?? []} category="baohay" currentLevel={levelParam} />
-            </>
-          )}
+        <div className="w-full flex justify-center">
+          <div className="w-full max-w-[1600px] px-4 pt-12 pb-12 md:px-6 xl:px-21">
+            {isLoading ? (
+              <div className="space-y-4">
+                <div className="h-20 animate-pulse rounded-xl bg-gray-100" />
+                <div className="h-20 animate-pulse rounded-xl bg-gray-100" />
+              </div>
+            ) : (
+              <>
+                <FlatArticleList posts={levelPosts} />
+                <YouMayLike posts={posts ?? []} category="baohay" currentLevel={levelParam} />
+              </>
+            )}
+          </div>
         </div>
       </>
     );
@@ -307,15 +313,17 @@ function BaohayContent() {
         first && <BaohayHero lng={lng} first={first} second={second} />
       )}
 
-      <div className="px-4 pt-12 pb-12 md:px-6 xl:px-21">
-        {isLoading ? (
-          <div className="space-y-4">
-            <div className="h-8 w-48 animate-pulse rounded-lg bg-gray-100" />
-            <div className="h-20 animate-pulse rounded-xl bg-gray-100" />
-          </div>
-        ) : (
-          <ArticleListByLevel posts={posts ?? []} category="baohay" />
-        )}
+      <div className="w-full flex justify-center">
+        <div className="w-full max-w-[1600px] px-4 pt-12 pb-12 md:px-6 xl:px-21">
+          {isLoading ? (
+            <div className="space-y-4">
+              <div className="h-8 w-48 animate-pulse rounded-lg bg-gray-100" />
+              <div className="h-20 animate-pulse rounded-xl bg-gray-100" />
+            </div>
+          ) : (
+            <ArticleListByLevel posts={posts ?? []} category="baohay" />
+          )}
+        </div>
       </div>
     </>
   );
