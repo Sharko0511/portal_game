@@ -46,6 +46,26 @@ export function useAdminPosts(params: AdminPostsParams) {
   });
 }
 
+export interface PostCounts {
+  total: number;
+  public: number;
+  share: number;
+  private: number;
+}
+
+export function useAdminPostsCounts(params: Omit<AdminPostsParams, "page" | "visibility" | "sort">) {
+  return useQuery<PostCounts>({
+    queryKey: ["admin", "posts", "counts", params],
+    queryFn: async () => {
+      const p = new URLSearchParams();
+      if (params.search) p.set("search", params.search);
+      if (params.level !== "all") p.set("level", params.level);
+      if (params.category !== "all") p.set("category", params.category);
+      return adminFetchJson(`/api/admin/posts/stats?${p}`);
+    },
+  });
+}
+
 export function useAdminChangeVisibility() {
   const queryClient = useQueryClient();
   return useMutation({

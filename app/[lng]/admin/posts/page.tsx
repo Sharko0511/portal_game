@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import {
   useAdminPosts,
+  useAdminPostsCounts,
   useAdminChangeVisibility,
   useAdminDeletePost,
   AdminPost,
@@ -85,7 +86,11 @@ function formatDate(iso: string) {
   if (days === 0) return "Today";
   if (days === 1) return "Yesterday";
   if (days < 7) return `${days} days ago`;
-  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+  return d.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 function initials(name: string) {
@@ -143,7 +148,9 @@ function Thumbnail({ post }: { post: AdminPost }) {
       />
     );
   }
-  const gradient = post.level ? LEVEL_GRADIENT[post.level] : "from-gray-400 to-gray-600";
+  const gradient = post.level
+    ? LEVEL_GRADIENT[post.level]
+    : "from-gray-400 to-gray-600";
   const Icon = post.category === "baohay" ? Newspaper : BookOpen;
   return (
     <div
@@ -171,7 +178,8 @@ function VisibilityToggle({
   useEffect(() => {
     if (!open) return;
     function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -186,7 +194,9 @@ function VisibilityToggle({
       >
         <Icon className="h-4 w-4" />
         {cfg.label}
-        <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+        <ChevronDown
+          className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
+        />
       </button>
 
       {open && (
@@ -198,7 +208,10 @@ function VisibilityToggle({
             return (
               <button
                 key={v}
-                onClick={() => { onCycle(post.id, v); setOpen(false); }}
+                onClick={() => {
+                  onCycle(post.id, v);
+                  setOpen(false);
+                }}
                 disabled={isActive || loading}
                 className={`flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-gray-50 disabled:cursor-default ${
                   isActive ? "font-semibold text-gray-900" : "text-gray-600"
@@ -256,17 +269,24 @@ function PostRow({
         {/* Level + tags — always rendered to keep consistent card height */}
         <div className="flex min-h-8 flex-wrap items-center gap-2">
           {post.level && (
-            <span className={`rounded-full border px-3 py-1 text-sm font-bold ${LEVEL_STYLES[post.level]}`}>
+            <span
+              className={`rounded-full border px-3 py-1 text-sm font-bold ${LEVEL_STYLES[post.level]}`}
+            >
               🎯 {post.level}
             </span>
           )}
           {post.tags.slice(0, 3).map((tag) => (
-            <span key={tag} className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-600">
+            <span
+              key={tag}
+              className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-600"
+            >
               #{tag}
             </span>
           ))}
           {post.tags.length > 3 && (
-            <span className="text-sm text-gray-400">+{post.tags.length - 3} more</span>
+            <span className="text-sm text-gray-400">
+              +{post.tags.length - 3} more
+            </span>
           )}
         </div>
 
@@ -351,7 +371,19 @@ export default function AdminBlogManagement() {
     return () => clearTimeout(timer);
   }, [search]);
 
-  const postsQuery = useAdminPosts({ page, search: searchQuery, visibility, level, category, sort });
+  const postsQuery = useAdminPosts({
+    page,
+    search: searchQuery,
+    visibility,
+    level,
+    category,
+    sort,
+  });
+  const countsQuery = useAdminPostsCounts({
+    search: searchQuery,
+    level,
+    category,
+  });
   const changeVisibility = useAdminChangeVisibility();
   const deletePost = useAdminDeletePost();
 
@@ -359,9 +391,10 @@ export default function AdminBlogManagement() {
   const total = postsQuery.data?.total ?? 0;
   const totalPages = postsQuery.data?.totalPages ?? 1;
 
-  const publicCount = posts.filter((p) => p.visibility === "public").length;
-  const privateCount = posts.filter((p) => p.visibility === "private").length;
-  const shareCount = posts.filter((p) => p.visibility === "share").length;
+  const publicCount = countsQuery.data?.public ?? 0;
+  const privateCount = countsQuery.data?.private ?? 0;
+  const shareCount = countsQuery.data?.share ?? 0;
+  const totalCount = countsQuery.data?.total ?? 0;
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -388,13 +421,17 @@ export default function AdminBlogManagement() {
   }
 
   const hasActiveFilters =
-    searchQuery || visibility !== "all" || level !== "all" || category !== "all" || sort !== "newest";
+    searchQuery ||
+    visibility !== "all" ||
+    level !== "all" ||
+    category !== "all" ||
+    sort !== "newest";
 
   const handleVisibilityChange = useCallback(
     (postId: string, next: "private" | "share" | "public") => {
       changeVisibility.mutate({ postId, visibility: next });
     },
-    [changeVisibility]
+    [changeVisibility],
   );
 
   const handleDelete = useCallback(
@@ -402,7 +439,7 @@ export default function AdminBlogManagement() {
       if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
       deletePost.mutate(postId);
     },
-    [deletePost]
+    [deletePost],
   );
 
   const pages = buildPageList(page, totalPages);
@@ -431,10 +468,34 @@ export default function AdminBlogManagement() {
       {/* Summary stats */}
       {!postsQuery.isLoading && (
         <div className="flex flex-wrap gap-3">
-          <StatChip icon="📄" label="Total" count={total} active={visibility === "all"} onClick={() => handleFilterChange("visibility", "all")} />
-          <StatChip icon="🌍" label="Public" count={postsQuery.data ? posts.filter(p => p.visibility === "public").length : 0} fullCount active={visibility === "public"} onClick={() => handleFilterChange("visibility", "public")} />
-          <StatChip icon="🔗" label="Share" count={shareCount} active={visibility === "share"} onClick={() => handleFilterChange("visibility", "share")} />
-          <StatChip icon="🔒" label="Private" count={privateCount} active={visibility === "private"} onClick={() => handleFilterChange("visibility", "private")} />
+          <StatChip
+            icon="📄"
+            label="Total"
+            count={totalCount}
+            active={visibility === "all"}
+            onClick={() => handleFilterChange("visibility", "all")}
+          />
+          <StatChip
+            icon="🌍"
+            label="Public"
+            count={publicCount}
+            active={visibility === "public"}
+            onClick={() => handleFilterChange("visibility", "public")}
+          />
+          <StatChip
+            icon="🔗"
+            label="Share"
+            count={shareCount}
+            active={visibility === "share"}
+            onClick={() => handleFilterChange("visibility", "share")}
+          />
+          <StatChip
+            icon="🔒"
+            label="Private"
+            count={privateCount}
+            active={visibility === "private"}
+            onClick={() => handleFilterChange("visibility", "private")}
+          />
         </div>
       )}
 
@@ -550,7 +611,10 @@ export default function AdminBlogManagement() {
 
                 {pages.map((p, i) =>
                   p === "..." ? (
-                    <span key={`ellipsis-${i}`} className="px-1 text-sm text-gray-400">
+                    <span
+                      key={`ellipsis-${i}`}
+                      className="px-1 text-sm text-gray-400"
+                    >
                       …
                     </span>
                   ) : (
@@ -565,7 +629,7 @@ export default function AdminBlogManagement() {
                     >
                       {p}
                     </button>
-                  )
+                  ),
                 )}
 
                 <button
@@ -577,7 +641,8 @@ export default function AdminBlogManagement() {
                 </button>
               </div>
               <p className="text-xs text-gray-400">
-                Showing {(page - 1) * 10 + 1}–{Math.min(page * 10, total)} of {total} posts
+                Showing {(page - 1) * 10 + 1}–{Math.min(page * 10, total)} of{" "}
+                {total} posts
               </p>
             </div>
           )}
@@ -643,7 +708,8 @@ function FilterDropdown({
   useEffect(() => {
     if (!open) return;
     function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -660,7 +726,9 @@ function FilterDropdown({
         }`}
       >
         {current.label}
-        <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+        <ChevronDown
+          className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
+        />
       </button>
 
       {open && (
@@ -668,9 +736,14 @@ function FilterDropdown({
           {options.map((o) => (
             <button
               key={o.value}
-              onClick={() => { onChange(o.value); setOpen(false); }}
+              onClick={() => {
+                onChange(o.value);
+                setOpen(false);
+              }}
               className={`flex w-full items-center justify-between gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-gray-50 ${
-                value === o.value ? "font-semibold text-gray-900" : "text-gray-600"
+                value === o.value
+                  ? "font-semibold text-gray-900"
+                  : "text-gray-600"
               }`}
             >
               <span>{o.label}</span>
@@ -683,7 +756,13 @@ function FilterDropdown({
   );
 }
 
-function EmptyState({ hasFilters, onClear }: { hasFilters: boolean; onClear: () => void }) {
+function EmptyState({
+  hasFilters,
+  onClear,
+}: {
+  hasFilters: boolean;
+  onClear: () => void;
+}) {
   return (
     <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-gray-50 py-16 text-center">
       <BookOpen className="mb-3 h-10 w-10 text-gray-300" />
@@ -691,7 +770,9 @@ function EmptyState({ hasFilters, onClear }: { hasFilters: boolean; onClear: () 
         {hasFilters ? "No posts match your filters" : "No posts yet"}
       </p>
       <p className="mt-1 text-sm text-gray-400">
-        {hasFilters ? "Try adjusting your search or filters" : "Posts will appear here once users start writing"}
+        {hasFilters
+          ? "Try adjusting your search or filters"
+          : "Posts will appear here once users start writing"}
       </p>
       {hasFilters && (
         <Button onClick={onClear} variant="primary" size="md" className="mt-4">
@@ -706,7 +787,11 @@ function buildPageList(current: number, total: number): (number | "...")[] {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
   const pages: (number | "...")[] = [1];
   if (current > 3) pages.push("...");
-  for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
+  for (
+    let i = Math.max(2, current - 1);
+    i <= Math.min(total - 1, current + 1);
+    i++
+  ) {
     pages.push(i);
   }
   if (current < total - 2) pages.push("...");
