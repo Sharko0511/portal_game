@@ -4,7 +4,14 @@ const DEFAULT_LANGUAGE = "en";
 const COOKIE_NAME = "i18next";
 
 // Paths that should never be redirected
-const BYPASS_PREFIXES = ["/api", "/_next", "/favicon.ico", "/public"];
+const BYPASS_PREFIXES = [
+  "/api",
+  "/_next",
+  "/favicon.ico",
+  "/robots.txt",
+  "/sitemap.xml",
+  "/public",
+];
 
 // Matches any ISO 639-1/2 language code (2–3 lowercase letters), optionally with a region tag
 const LANG_SEGMENT_RE = /^[a-z]{2,3}(-[A-Za-z]{2,4})?$/;
@@ -48,5 +55,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|svg|webp|ico|css|js)).*)"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:png|jpg|jpeg|gif|svg|webp|ico|css|js|txt|xml)).*)",
+  ],
 };
