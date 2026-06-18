@@ -139,7 +139,8 @@ html.dark {
 /* ─────────────────────────────────────────────────────────────
    BASE
 ───────────────────────────────────────────────────────────── */
-html, body {
+html,
+body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-montserrat), var(--font-geist-sans), Arial, Helvetica, sans-serif;
@@ -150,36 +151,557 @@ html, body {
   scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 
-*::-webkit-scrollbar { width: 4px; height: 4px; }
-*::-webkit-scrollbar-track { background: transparent; }
-*::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 2px; }
-*::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 2px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
 
 /* ─────────────────────────────────────────────────────────────
    PROSE (TipTap / rich text)
 ───────────────────────────────────────────────────────────── */
-.prose h1 { font-size: 1.875rem; font-weight: 700; margin: 1.5rem 0 0.75rem; color: var(--foreground); }
-.prose h2 { font-size: 1.5rem; font-weight: 600; margin: 1.25rem 0 0.625rem; color: var(--foreground); }
-.prose h3 { font-size: 1.25rem; font-weight: 600; margin: 1rem 0 0.5rem; color: var(--foreground); }
-.prose p { margin: 0.75rem 0; line-height: 1.75; color: var(--foreground); }
-.prose strong { font-weight: 700; color: var(--foreground); }
-.prose em { font-style: italic; }
-.prose u { text-decoration: underline; }
-.prose s { text-decoration: line-through; }
-.prose a { color: var(--foreground); text-decoration: underline; font-weight: 500; }
-.prose a:hover { color: var(--foreground-muted); }
-.prose ul { list-style-type: disc; padding-left: 1.5rem; margin: 0.75rem 0; color: var(--foreground); }
-.prose ol { list-style-type: decimal; padding-left: 1.5rem; margin: 0.75rem 0; color: var(--foreground); }
-.prose li { margin: 0.25rem 0; line-height: 1.75; }
-.prose blockquote { border-left: 3px solid var(--border); padding-left: 1rem; color: var(--foreground-muted); margin: 1rem 0; font-style: italic; }
-.prose code { background: var(--card); border-radius: 4px; padding: 0.1em 0.4em; font-size: 0.875em; color: var(--foreground); font-family: monospace; }
-.prose pre { background: var(--card); color: var(--foreground); padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); }
-.prose pre code { background: none; padding: 0; color: inherit; }
-.prose hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
-.prose img { max-width: 100%; border-radius: 8px; margin: 1rem 0; }
+.prose h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin: 1.5rem 0 0.75rem;
+  color: var(--foreground);
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.625rem;
+  color: var(--foreground);
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+  color: var(--foreground);
+}
+
+.prose p {
+  margin: 0.75rem 0;
+  line-height: 1.75;
+  color: var(--foreground);
+}
+
+.prose strong {
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose u {
+  text-decoration: underline;
+}
+
+.prose s {
+  text-decoration: line-through;
+}
+
+.prose a {
+  color: var(--foreground);
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.prose a:hover {
+  color: var(--foreground-muted);
+}
+
+.prose ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+  color: var(--foreground);
+}
+
+.prose ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+  color: var(--foreground);
+}
+
+.prose li {
+  margin: 0.25rem 0;
+  line-height: 1.75;
+}
+
+.prose blockquote {
+  border-left: 3px solid var(--border);
+  padding-left: 1rem;
+  color: var(--foreground-muted);
+  margin: 1rem 0;
+  font-style: italic;
+}
+
+.prose code {
+  background: var(--card);
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+  font-size: 0.875em;
+  color: var(--foreground);
+  font-family: monospace;
+}
+
+.prose pre {
+  background: var(--card);
+  color: var(--foreground);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1rem 0;
+  border: 1px solid var(--border);
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+.prose img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
 
 /* ─────────────────────────────────────────────────────────────
    UTILITIES
 ───────────────────────────────────────────────────────────── */
-button:not(:disabled), [role="button"], a { cursor: pointer; }
-button:disabled { cursor: not-allowed; }
+button:not(:disabled),
+[role="button"],
+a {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TOOLTIP HIGHLIGHT (Tiptap custom mark)
+   ───────────────────────────────────────────────────────────── */
+
+/* The highlighted word */
+.tooltip-highlight {
+  position: relative;
+  display: inline;
+  background-color: rgba(153, 246, 228, 0.4);
+  border-bottom: 2px dotted #14b8a6;
+  border-radius: 2px;
+  padding: 0 2px;
+  cursor: help;
+  transition: background-color 0.15s ease;
+}
+
+/* Hover glow */
+.tooltip-highlight:hover {
+  background-color: rgba(153, 246, 228, 0.6);
+}
+
+/* The tooltip bubble */
+.tooltip-highlight::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.5;
+  padding: 8px 14px;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  max-width: min(480px, 85vw);
+  min-width: 200px;
+  width: max-content;
+  text-align: left;
+  pointer-events: none;
+  box-shadow: 0 10px 30px rgba(13, 148, 136, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  z-index: 50;
+
+  /* Hidden by default */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+}
+
+/* Arrow pointing down */
+.tooltip-highlight:hover::before {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Small triangle caret */
+.tooltip-highlight:hover>span::after {
+  z-index: 51;
+}
+
+/* Dark mode adjustments for tooltip bubble */
+html.dark .tooltip-highlight {
+  background-color: rgba(94, 234, 212, 0.18);
+  border-bottom-color: #14b8a6;
+}
+
+html.dark .tooltip-highlight::before {
+  background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #f0fdfa;
+  box-shadow: 0 12px 36px rgba(13, 148, 136, 0.4), 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   COLLAPSIBLE DETAILS (Tiptap extension-details)
+   ───────────────────────────────────────────────────────────── */
+
+/* Wrapper for both native details and TipTap custom node view */
+.details {
+  position: relative;
+  margin: 1.25rem 0;
+}
+
+/* Reader view (readonly): NO box style */
+.readonly-view .details {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Editor mode: add visual container */
+.prose .ProseMirror .details {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  padding: 12px 16px;
+  transition: box-shadow 0.2s ease;
+}
+
+/* Override for readonly even if inside ProseMirror */
+.readonly-view .ProseMirror .details {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.prose .ProseMirror .details:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+}
+
+/* No hover effect in readonly */
+.readonly-view .ProseMirror .details:hover {
+  box-shadow: none !important;
+}
+
+/* Hide default browser marker for native summary */
+.details summary::-webkit-details-marker {
+  display: none;
+}
+
+.details summary::marker {
+  display: none;
+}
+
+/* Clickable summary header */
+.details summary {
+  display: block;
+  padding: 0;
+  padding-right: 32px;
+  /* Space for arrow on right */
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0;
+  color: inherit;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  background: transparent;
+  position: relative;
+  pointer-events: auto;
+}
+
+/* Headings inside summary should keep their natural styles */
+.details summary h1,
+.details summary h2,
+.details summary h3,
+.details summary p {
+  margin: 0;
+  padding: 0;
+  padding-right: 32px;
+  display: inline-block;
+  width: 100%;
+  pointer-events: none;
+  /* Let clicks pass through to summary */
+}
+
+/* Make entire summary area clickable */
+.details summary:hover {
+  cursor: pointer;
+}
+
+/* Reader view: keep summary natural and clickable */
+.readonly-view .details summary {
+  margin: 0 !important;
+  padding: 0 !important;
+  padding-right: 32px !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Headings in readonly view keep full prose styles but pass clicks through */
+.readonly-view .details summary h1,
+.readonly-view .details summary h2,
+.readonly-view .details summary h3 {
+  margin: 0 !important;
+  padding-right: 32px !important;
+  pointer-events: none !important;
+}
+
+/* Editor mode: make summary stand out slightly */
+.prose .ProseMirror .details summary,
+.readonly-view .details summary {
+  font-weight: 700 !important;
+  font-size: 1.5rem !important;
+  line-height: 2rem !important;
+  letter-spacing: -0.025em !important;
+}
+
+/* Heading level 1 for summary */
+.details summary[data-heading-level="1"] {
+  font-size: 2.25rem !important;
+  font-weight: 800 !important;
+  line-height: 2.5rem !important;
+  letter-spacing: -0.025em !important;
+}
+
+/* Heading level 2 for summary */
+.details summary[data-heading-level="2"] {
+  font-size: 1.875rem !important;
+  font-weight: 700 !important;
+  line-height: 2.25rem !important;
+  letter-spacing: -0.025em !important;
+}
+
+/* Let user click & type summary text in editor mode */
+.ProseMirror[contenteditable="true"] .details summary {
+  cursor: text;
+}
+
+/* Arrow should not block clicks */
+.details summary::before {
+  pointer-events: none;
+}
+
+/* Custom rotating arrow icon for native details */
+.details summary::after {
+  content: "";
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23317f5f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+/* Dark mode native arrow */
+html.dark .details summary::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a4c639' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+}
+
+/* Rotate native arrow when open - must account for translateY */
+.details[open]>summary::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* Rotate arrow for TipTap custom node when open - IMPORTANT for readonly */
+div.details.is-open summary::after {
+  transform: translateY(-50%) rotate(180deg) !important;
+}
+
+/* Additional specificity for readonly view */
+.readonly-view div.details.is-open summary::after {
+  transform: translateY(-50%) rotate(180deg) !important;
+}
+
+.prose.readonly-view div.details.is-open summary::after {
+  transform: translateY(-50%) rotate(180deg) !important;
+}
+
+/* ── TipTap Editor Custom Node View Toggle Button ── */
+
+/* Hide arrow in EDITOR mode only (when inside non-readonly prose) */
+.prose:not(.readonly-view) div.details summary::after {
+  display: none !important;
+}
+
+/* Ensure arrow shows in readonly view with all necessary styles */
+.prose.readonly-view div.details summary::after,
+.readonly-view div.details summary::after {
+  display: inline-block !important;
+  content: "" !important;
+  position: absolute !important;
+  right: 4px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 18px !important;
+  height: 18px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23317f5f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  pointer-events: none !important;
+}
+
+/* Rotate in readonly view when open */
+.prose.readonly-view div.details.is-open summary::after,
+.readonly-view div.details.is-open summary::after {
+  transform: translateY(-50%) rotate(180deg) !important;
+}
+
+.details-toggle-btn {
+  position: absolute;
+  right: 4px;
+  top: 0.2em;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--brand-primary);
+  cursor: pointer;
+  border-radius: 4px;
+  z-index: 10;
+  padding: 0;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.details-toggle-btn:hover {
+  background-color: var(--card-hover);
+}
+
+.details-toggle-btn svg {
+  width: 18px;
+  height: 18px;
+  color: var(--brand-primary);
+  transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.dark .details-toggle-btn svg {
+  color: var(--brand-lime);
+}
+
+/* Rotate button SVG when details is open in editor */
+.details.is-open .details-toggle-btn svg {
+  transform: rotate(180deg);
+}
+
+/* Content area for both native and TipTap */
+.details div[data-type="detailsContent"] {
+  padding: 4px 0 0 0;
+  background: transparent;
+}
+
+/* Reader view: no border separator */
+.readonly-view .details div[data-type="detailsContent"] {
+  padding: 4px 0 0 0 !important;
+  border: none !important;
+  margin-top: 0 !important;
+}
+
+/* Editor mode: add border separator */
+.prose .ProseMirror .details div[data-type="detailsContent"]:not([hidden]) {
+  padding: 12px 0 0 0;
+  margin-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+/* Override for readonly */
+.readonly-view .ProseMirror .details div[data-type="detailsContent"] {
+  padding: 4px 0 0 0 !important;
+  border: none !important;
+  margin-top: 0 !important;
+}
+
+/* Ensure hidden attribute works correctly in editor */
+.details div[data-type="detailsContent"][hidden] {
+  display: none !important;
+}
+
+/* Nested details */
+.details .details {
+  margin: 0.5rem 0;
+}
+
+/* Reader view: nested details stay simple */
+.readonly-view .details .details {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Editor mode: nested details style */
+.prose .ProseMirror .details .details {
+  border-radius: 6px;
+}
+
+/* Override for readonly */
+.readonly-view .ProseMirror .details .details {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+/* Dark mode for editor */
+html.dark .prose .ProseMirror .details {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+/* Override for readonly dark mode */
+html.dark .readonly-view .ProseMirror .details {
+  background: transparent !important;
+  border: none !important;
+}

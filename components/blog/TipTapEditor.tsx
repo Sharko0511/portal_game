@@ -8,6 +8,14 @@ import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
 import TextAlign from "@tiptap/extension-text-align";
+import {
+  Details,
+  DetailsContent,
+  DetailsSummary,
+} from "@tiptap/extension-details";
+import { Tooltip } from "./extensions/Tooltip";
+import { CustomDetailsSummary } from "./extensions/CustomDetailsSummary";
+import { TooltipDialog } from "./TooltipDialog";
 import { createClient } from "@supabase/supabase-js";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -64,6 +72,32 @@ export default function TipTapEditor({
   const { user } = useAuth();
   const imageInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [showTooltipDialog, setShowTooltipDialog] = useState(false);
+
+  // Helper to check if cursor is inside detailsSummary
+  const isInSummary = () => {
+    if (!editor) return false;
+    const { $from } = editor.state.selection;
+    for (let depth = $from.depth; depth > 0; depth--) {
+      if ($from.node(depth).type.name === "detailsSummary") {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // Helper to get current summary heading level
+  const getSummaryLevel = () => {
+    if (!editor) return null;
+    const { $from } = editor.state.selection;
+    for (let depth = $from.depth; depth > 0; depth--) {
+      const node = $from.node(depth);
+      if (node.type.name === "detailsSummary") {
+        return node.attrs.headingLevel;
+      }
+    }
+    return null;
+  };
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -77,6 +111,27 @@ export default function TipTapEditor({
         HTMLAttributes: { class: "rounded-xl max-w-full my-4" },
       }),
       Placeholder.configure({ placeholder }),
+      Details.configure({
+        persist: true,
+        HTMLAttributes: {
+          class: "details",
+        },
+        renderToggleButton: ({ element, isOpen }) => {
+          element.className = "details-toggle-btn";
+          element.setAttribute(
+            "aria-label",
+            isOpen ? "Collapse details content" : "Expand details content",
+          );
+          element.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          `;
+        },
+      }),
+      CustomDetailsSummary,
+      DetailsContent,
+      Tooltip,
     ],
     content: content ?? { type: "doc", content: [] },
     editable,
@@ -92,17 +147,22 @@ export default function TipTapEditor({
     if (!user) return;
     const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif"];
     if (!ALLOWED.includes(file.type)) return;
-    if (file.size > 5 * 1024 * 1024) { alert("Image must be under 5MB."); return; }
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Image must be under 5MB.");
+      return;
+    }
 
     setUploading(true);
     try {
       const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       );
       const ext = file.name.split(".").pop();
       const path = `${user.id}/${Date.now()}.${ext}`;
-      const { error } = await supabase.storage.from("post-images").upload(path, file);
+      const { error } = await supabase.storage
+        .from("post-images")
+        .upload(path, file);
       if (error) throw error;
       const { data } = supabase.storage.from("post-images").getPublicUrl(path);
       // Insert image node at current cursor position
@@ -129,101 +189,265 @@ export default function TipTapEditor({
 
   // ── Editor ───────────────────────────────────────────────
   return (
-    <div className="rounded-xl border border-border bg-white">
-      {/* Hidden file input for image uploads */}
-      <input
-        ref={imageInputRef}
-        type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif"
-        className="hidden"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) handleImageUpload(file);
-        }}
-      />
+    <>
+      <div className="rounded-xl border border-border bg-white">
+        {/* Hidden file input for image uploads */}
+        <input
+          ref={imageInputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) handleImageUpload(file);
+          }}
+        />
 
-      {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-0.5 border-b border-border px-3 py-2">
-        <ToolbarBtn title="Undo" onClick={() => editor.chain().focus().undo().run()}>↩</ToolbarBtn>
-        <ToolbarBtn title="Redo" onClick={() => editor.chain().focus().redo().run()}>↪</ToolbarBtn>
+        {/* Toolbar */}
+        <div className="flex flex-wrap items-center gap-0.5 border-b border-border px-3 py-2">
+          <ToolbarBtn
+            title="Undo"
+            onClick={() => editor.chain().focus().undo().run()}
+          >
+            ↩
+          </ToolbarBtn>
+          <ToolbarBtn
+            title="Redo"
+            onClick={() => editor.chain().focus().redo().run()}
+          >
+            ↪
+          </ToolbarBtn>
 
-        <div className="mx-1 h-5 w-px bg-gray-200" />
+          <div className="mx-1 h-5 w-px bg-gray-200" />
 
-        <ToolbarBtn title="Heading 1" active={editor.isActive("heading", { level: 1 })}
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>H1</ToolbarBtn>
-        <ToolbarBtn title="Heading 2" active={editor.isActive("heading", { level: 2 })}
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>H2</ToolbarBtn>
-        <ToolbarBtn title="Heading 3" active={editor.isActive("heading", { level: 3 })}
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}>H3</ToolbarBtn>
+          <ToolbarBtn
+            title="Heading 1"
+            active={
+              isInSummary()
+                ? getSummaryLevel() === 1
+                : editor.isActive("heading", { level: 1 })
+            }
+            onClick={() => {
+              if (isInSummary()) {
+                const currentLevel = getSummaryLevel();
+                editor
+                  .chain()
+                  .focus()
+                  .setSummaryHeading(currentLevel === 1 ? null : 1)
+                  .run();
+              } else {
+                editor.chain().focus().toggleHeading({ level: 1 }).run();
+              }
+            }}
+          >
+            H1
+          </ToolbarBtn>
+          <ToolbarBtn
+            title="Heading 2"
+            active={
+              isInSummary()
+                ? getSummaryLevel() === 2
+                : editor.isActive("heading", { level: 2 })
+            }
+            onClick={() => {
+              if (isInSummary()) {
+                const currentLevel = getSummaryLevel();
+                editor
+                  .chain()
+                  .focus()
+                  .setSummaryHeading(currentLevel === 2 ? null : 2)
+                  .run();
+              } else {
+                editor.chain().focus().toggleHeading({ level: 2 }).run();
+              }
+            }}
+          >
+            H2
+          </ToolbarBtn>
+          <ToolbarBtn
+            title="Heading 3"
+            active={editor.isActive("heading", { level: 3 })}
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 3 }).run()
+            }
+          >
+            H3
+          </ToolbarBtn>
 
-        <div className="mx-1 h-5 w-px bg-gray-200" />
+          <div className="mx-1 h-5 w-px bg-gray-200" />
 
-        <ToolbarBtn title="Bold" active={editor.isActive("bold")}
-          onClick={() => editor.chain().focus().toggleBold().run()}><strong>B</strong></ToolbarBtn>
-        <ToolbarBtn title="Italic" active={editor.isActive("italic")}
-          onClick={() => editor.chain().focus().toggleItalic().run()}><em>I</em></ToolbarBtn>
-        <ToolbarBtn title="Underline" active={editor.isActive("underline")}
-          onClick={() => editor.chain().focus().toggleUnderline().run()}><span className="underline">U</span></ToolbarBtn>
-        <ToolbarBtn title="Strikethrough" active={editor.isActive("strike")}
-          onClick={() => editor.chain().focus().toggleStrike().run()}><span className="line-through">S</span></ToolbarBtn>
-        <ToolbarBtn title="Inline Code" active={editor.isActive("code")}
-          onClick={() => editor.chain().focus().toggleCode().run()}>{"</>"}</ToolbarBtn>
+          <ToolbarBtn
+            title="Bold"
+            active={editor.isActive("bold")}
+            onClick={() => editor.chain().focus().toggleBold().run()}
+          >
+            <strong>B</strong>
+          </ToolbarBtn>
+          <ToolbarBtn
+            title="Italic"
+            active={editor.isActive("italic")}
+            onClick={() => editor.chain().focus().toggleItalic().run()}
+          >
+            <em>I</em>
+          </ToolbarBtn>
+          <ToolbarBtn
+            title="Underline"
+            active={editor.isActive("underline")}
+            onClick={() => editor.chain().focus().toggleUnderline().run()}
+          >
+            <span className="underline">U</span>
+          </ToolbarBtn>
+          <ToolbarBtn
+            title="Strikethrough"
+            active={editor.isActive("strike")}
+            onClick={() => editor.chain().focus().toggleStrike().run()}
+          >
+            <span className="line-through">S</span>
+          </ToolbarBtn>
+          <ToolbarBtn
+            title="Inline Code"
+            active={editor.isActive("code")}
+            onClick={() => editor.chain().focus().toggleCode().run()}
+          >
+            {"</>"}
+          </ToolbarBtn>
 
-        <div className="mx-1 h-5 w-px bg-gray-200" />
+          <div className="mx-1 h-5 w-px bg-gray-200" />
 
-        <ToolbarBtn title="Align Left" active={editor.isActive({ textAlign: "left" })}
-          onClick={() => editor.chain().focus().setTextAlign("left").run()}>≡</ToolbarBtn>
-        <ToolbarBtn title="Align Center" active={editor.isActive({ textAlign: "center" })}
-          onClick={() => editor.chain().focus().setTextAlign("center").run()}>☰</ToolbarBtn>
-        <ToolbarBtn title="Align Right" active={editor.isActive({ textAlign: "right" })}
-          onClick={() => editor.chain().focus().setTextAlign("right").run()}>≡</ToolbarBtn>
+          <ToolbarBtn
+            title="Align Left"
+            active={editor.isActive({ textAlign: "left" })}
+            onClick={() => editor.chain().focus().setTextAlign("left").run()}
+          >
+            ≡
+          </ToolbarBtn>
+          <ToolbarBtn
+            title="Align Center"
+            active={editor.isActive({ textAlign: "center" })}
+            onClick={() => editor.chain().focus().setTextAlign("center").run()}
+          >
+            ☰
+          </ToolbarBtn>
+          <ToolbarBtn
+            title="Align Right"
+            active={editor.isActive({ textAlign: "right" })}
+            onClick={() => editor.chain().focus().setTextAlign("right").run()}
+          >
+            ≡
+          </ToolbarBtn>
 
-        <div className="mx-1 h-5 w-px bg-gray-200" />
+          <div className="mx-1 h-5 w-px bg-gray-200" />
 
-        <ToolbarBtn title="Bullet List" active={editor.isActive("bulletList")}
-          onClick={() => editor.chain().focus().toggleBulletList().run()}>•≡</ToolbarBtn>
-        <ToolbarBtn title="Ordered List" active={editor.isActive("orderedList")}
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}>1≡</ToolbarBtn>
+          <ToolbarBtn
+            title="Bullet List"
+            active={editor.isActive("bulletList")}
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+          >
+            •≡
+          </ToolbarBtn>
+          <ToolbarBtn
+            title="Ordered List"
+            active={editor.isActive("orderedList")}
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          >
+            1≡
+          </ToolbarBtn>
 
-        <div className="mx-1 h-5 w-px bg-gray-200" />
+          <div className="mx-1 h-5 w-px bg-gray-200" />
 
-        <ToolbarBtn title="Blockquote" active={editor.isActive("blockquote")}
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}>❝</ToolbarBtn>
-        <ToolbarBtn title="Code Block" active={editor.isActive("codeBlock")}
-          onClick={() => editor.chain().focus().toggleCodeBlock().run()}>{"{ }"}</ToolbarBtn>
-        <ToolbarBtn title="Divider"
-          onClick={() => editor.chain().focus().setHorizontalRule().run()}>—</ToolbarBtn>
+          <ToolbarBtn
+            title="Blockquote"
+            active={editor.isActive("blockquote")}
+            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          >
+            ❝
+          </ToolbarBtn>
+          <ToolbarBtn
+            title="Code Block"
+            active={editor.isActive("codeBlock")}
+            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+          >
+            {"{ }"}
+          </ToolbarBtn>
+          <ToolbarBtn
+            title="Divider"
+            onClick={() => editor.chain().focus().setHorizontalRule().run()}
+          >
+            —
+          </ToolbarBtn>
 
-        <div className="mx-1 h-5 w-px bg-gray-200" />
+          <div className="mx-1 h-5 w-px bg-gray-200" />
 
-        <ToolbarBtn title="Add Link" active={editor.isActive("link")}
-          onClick={() => {
-            const url = window.prompt("Enter URL:");
-            if (url) editor.chain().focus().setLink({ href: url }).run();
-            else editor.chain().focus().unsetLink().run();
-          }}>🔗</ToolbarBtn>
+          <ToolbarBtn
+            title="Add Link"
+            active={editor.isActive("link")}
+            onClick={() => {
+              const url = window.prompt("Enter URL:");
+              if (url) editor.chain().focus().setLink({ href: url }).run();
+              else editor.chain().focus().unsetLink().run();
+            }}
+          >
+            🔗
+          </ToolbarBtn>
 
-        {/* ── Image upload button ── */}
-        <ToolbarBtn
-          title="Insert Image"
-          disabled={uploading}
-          onClick={() => imageInputRef.current?.click()}
-        >
-          {uploading ? (
-            <span className="text-xs">↑</span>
-          ) : (
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round"
-                d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3 8.25A2.25 2.25 0 015.25 6h13.5A2.25 2.25 0 0121 8.25v7.5A2.25 2.25 0 0118.75 18H5.25A2.25 2.25 0 013 15.75V8.25z" />
-            </svg>
-          )}
-        </ToolbarBtn>
-      </div>
+          <ToolbarBtn
+            title="Add Tooltip"
+            active={editor.isActive("tooltip")}
+            onClick={() => {
+              if (editor.isActive("tooltip")) {
+                editor.chain().focus().unsetTooltip().run();
+              } else {
+                setShowTooltipDialog(true);
+              }
+            }}
+          >
+            💬
+          </ToolbarBtn>
 
-      {/* Editor area */}
-      <EditorContent
-        editor={editor}
-        className="prose prose-gray max-w-none px-5 py-4 text-foreground
+          <ToolbarBtn
+            title="Collapsible"
+            active={editor.isActive("details")}
+            onClick={() => {
+              if (editor.isActive("details")) {
+                editor.chain().focus().unsetDetails().run();
+              } else {
+                editor.chain().focus().setDetails().run();
+              }
+            }}
+          >
+            ↕
+          </ToolbarBtn>
+
+          {/* ── Image upload button ── */}
+          <ToolbarBtn
+            title="Insert Image"
+            disabled={uploading}
+            onClick={() => imageInputRef.current?.click()}
+          >
+            {uploading ? (
+              <span className="text-xs">↑</span>
+            ) : (
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3 8.25A2.25 2.25 0 015.25 6h13.5A2.25 2.25 0 0121 8.25v7.5A2.25 2.25 0 0118.75 18H5.25A2.25 2.25 0 013 15.75V8.25z"
+                />
+              </svg>
+            )}
+          </ToolbarBtn>
+        </div>
+
+        {/* Editor area */}
+        <EditorContent
+          editor={editor}
+          className="prose prose-gray max-w-none px-5 py-4 text-foreground
           [&_.ProseMirror]:min-h-75
           [&_.ProseMirror]:outline-none
           [&_.ProseMirror_img]:rounded-xl
@@ -237,13 +461,23 @@ export default function TipTapEditor({
           [&_.ProseMirror_p.is-editor-empty:first-child::before]:pointer-events-none
           [&_.ProseMirror_p.is-editor-empty:first-child::before]:float-left
           [&_.ProseMirror_p.is-editor-empty:first-child::before]:h-0"
-      />
+        />
 
-      {uploading && (
-        <div className="border-t border-border px-5 py-2 text-xs text-muted-foreground">
-          Uploading image...
-        </div>
-      )}
-    </div>
+        {uploading && (
+          <div className="border-t border-border px-5 py-2 text-xs text-muted-foreground">
+            Uploading image...
+          </div>
+        )}
+      </div>
+
+      <TooltipDialog
+        isOpen={showTooltipDialog}
+        onClose={() => setShowTooltipDialog(false)}
+        onConfirm={(text) => {
+          editor.chain().focus().setTooltip(text).run();
+          setShowTooltipDialog(false);
+        }}
+      />
+    </>
   );
 }
